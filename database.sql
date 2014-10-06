@@ -38,6 +38,7 @@ SELECT create_schema_and_grant('brca_normal');
 SELECT create_schema_and_grant('coad_normal');
 SELECT create_schema_and_grant('luad_tumor');
 SELECT create_schema_and_grant('thca_normal');
+SELECT create_schema_and_grant('thca_tumor');
 SELECT create_schema_and_grant('brca_tumor');
 SELECT create_schema_and_grant('coad_tumor');
 SELECT create_schema_and_grant('luad_normal');
@@ -2767,7 +2768,7 @@ TCGA_91_6849_11A_01R_1949_07 FLOAT(4));
 
 
 
-\copy luad_normal.illuminahiseq_rnaseqv2FROM '/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/luad_normal/luad_illuminahiseq_rnaseqv2_to_SQL.csv' WITH NULL AS 'NA' DELIMITER ','
+\copy luad_normal.illuminahiseq_rnaseqv2 FROM '/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/luad_normal/luad_illuminahiseq_rnaseqv2_to_SQL.csv' WITH NULL AS 'NA' DELIMITER ','
 
 
 \copy luad_normal.humanmethylation450 FROM '/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/luad_normal/luad_humanmethylation450_to_SQL.csv' WITH NULL AS 'NA' DELIMITER ','
@@ -4284,11 +4285,11 @@ TCGA_KS_A41L_01A_11R_A23N_07 FLOAT(4));
 
 
 CREATE TABLE annotations.exons_annot(
-id VARCHAR(16),
-exon VARCHAR(16),
+id VARCHAR(64),
+exon VARCHAR,
 EmsemblGeneID VARCHAR(32),
 EmsemblTransID VARCHAR(32),
-chr VARCHAR(32),
+chr VARCHAR,
 exon_start INTEGER,
 exon_end INTEGER,
 strand VARCHAR(16),
@@ -4321,7 +4322,7 @@ CpGiID INTEGER);
 \copy annotations.exons_annot FROM '/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/exons_annotations_definitive.tab' WITH NULL AS 'NA' DELIMITER E'\t'
 
 
-\copy thca_tumor.humanmethylation450Annot FROM '/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/probes_450k_annot_CpGi.tab' WITH NULL AS 'NA' DELIMITER E'\t'
+\copy annotations.humanmethylation450kAnnot FROM '/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/probes_450k_annot_CpGi.tab' WITH NULL AS 'NA' DELIMITER E'\t'
 
 
 
@@ -4329,4 +4330,4 @@ SELECT nspname AS "schema", relname AS "relation", pg_size_pretty(pg_relation_si
   FROM pg_class C LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
   WHERE nspname NOT IN ('pg_catalog', 'information_schema')
   ORDER BY pg_relation_size(C.oid) DESC
-  LIMIT 20;
+  LIMIT 30;
