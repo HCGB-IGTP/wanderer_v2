@@ -4323,8 +4323,10 @@ CpGiID INTEGER);
 
 \copy thca_tumor.humanmethylation450Annot FROM '/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/probes_450k_annot_CpGi.tab' WITH NULL AS 'NA' DELIMITER E'\t'
 
-SELECT schema, relname AS "relation", pg_size_pretty(pg_relation_size(C.oid)) AS "size"
+
+
+SELECT nspname AS "schema", relname AS "relation", pg_size_pretty(pg_relation_size(C.oid)) AS "size"
   FROM pg_class C LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
   WHERE nspname NOT IN ('pg_catalog', 'information_schema')
   ORDER BY pg_relation_size(C.oid) DESC
-  LIMIT 40;
+  LIMIT 20;
