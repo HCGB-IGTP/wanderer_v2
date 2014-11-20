@@ -36,9 +36,9 @@ cd $WDIR
 
 for name in ${DAT[@]}
 do
-    for platform in ${PLATFORM[@]}
+    for ctype in ${CTYPE[@]}
     do
-        for ctype in ${CTYPE[@]}
+        for platform in ${PLATFORM[@]}
         do
             curr_data_fn="$WDIR"/"$name"/"$platform"/"$ctype"/"$name"_"$platform"_"$ctype".csv
             curr_sql_fn="$WDIR"/"$name"/"$platform"/"$ctype"/"$name"_"$platform"_"$ctype"_createTable.txt
@@ -69,7 +69,7 @@ do
             # fixing the table declarations start
 
             # schema statement start
-            echo "CREATE SCHEMA ""$name"_"$ctype"";" > /tmp/schema_stmt
+            echo "CREATE SCHEMA IF NOT EXISTS ""$name"_"$ctype"";" > /tmp/schema_stmt
             echo "GRANT USAGE ON SCHEMA ""$name"_"$ctype"" TO maplabr;" >> /tmp/schema_stmt
             echo "ALTER DEFAULT PRIVILEGES IN SCHEMA ""$name"_"$ctype" >> /tmp/schema_stmt
             echo " GRANT SELECT ON TABLES TO maplabr;" >> /tmp/schema_stmt
