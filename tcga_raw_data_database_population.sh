@@ -23,7 +23,7 @@ WDIR=/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data
 # DAT=(BLCA BRCA CESC COAD GBM  HNSC KIRC KIRP LIHC LUAD LUSC PAAD PCPG PRAD READ SARC SKCM THCA UCEC)
 # some of them are already in xd
 DAT=(BLCA CESC GBM HNSC KIRC KIRP LIHC LUSC PAAD PCPG PRAD READ SARC SKCM UCEC)
-
+NEWDAT=(BRCA COAD LUAD THCA)
 
 PLATFORM=(450KMeth RNAseq)
 CTYPE=(Normal Tumor)
@@ -34,7 +34,8 @@ CTYPE=(Normal Tumor)
 
 cd $WDIR
 
-for name in ${DAT[@]}
+# for name in ${DAT[@]}
+for name in ${NEWDAT[@]}
 do
     for ctype in ${CTYPE[@]}
     do
