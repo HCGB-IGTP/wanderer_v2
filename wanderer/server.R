@@ -21,10 +21,10 @@ source(file.path(SRC, 'max_sample.R'))
 sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
 
 
-shinyServer(function(input, output){
+shinyServer(function(input, output, session){
   ## db_conf <- get_db_parameters(DB_CONF)
   ## con <- dbConnect(drv, host=dbhost, port=dbport, dbname=dbname, user=dbuser, password=dbpass)
-
+    
   con <- db_connect(DB_CONF)
 
   

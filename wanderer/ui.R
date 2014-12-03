@@ -10,7 +10,7 @@ WRIGHT = 7   # rigth column width
 ORIGHT = 0   # rigth column offset
 
 shinyUI(
-  #corner_element = HTML(paste0('<a href=',shQuote(paste0("http://maplab.imppc.org/",sep='')), '>', 'maplab.cat', '</a>')),
+  ## corner_element = HTML(paste0('<a href=',shQuote(paste0("http://maplab.imppc.org/",sep='')), '>', 'maplab.cat', '</a>')),
   
   navbarPage(id = "Region Profile (beta)", title="",
              header = div(img(src="regional_profile.png",style="float:left; padding: 100px 20px 100px 150px;"), h2("TCGA Wanderer (beta)", style="color:#dd4814; float:left; padding: 120px 20px 20px 20px;")),
@@ -19,7 +19,12 @@ shinyUI(
              #tabPanel(a(href="http://maplab.imppc.org/", "maplab.cat")),
              #tabPanel(HTML("</a></li><li><a href=\"http://maplab.imppc.org/\">maplab.cat")),
              #tabPanel("maplab.cat",includeHTML("http://maplab.imppc.org/")),
+             ## HTML(paste0('<a href=',shQuote(paste0("http://maplab.imppc.org/",sep='')), '>', 'maplab.cat', '</a>')),
+            ## tabPanel('maplab',
+            ##          value = 'maplab_tabpanel'),
+
             tabPanel("TCGA Wanderer",
+                     value='main_tabpanel',
 
                       fluidRow(
                         column(width = WLEFT, offset = OLEFT,
