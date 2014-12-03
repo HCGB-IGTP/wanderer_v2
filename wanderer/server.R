@@ -9,26 +9,23 @@ library(RPostgreSQL)
 # the file containing the db parameters
 ## SRC <- '/imppc/labs/maplab/adiez/region_profile/web/'
 SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+DB_CONF <- file.path(SRC, 'db.txt')
 
-source(paste0(SRC, 'region_profile_methylation.R'))
-source(paste0(SRC, 'GeneSize_methylation.R'))
-source(paste0(SRC, 'region_profile_expression.R'))
-sample_size <- read.table(paste0(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
-source(paste0(SRC, 'max_sample.R'))
+source(file.path(SRC, 'region_profile_methylation.R'))
+source(file.path(SRC, 'GeneSize_methylation.R'))
+source(file.path(SRC, 'region_profile_expression.R'))
+source(file.path(SRC, 'database.R'))
+source(file.path(SRC, 'max_sample.R'))
 
 
-DB_CONF <- file.path(SRC, 'db.conf')
+sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
 
 
 shinyServer(function(input, output){
-  
-  dbhost = "overlook"
-  drv <- dbDriver("PostgreSQL")
-  dbname <-""
-  dbuser <- ""
-  dbpass <- ""
-  dbport <- 5432
-  con <- dbConnect(drv, host=dbhost, port=dbport, dbname=dbname, user=dbuser, password=dbpass)
+  ## db_conf <- get_db_parameters(DB_CONF)
+  ## con <- dbConnect(drv, host=dbhost, port=dbport, dbname=dbname, user=dbuser, password=dbpass)
+
+  con <- db_connect(DB_CONF)
   
     #if(exists(input$TissueType)){
       #geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType
