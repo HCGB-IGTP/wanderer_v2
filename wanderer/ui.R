@@ -23,7 +23,6 @@ shinyUI(
 
                       fluidRow(
                         column(width = WLEFT, offset = OLEFT,
-                              actionButton("goButton", "Go!"),
                               hr(),
                               uiOutput("Tissues"),
                                hr(),
@@ -35,6 +34,8 @@ shinyUI(
                                hr(),
                                textInput("Gene", h5("Gene"), value='ENSG00000012048'),
                                helpText("Examples: BRCA1 or ENSG00000012048"),
+                               ## submitButton("Update View", icon("refresh")), ## here
+                               actionButton("goButton", "Refresh"),
                                hr(),
                                checkboxInput("plotmean", label = h5("Boxplot Summary"), FALSE),
                                hr(),
@@ -45,8 +46,8 @@ shinyUI(
                                uiOutput("nNmax"),
                                hr(),
                                uiOutput("nTmax"),
-                               hr(),
-                               actionButton("goButton", "Go!")
+                               hr() ##,
+                               ## actionButton("goButton", "Go!")
                         ),
                         column( width = WRIGHT,
                                 inputPanel(downloadButton('downloadPlot', 'Download Plot'), br(), downloadButton('downloadNData', 'Download Normal Data'), br(), downloadButton('downloadTData', 'Download Tumor Data'), br(), downloadButton('downloadPData', 'Download Annotation Data')),
