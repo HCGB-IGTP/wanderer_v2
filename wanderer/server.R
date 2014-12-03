@@ -9,26 +9,43 @@ library(RPostgreSQL)
 # the file containing the db parameters
 ## SRC <- '/imppc/labs/maplab/adiez/region_profile/web/'
 SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+DB_CONF <- file.path(SRC, 'db.txt')
 
-source(paste0(SRC, 'region_profile_methylation.R'))
-source(paste0(SRC, 'GeneSize_methylation.R'))
-source(paste0(SRC, 'region_profile_expression.R'))
-sample_size <- read.table(paste0(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
-source(paste0(SRC, 'max_sample.R'))
-
-
-DB_CONF <- file.path(SRC, 'db.conf')
+source(file.path(SRC, 'region_profile_methylation.R'))
+source(file.path(SRC, 'GeneSize_methylation.R'))
+source(file.path(SRC, 'region_profile_expression.R'))
+source(file.path(SRC, 'database.R'))
+source(file.path(SRC, 'max_sample.R'))
 
 
-shinyServer(function(input, output){
+sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
+
+
+shinyServer(function(input, output, session){
+  ## db_conf <- get_db_parameters(DB_CONF)
+  ## con <- dbConnect(drv, host=dbhost, port=dbport, dbname=dbname, user=dbuser, password=dbpass)
+    
+  con <- db_connect(DB_CONF)
+
   
-  dbhost = "overlook"
-  drv <- dbDriver("PostgreSQL")
-  dbname <-""
-  dbuser <- ""
-  dbpass <- ""
-  dbport <- 5432
-  con <- dbConnect(drv, host=dbhost, port=dbport, dbname=dbname, user=dbuser, password=dbpass)
+  user_values <- reactiveValues(Gene = NA,
+                                GeneFormat = NA)
+  ## user_values <- list(gene_name = 'ENSG0000001204',
+  ##                     gene_format = 'emsemblgeneid')
+  
+  ## isolating tests start
+
+  user_values$gene_name <-'ENSG0000001204'
+  user_values$gene_format <- 'ensemblgeneid'
+  
+  observe({        
+      if(input$goButton > 0) {
+            user_values$Gene <- isolate(input$Gene)
+            user_values$GeneFormat <- isolate(input$GeneFormat)
+            ## stop(print(user_values))
+        }
+    })
+  ## isolating tests end
   
     #if(exists(input$TissueType)){
       #geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType
@@ -54,14 +71,22 @@ shinyServer(function(input, output){
   })
   
   output$ZoomControl <- renderUI({
-    lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
+    ## lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
+    lengthGene <- GeneSize_methylation(con = con,
+                                       geneName = user_values$Gene,
+                                       geneNamesType = user_values$GeneFormat)
+    
     minval <- (lengthGene/2)-5
     sliderInput("Zoom", label = h5("Zoom"), value = 0, min = 0, max = minval, step = 100)
   })
   
   output$WalkControl <- renderUI({
-    lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
-    val <- (lengthGene/2)
+    ## lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
+      lengthGene <- GeneSize_methylation(con = con,
+                                         geneName = user_values$Gene,
+                                         geneNamesType = user_values$GeneFormat)
+
+   val <- (lengthGene/2)
     if(input$DataType == 'methylation'){
       maxval <- (lengthGene/2) + 20000
       minval <- -(lengthGene/2) - 20000
@@ -72,21 +97,86 @@ shinyServer(function(input, output){
     }
     sliderInput("Walk", label = h5("Slider"), value = 0, min = minval, max = maxval, step = 100)
   })
-  
+
+  ## ##nonisolated
+  ## output$plot1_bak <- renderPlot({
+  ##   ## if(input$goButton == 0) return()
+  ##   ## input$goButton
+  ##   ## isolate({
+  ##   ## if(input$DataType == 'methylation'){
+  ##   ##   print(input$nN)
+  ##   ##   region_profile_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom, walk = input$Walk ,npointsN = input$nN, npointsT = input$nT, CpGislands = input$CpGi, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+  ##   ## }
+  ##   ## if(input$DataType == 'expression'){
+  ##   ##   region_profile_expression(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom, walk = input$Walk ,npointsN = input$nN, npointsT = input$nT, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+  ##   ## }
+  ##   ## })
+  ##   if(input$DataType == 'methylation'){
+  ##     print(input$nN)
+  ##     print(user_values)
+  ##     region_profile_methylation(con = con,
+  ##                                ## geneName = input$Gene, geneNamesType = input$GeneFormat,
+  ##                                geneName = user_values$geneName,
+  ##                                geneNamesType = user_values$geneNamesType,
+  ##                                sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
+  ##                                walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
+  ##                                CpGislands = input$CpGi, plotmean = input$plotmean,
+  ##                                plotting = TRUE, geneLine = input$geneLine)
+  ##   }
+  ##   if(input$DataType == 'expression'){
+  ##     region_profile_expression(con = con,
+  ##                               ## geneName = input$Gene, geneNamesType = input$GeneFormat,
+  ##                               geneName = user_values$geneName,
+  ##                               geneNamesType = user_values$geneNamesType,
+  ##                               sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
+  ##                               walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
+  ##                               plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+  ##   }
+
+  ## }, height = 1000, width = 1000)
+
+
+  ## test start
+
   output$plot1 <- renderPlot({
-    if(input$goButton == 0) return()
-    input$goButton
-    isolate({
+    ## if(input$goButton == 0) return()
+    ## input$goButton
+    ## isolate({
+    ## if(input$DataType == 'methylation'){
+    ##   print(input$nN)
+    ##   region_profile_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom, walk = input$Walk ,npointsN = input$nN, npointsT = input$nT, CpGislands = input$CpGi, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+    ## }
+    ## if(input$DataType == 'expression'){
+    ##   region_profile_expression(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom, walk = input$Walk ,npointsN = input$nN, npointsT = input$nT, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+    ## }
+    ## })
+
     if(input$DataType == 'methylation'){
       print(input$nN)
-      region_profile_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom, walk = input$Walk ,npointsN = input$nN, npointsT = input$nT, CpGislands = input$CpGi, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+      ## stop(user_values$gene_name)
+      region_profile_methylation(con = con,
+                                 ## geneName = input$Gene, geneNamesType = input$GeneFormat,
+                                 geneName = as.character(user_values$Gene),
+                                 geneNamesType = as.character(user_values$GeneFormat),
+                                 sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
+                                 walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
+                                 CpGislands = input$CpGi, plotmean = input$plotmean,
+                                 plotting = TRUE, geneLine = input$geneLine)
+      
     }
     if(input$DataType == 'expression'){
-      region_profile_expression(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom, walk = input$Walk ,npointsN = input$nN, npointsT = input$nT, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+        region_profile_expression(con = con,
+                                ## geneName = input$Gene, geneNamesType = input$GeneFormat,
+                                geneName = user_values$Gene,
+                                geneNamesType = user_values$GeneFormat,
+                                sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
+                                walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
+                                plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
     }
-    })
+
   }, height = 1000, width = 1000)
-  
+
+  ## test end
   output$downloadPlot <- downloadHandler(
     filename = function() { paste0(input$Gene, '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {

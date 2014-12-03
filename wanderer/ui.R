@@ -10,7 +10,7 @@ WRIGHT = 7   # rigth column width
 ORIGHT = 0   # rigth column offset
 
 shinyUI(
-  #corner_element = HTML(paste0('<a href=',shQuote(paste0("http://maplab.imppc.org/",sep='')), '>', 'maplab.cat', '</a>')),
+  ## corner_element = HTML(paste0('<a href=',shQuote(paste0("http://maplab.imppc.org/",sep='')), '>', 'maplab.cat', '</a>')),
   
   navbarPage(id = "Region Profile (beta)", title="",
              header = div(img(src="regional_profile.png",style="float:left; padding: 100px 20px 100px 150px;"), h2("TCGA Wanderer (beta)", style="color:#dd4814; float:left; padding: 120px 20px 20px 20px;")),
@@ -19,23 +19,44 @@ shinyUI(
              #tabPanel(a(href="http://maplab.imppc.org/", "maplab.cat")),
              #tabPanel(HTML("</a></li><li><a href=\"http://maplab.imppc.org/\">maplab.cat")),
              #tabPanel("maplab.cat",includeHTML("http://maplab.imppc.org/")),
+             ## HTML(paste0('<a href=',shQuote(paste0("http://maplab.imppc.org/",sep='')), '>', 'maplab.cat', '</a>')),
+            ## tabPanel('maplab',
+            ##          value = 'maplab_tabpanel'),
+
             tabPanel("TCGA Wanderer",
+                     value='main_tabpanel',
 
                       fluidRow(
                         column(width = WLEFT, offset = OLEFT,
-                              actionButton("goButton", "Go!"),
                               hr(),
+
+                               h4('Gene identifier and format'),                               
+                               textInput("Gene", h5("Gene"), value='ENSG00000012048'),
+                               selectInput("GeneFormat", label = h5('Format'), 
+                                           choices = c("Ensembl Gene ID" = 'emsemblgeneid', "Gene Name" = 'genename')),
+
+                               
+                               helpText("Examples: BRCA1 or ENSG00000012048"),
+                               ## submitButton("Update View", icon("refresh")), ## here
+                               actionButton("goButton", "Refresh"),
+                               hr(),
+
+                              h5('Dataset'),
                               uiOutput("Tissues"),
                                hr(),
                                selectInput("DataType", label = h5("Select Data Type:"), 
                                            choices = c("450k Methylation Array" = 'methylation', "Illumina HiSeq RNAseq" = 'expression'), selected = "methylation"),
                                hr(),
-                               selectInput("GeneFormat", label = h5("Select Gene Format:"), 
-                                           choices = c("Ensembl Gene ID" = 'emsemblgeneid', "Gene Name" = 'genename')),
-                               hr(),
-                               textInput("Gene", h5("Gene"), value='ENSG00000012048'),
-                               helpText("Examples: BRCA1 or ENSG00000012048"),
-                               hr(),
+                               ## selectInput("GeneFormat", label = h5("Select Gene Format:"), 
+                               ##             choices = c("Ensembl Gene ID" = 'emsemblgeneid', "Gene Name" = 'genename')),
+                               ## hr(),
+                               ## textInput("Gene", h5("Gene"), value='ENSG00000012048'),
+                               ## helpText("Examples: BRCA1 or ENSG00000012048"),
+                               ## ## submitButton("Update View", icon("refresh")), ## here
+                               ## actionButton("goButton", "Refresh"),
+
+                               h5('Plotting parameters'),
+                               
                                checkboxInput("plotmean", label = h5("Boxplot Summary"), FALSE),
                                hr(),
                                checkboxInput("geneLine", label = h5("Show Gene", help_popup('Show Gene')), TRUE),
@@ -45,8 +66,8 @@ shinyUI(
                                uiOutput("nNmax"),
                                hr(),
                                uiOutput("nTmax"),
-                               hr(),
-                               actionButton("goButton", "Go!")
+                               hr() ##,
+                               ## actionButton("goButton", "Go!")
                         ),
                         column( width = WRIGHT,
                                 inputPanel(downloadButton('downloadPlot', 'Download Plot'), br(), downloadButton('downloadNData', 'Download Normal Data'), br(), downloadButton('downloadTData', 'Download Tumor Data'), br(), downloadButton('downloadPData', 'Download Annotation Data')),
