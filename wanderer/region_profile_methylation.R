@@ -1,3 +1,8 @@
+#!/usr/bin/env R
+#
+# @package wanderer
+# @author Anna Diez
+
 ######################################
 #function to plot a region with the probes and the gene
 

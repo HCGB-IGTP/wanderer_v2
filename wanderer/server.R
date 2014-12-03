@@ -1,10 +1,15 @@
 #!/usr/bin/env R
+#
+## @package wanderer
+# @author Anna Diez
 
 library(shiny)
 library(RPostgreSQL)
 
 # the file containing the db parameters
-SRC <- '/imppc/labs/maplab/adiez/region_profile/web/'
+## SRC <- '/imppc/labs/maplab/adiez/region_profile/web/'
+SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+
 source(paste0(SRC, 'region_profile_methylation.R'))
 source(paste0(SRC, 'GeneSize_methylation.R'))
 source(paste0(SRC, 'region_profile_expression.R'))

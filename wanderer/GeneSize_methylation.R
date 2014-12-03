@@ -1,3 +1,7 @@
+#!/usr/bin/env R
+#
+# @package wanderer
+# @author Anna Diez
 
 GeneSize_methylation <- function(con, geneName, geneNamesType){
   
@@ -9,7 +13,7 @@ GeneSize_methylation <- function(con, geneName, geneNamesType){
   #methylation array annotation download
   probesaux <- dbSendQuery(con, statement = paste0("select * from annotations.humanmethylation450kannot where ", geneNamesType, " = '", geneName, "' limit 1"))
   probesaux <- fetch(probesaux, n = -1)
-  if(dim(probesaux)[1] == 0) stop(paste0("Your gene ", geneName, " does not correspon to any ", geneNamesType_label, " or is not in the probes annotation"))
+  if(dim(probesaux)[1] == 0) stop(paste0("Your gene ", geneName, " does not correspond to any ", geneNamesType_label, " or is not in the probes annotation"))
   
   lengthGene <- probesaux$geneend - probesaux$genestart + 1 
   return(lengthGene)
