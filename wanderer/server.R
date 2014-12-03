@@ -28,16 +28,20 @@ shinyServer(function(input, output){
   con <- db_connect(DB_CONF)
 
   
-  user_values <- reactiveValues(gene_name = 'ENSG0000001204',
-                                gene_format = 'emsemblgeneid')
+  user_values <- reactiveValues(Gene = NA,
+                                GeneFormat = NA)
   ## user_values <- list(gene_name = 'ENSG0000001204',
   ##                     gene_format = 'emsemblgeneid')
   
   ## isolating tests start
-  observe({
-        if(input$goButton > 0) {
-            user_values$gene_name <- isolate(input$Gene)
-            user_values$gene_format <- isolate(input$GeneFormat)
+
+  user_values$gene_name <-'ENSG0000001204'
+  user_values$gene_format <- 'ensemblgeneid'
+  
+  observe({        
+      if(input$goButton > 0) {
+            user_values$Gene <- isolate(input$Gene)
+            user_values$GeneFormat <- isolate(input$GeneFormat)
             ## stop(print(user_values))
         }
     })
@@ -67,14 +71,22 @@ shinyServer(function(input, output){
   })
   
   output$ZoomControl <- renderUI({
-    lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
+    ## lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
+    lengthGene <- GeneSize_methylation(con = con,
+                                       geneName = user_values$Gene,
+                                       geneNamesType = user_values$GeneFormat)
+    
     minval <- (lengthGene/2)-5
     sliderInput("Zoom", label = h5("Zoom"), value = 0, min = 0, max = minval, step = 100)
   })
   
   output$WalkControl <- renderUI({
-    lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
-    val <- (lengthGene/2)
+    ## lengthGene <- GeneSize_methylation(con = con, geneName = input$Gene, geneNamesType = input$GeneFormat)
+      lengthGene <- GeneSize_methylation(con = con,
+                                         geneName = user_values$Gene,
+                                         geneNamesType = user_values$GeneFormat)
+
+   val <- (lengthGene/2)
     if(input$DataType == 'methylation'){
       maxval <- (lengthGene/2) + 20000
       minval <- -(lengthGene/2) - 20000
@@ -144,8 +156,8 @@ shinyServer(function(input, output){
       ## stop(user_values$gene_name)
       region_profile_methylation(con = con,
                                  ## geneName = input$Gene, geneNamesType = input$GeneFormat,
-                                 geneName = as.character(user_values$gene_name),
-                                 geneNamesType = as.character(user_values$gene_format),
+                                 geneName = as.character(user_values$Gene),
+                                 geneNamesType = as.character(user_values$GeneFormat),
                                  sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
                                  walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
                                  CpGislands = input$CpGi, plotmean = input$plotmean,
@@ -155,8 +167,8 @@ shinyServer(function(input, output){
     if(input$DataType == 'expression'){
         region_profile_expression(con = con,
                                 ## geneName = input$Gene, geneNamesType = input$GeneFormat,
-                                geneName = user_values$gene_name,
-                                geneNamesType = user_values$gene_format,
+                                geneName = user_values$Gene,
+                                geneNamesType = user_values$GeneFormat,
                                 sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
                                 walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
                                 plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
