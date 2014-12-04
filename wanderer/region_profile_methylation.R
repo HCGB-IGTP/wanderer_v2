@@ -7,12 +7,12 @@
 #function to plot a region with the probes and the gene
 
 region_profile_methylation <- function(con, geneName, geneNamesType, sampleSize, tissue, zoom, walk, npointsN, npointsT, CpGislands, plotmean, plotting, geneLine){
-  
+
   tissue_label <- sampleSize[sampleSize[,3]==tissue,1]
   data_label <- "450k Methylation Array"
   
   if (geneNamesType == "genename") geneNamesType_label <- "Gene Name"
-  if (geneNamesType == "ensemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
+  if (geneNamesType == "emsemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
   
   
 

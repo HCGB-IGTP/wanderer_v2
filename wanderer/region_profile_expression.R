@@ -8,12 +8,11 @@
 
 region_profile_expression <- function(con, geneName, geneNamesType, sampleSize, tissue, zoom, walk, npointsN, npointsT, plotmean, plotting, geneLine){
   
-
   tissue_label <- sampleSize[sampleSize[,3]==tissue,1]
   data_label <- "Illumina HiSeq RNAseq"
   
   if (geneNamesType == "genename") geneNamesType_label <- "Gene Name"
-  if (geneNamesType == "ensemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
+  if (geneNamesType == "emsemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
   
   ################
   #RNAseq annotation download

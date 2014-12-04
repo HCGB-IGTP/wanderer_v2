@@ -28,19 +28,20 @@ shinyServer(function(input, output, session){
   con <- db_connect(DB_CONF)
 
   
-  user_values <- reactiveValues(Gene = NA,
-                                GeneFormat = NA)
+  user_values <- reactiveValues(Gene = 'ENSG00000012048',
+                                GeneFormat = 'emsemblgeneid',
+                                Tissue = 'brca')
   ## user_values <- list(gene_name = 'ENSG0000001204',
   ##                     gene_format = 'emsemblgeneid')
   
   ## isolating tests start
 
-  user_values$gene_name <-'ENSG0000001204'
-  user_values$gene_format <- 'ensemblgeneid'
+  user_values$gene_name <-'ENSG00000012048'
+  user_values$gene_format <- 'emsemblgeneid'
   
   observe({        
       if(input$goButton > 0) {
-            user_values$Gene <- isolate(input$Gene)
+            user_values$Gene <- isolate(toupper(input$Gene))
             user_values$GeneFormat <- isolate(input$GeneFormat)
             ## stop(print(user_values))
         }
@@ -59,15 +60,20 @@ shinyServer(function(input, output, session){
   })
   
   output$nNmax <- renderUI({
-    maxn <- max_sample(sample_size, input$DataType, input$TissueType)[1]
-    valor <- min(maxn, 30)
-    conditionalPanel("input.plotmean == false", numericInput("nN", h5(paste0("Number of normal samples to plot (max = ", maxn, ")"), help_popup('Number of normal samples to plot')), value = valor, min = 1, max = maxn))
+
+    if (!is.null(input$DataType) & !is.null(input$TissueType)) {
+        maxn <- max_sample(sample_size, input$DataType, input$TissueType)[1]
+        valor <- min(maxn, 30)
+        conditionalPanel("input.plotmean == false", numericInput("nN", h5(paste0("Number of normal samples to plot (max = ", maxn, ")"), help_popup('Number of normal samples to plot')), value = valor, min = 1, max = maxn))
+    }
   })
     
   output$nTmax <- renderUI({
-    maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
-    valor <- min(maxt, 30)
-    conditionalPanel("input.plotmean == false", numericInput("nT", h5(paste0("Number of tumoral samples to plot (max = ", maxt, ")"), help_popup('Number of tumoral samples to plot')), value = valor, min = 1, max = maxt))
+      if (!is.null(input$DataType) & !is.null(input$TissueType)) {
+          maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
+          valor <- min(maxt, 30)
+          conditionalPanel("input.plotmean == false", numericInput("nT", h5(paste0("Number of tumoral samples to plot (max = ", maxt, ")"), help_popup('Number of tumoral samples to plot')), value = valor, min = 1, max = maxt))
+      }
   })
   
   output$ZoomControl <- renderUI({
@@ -152,18 +158,19 @@ shinyServer(function(input, output, session){
     ## })
 
     if(input$DataType == 'methylation'){
-      print(input$nN)
+      ## print(input$nN)
       ## stop(user_values$gene_name)
-      region_profile_methylation(con = con,
-                                 ## geneName = input$Gene, geneNamesType = input$GeneFormat,
-                                 geneName = as.character(user_values$Gene),
-                                 geneNamesType = as.character(user_values$GeneFormat),
-                                 sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
-                                 walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
-                                 CpGislands = input$CpGi, plotmean = input$plotmean,
-                                 plotting = TRUE, geneLine = input$geneLine)
-      
-    }
+      if (!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT)) {
+          region_profile_methylation(con = con,
+                                     ## geneName = input$Gene, geneNamesType = input$GeneFormat,
+                                     geneName = as.character(user_values$Gene),
+                                     geneNamesType = as.character(user_values$GeneFormat),
+                                     sampleSize = sample_size, tissue = input$TissueType, zoom = input$Zoom,
+                                     walk = input$Walk ,npointsN = input$nN, npointsT = input$nT,
+                                     CpGislands = input$CpGi, plotmean = input$plotmean,
+                                     plotting = TRUE, geneLine = input$geneLine)
+          
+      }}
     if(input$DataType == 'expression'){
         region_profile_expression(con = con,
                                 ## geneName = input$Gene, geneNamesType = input$GeneFormat,
