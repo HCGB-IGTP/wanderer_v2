@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <script type="application/shiny-singletons">7068be154af277356dab1092ff4e4c8f67c35a88,7196694b46f8e7c34171939351e3a70cdd3ccf40</script>
+  <script type="application/html-dependencies">jquery[1.11.0];shiny[0.10.0];selectize[0.8.5];bootstrap[2.3.2];bootstrap-responsive[2.3.2]</script>
+<script src="shared/jquery.js"></script>
+<link href="shared/shiny.css" rel="stylesheet" />
+<script src="shared/shiny.js"></script>
+<link href="shared/selectize/css/selectize.bootstrap2.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+<script src="shared/selectize/js/es5-shim.min.js"></script>
+<![endif]-->
+<script src="shared/selectize/js/selectize.min.js"></script>
+<script src="shared/bootstrap/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="shared/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="united.css"/>
+  <script>$(function() { $("[data-toggle='popover']").popover(); })</script>
+  <link rel="stylesheet" type="text/css" href="shared/font-awesome/css/font-awesome.min.css"/>
+</head>
+<body>
+<div class="navbar navbar-static-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <span class="brand pull-left"></span>
+      <ul class="nav shiny-tab-input" id="Region Profile (beta)">
+        <li class="active">
+          <a href="#tab-1846-1" data-toggle="tab" data-value="main_tabpanel">TCGA Wanderer</a>
+        </li>
+        <li>
+          <a href="#tab-1846-2" data-toggle="tab">Download</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div>
+      <img src="regional_profile.png" style="float:left; padding: 100px 20px 100px 150px;"/>
+      <h2 style="color:#dd4814; float:left; padding: 120px 20px 20px 20px;">TCGA Wanderer (beta)</h2>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div class="tab-pane active" data-value="main_tabpanel" id="tab-1846-1">
+      <div class="row-fluid">
+        <div class="span3 offset1">
+          <hr/>
+          <h4>Gene identifier and format</h4>
+          <label for="Gene">
+            <h5>Gene</h5>
+          </label>
+          <input id="Gene" type="text" value="ENSG00000012048"/>
+          <label class="control-label" for="GeneFormat">
+            <h5>Format</h5>
+          </label>
+          <select id="GeneFormat"><option value="emsemblgeneid" selected>Ensembl Gene ID</option>
+<option value="genename">Gene Name</option></select>
+          <script type="application/json" data-for="GeneFormat" data-nonempty="">{}</script>
+          <span class="help-block">Examples: BRCA1 or ENSG00000012048</span>
+          <button id="goButton" type="button" class="btn action-button">Refresh</button>
+          <hr/>
+          <h5>Dataset</h5>
+          <div id="Tissues" class="shiny-html-output"></div>
+          <hr/>
+          <label class="control-label" for="DataType">
+            <h5>Select Data Type:</h5>
+          </label>
+          <select id="DataType"><option value="methylation" selected>450k Methylation Array</option>
+<option value="expression">Illumina HiSeq RNAseq</option></select>
+          <script type="application/json" data-for="DataType" data-nonempty="">{}</script>
+          <hr/>
+          <h5>Plotting parameters</h5>
+          <label class="checkbox" for="plotmean">
+            <input id="plotmean" type="checkbox"/>
+            <span>
+              <h5>Boxplot Summary</h5>
+            </span>
+          </label>
+          <hr/>
+          <label class="checkbox" for="geneLine">
+            <input id="geneLine" type="checkbox" checked="checked"/>
+            <span>
+              <h5>
+                Show Gene
+                <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as an orange arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
+                  <b>?</b>
+                </a>
+              </h5>
+            </span>
+          </label>
+          <hr/>
+          <div data-display-if="input.DataType == &#39;methylation&#39;">
+            <label class="checkbox" for="CpGi">
+              <input id="CpGi" type="checkbox" checked="checked"/>
+              <span>
+                <h5>
+                  Show CpG islands
+                  <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="CpG islands are displayed in green color in the x-axis. Only allowed for Illumina 450k methylation data." data-animation="TRUE" data-placement="right" data-trigger="hover">
+                    <b>?</b>
+                  </a>
+                </h5>
+              </span>
+            </label>
+          </div>
+          <hr/>
+          <div id="nNmax" class="shiny-html-output"></div>
+          <hr/>
+          <div id="nTmax" class="shiny-html-output"></div>
+          <hr/>
+        </div>
+        <div class="span7">
+          <div class="shiny-input-panel">
+            <div class="shiny-flow-layout">
+              <div>
+                <a id="downloadPlot" class="btn shiny-download-link" href="" target="_blank">
+                  <i class="fa fa-download"></i>
+                  Download Plot
+                </a>
+              </div>
+              <div>
+                <br/>
+              </div>
+              <div>
+                <a id="downloadNData" class="btn shiny-download-link" href="" target="_blank">
+                  <i class="fa fa-download"></i>
+                  Download Normal Data
+                </a>
+              </div>
+              <div>
+                <br/>
+              </div>
+              <div>
+                <a id="downloadTData" class="btn shiny-download-link" href="" target="_blank">
+                  <i class="fa fa-download"></i>
+                  Download Tumor Data
+                </a>
+              </div>
+              <div>
+                <br/>
+              </div>
+              <div>
+                <a id="downloadPData" class="btn shiny-download-link" href="" target="_blank">
+                  <i class="fa fa-download"></i>
+                  Download Annotation Data
+                </a>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <div class="shiny-input-panel">
+            <div class="shiny-flow-layout">
+              <div>
+                <div id="ZoomControl" class="shiny-html-output"></div>
+              </div>
+              <div>
+                <br/>
+              </div>
+              <div>
+                <br/>
+              </div>
+              <div>
+                <br/>
+              </div>
+              <div>
+                <div id="WalkControl" class="shiny-html-output"></div>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="tab-1846-2"></div>
+  </div>
+</div>
+</body>
+</html>
