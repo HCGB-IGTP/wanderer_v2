@@ -16,6 +16,7 @@ source(file.path(SRC, 'GeneSize_methylation.R'))
 source(file.path(SRC, 'region_profile_expression.R'))
 source(file.path(SRC, 'database.R'))
 source(file.path(SRC, 'max_sample.R'))
+source(file.path(SRC, 'help_messages.R'))
 
 
 sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
