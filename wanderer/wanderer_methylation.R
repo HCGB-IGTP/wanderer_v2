@@ -150,9 +150,10 @@ wanderer_methylation <- function(results, geneName, geneNamesType, sampleSize, t
       par(xpd = FALSE)
     }
   }
-  results <- list(ddN2, ddT2, probes2)
-  return(results)
   
+  plotting_results <- list(ddN2 = ddN2, ddT2 = ddT2, probes2 = probes2)
+  
+  return(plotting_results)
 }
 
 
