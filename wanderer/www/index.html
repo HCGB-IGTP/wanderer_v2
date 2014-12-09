@@ -70,13 +70,13 @@
                 <label for="Gene">
                   <h5>Gene</h5>
                 </label>
-                <input id="Gene" type="text" value="ENSG00000012048"/>
+                <input id="Gene" type="text" value="BRCA1"/>
                 <span class="help-block">Examples: BRCA1 or ENSG00000012048</span>
                 <label class="control-label" for="GeneFormat">
                   <h5>Format</h5>
                 </label>
-                <select id="GeneFormat"><option value="emsemblgeneid" selected>Ensembl Gene ID</option>
-                  <option value="genename">Gene Symbol</option></select>
+                <select id="GeneFormat"><option value="genename" selected>Gene Symbol</option>
+                  <option value="emsemblgeneid">Ensembl Gene ID</option></select>
                 <!-- <script type="application/json" data-for="GeneFormat" data-nonempty="">{}</script> -->
                 <!-- <span class="help-block">Examples: BRCA1 or ENSG00000012048</span> -->
                 <span class="help-block">Tip: Gene symbols look like TP53 or BRCA1 whereas Ensembl Gene IDs start by ENSG</span>
@@ -88,7 +88,7 @@
               <div id="Tissues" class="shiny-html-output"></div>
               <!-- <hr/> -->
               <label class="control-label" for="DataType">
-                <h5>Select Data Type:</h5>
+                <h5>Platform:</h5>
               </label>
               <select id="DataType"><option value="methylation" selected>450k Methylation Array</option>
                 <option value="expression">Illumina HiSeq RNAseq</option></select>
