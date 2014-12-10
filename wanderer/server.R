@@ -109,7 +109,8 @@ shinyServer(function(input, output, session){
                                        geneNamesType = user_values$GeneFormat)
     
     minval <- (lengthGene/2)-5
-    sliderInput("Zoom", label = h5("Zoom"), value = 0, min = 0, max = minval, step = 100)
+
+    sliderInput("Zoom", label = h5("Zoom"), value = 0, min = 0, max = minval, step = 100, width = "800px")
   })
   
   output$WalkControl <- renderUI({
