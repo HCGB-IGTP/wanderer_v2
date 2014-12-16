@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+  <script type="text/css">
+   ".jslider { max-width: 1000px; }"
+  </script>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script type="application/shiny-singletons">7068be154af277356dab1092ff4e4c8f67c35a88,7196694b46f8e7c34171939351e3a70cdd3ccf40</script>
@@ -19,11 +22,6 @@
     <link rel="stylesheet" type="text/css" href="united.css"/>
     <script>$(function() { $("[data-toggle='popover']").popover(); })</script>
     <link rel="stylesheet" type="text/css" href="shared/font-awesome/css/font-awesome.min.css"/>
-
- <script type="text/css">
-  ".jslider { max-width: 1000px; }"
- </script>
-
   </head>
   <body>
     <div class="navbar navbar-static-top">
@@ -59,12 +57,12 @@
     </div>
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class = "span8 offset2">
+        <!--<div class = "span8 offset2"> -->
           <img src="wanderer_logo.png" style="float:left; padding: 50px 20px 50px 150px; "/>
           <!-- <h2 style="color:#dd4814; float:left; padding-top: 50px ;">Wanderer: A comparative browser<br>for cancer methylation and expression data</h2> -->
           <h3 style="color:#dd4814; float:left; padding-top: 50px ;">Wanderer: A viewer for exploration<br>of cancer DNA methylation and gene expression data</h3>
 
-        </div>
+        <!--</div> -->
       </div>
       <div class="tab-content">
         <div class="tab-pane active" data-value="main_tabpanel" id="tab-1846-1">
@@ -142,34 +140,41 @@
               <div id="nTmax" class="shiny-html-output"></div>
               <hr/>
             </div>
-            <!-- <div class="span10"> -->
-            <!--   <div class="well"> -->
-            <!--     <div id="ZoomControl" class="shiny-html-output" ></div> -->
-            <!--   </div> -->
-            <!-- </div> -->
             <div class="span7">
               <!-- <hr/> -->
               <div class="shiny-flow-layout" align="center">
                 <div>
-                  <div id="ZoomControl" class="shiny-html-output" ></div>
+                  <div id="ZoomControl" class="shiny-html-output"></div>
                 </div>
-                <div>
-                  <div id="WalkControl" class="shiny-html-output"></div>
-                </div>       
-              </div> <!-- shiny flow end -->
-              <!-- <hr/> -->
-              <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
+            <hr/>
+            <div>
+                <label class="checkbox" for="region">
+                  <input id="region" type="checkbox"/>
+                  <span>
+                    <h5>Specify a region</h5>
+                  </span>
+                </label>
+              </div>
               <br>
-              <hr/>
+              <div id="regionlimit" class="shiny-html-output"></div>
+              <br>
+              <div id="start" class="shiny-html-output"></div>
+              <div id="end" class="shiny-html-output"></div>
+              <br>
+            </div>
+            <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
+              <br>
               <div align = "center">
                 <a id="downloadPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG plot</a>  <a id="downloadPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF plot</a> <a id="downloadNData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Normals data</a>  <a id="downloadTData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Tumors data</a> <a id="downloadPData" class="btn shiny-download-link" href="" target="_blank"> <i class="fa fa-download"></i> Annotation</a>
               </div>
+              </div> <!-- shiny flow end -->
+              <!-- <hr/> -->
+
             </div>
           </div>
         </div> <!-- tabpane end -->
         <div class="tab-pane" id="tab-1846-2"></div>
       </div>
-    </div>
     <br>
     <br>
     <div class="row-fluid">
