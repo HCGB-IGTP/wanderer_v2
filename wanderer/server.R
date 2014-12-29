@@ -1,8 +1,3 @@
-#!/usr/bin/env R
-#
-## @package wanderer
-## @author Anna Diez
-## @author Izaskun Mallona
 
 library(shiny)
 library(RPostgreSQL)
@@ -10,7 +5,9 @@ library(RPostgreSQL)
 # the file containing the db parameters
 #SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
 #SRC <- '/imppc/labs/maplab/share/izaskun2anna/wanderer/current'
-SRC <- '/imppc/labs/maplab/adiez/region_profile/wanderer/current'
+#SRC <- '/imppc/labs/maplab/share/anna2izaskun/Wanderer/current'
+#SRC <- '/imppc/labs/maplab/adiez/region_profile/wanderer/current'
+SRC <- '/data/shiny/apps/wanderer'
 DB_CONF <- file.path(SRC, 'db.txt')
 
 source(file.path(SRC, 'GeneSize.R'))
@@ -24,56 +21,44 @@ source(file.path(SRC, 'max_sample.R'))
 
 sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
 
+
+
 shinyServer(function(input, output, session){
   
   con <- db_connect(DB_CONF)
   
-  
-  ## by default values start
-  user_values <- reactiveValues(Gene = 'BRCA1',
-                                GeneFormat = 'genename',
-                                Tissue = 'brca')
-  
-  
-  meth_data_curr_query <<- methylation_data(con = con,
-                                            geneName = 'BRCA1',
-                                            geneNamesType = 'genename',
-                                            tissue = 'brca')
-  
-  expr_data_curr_query <<- expression_data(con = con,
-                                           geneName ='BRCA1',
-                                           geneNamesType = 'genename',
-                                           tissue = 'brca')
-  lengthGene <<- GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')
+  geneSize <- reactive({
+    if(input$goButton == 0) {
+      GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')  
+    }else{
+      if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
+        GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat))  
+      }
+    }
+  })  
   
   
-  ## by default values end
-  
-  ## current query data fetch from database start
-  
-  
-  observe({        
-    if(input$goButton > 0) {
-      user_values$Gene <- isolate(toupper(input$Gene))
-      user_values$GeneFormat <- isolate(input$GeneFormat)
-      
-      meth_data_curr_query <<- methylation_data(con = con,
-                                                geneName = user_values$Gene,
-                                                geneNamesType = user_values$GeneFormat,
-                                                tissue = input$TissueType)
-      
-      expr_data_curr_query <<- expression_data(con = con,
-                                               geneName = user_values$Gene,
-                                               geneNamesType = user_values$GeneFormat,
-                                               tissue = input$TissueType)
-      
-      lengthGene <<- GeneSize(con = con, geneName = user_values$Gene, geneNamesType = user_values$GeneFormat)
-      
-      
+  datameth <- reactive({
+    if(input$goButton == 0) {
+      methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
+    }else{
+      if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
+        methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat), tissue = input$TissueType)
+      }
     }
   })
   
-  ## current query data fetch from database end
+  dataexpr <- reactive({
+    if(input$goButton == 0) {
+      expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
+    }else{
+      if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
+        expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat), tissue = input$TissueType)
+      }
+    }
+  })
+  
+  
   
   output$Tissues <- renderUI({
     tissues <- paste0("'",sample_size[,1], " (", sample_size[,2], ")", "'='", sample_size[,3], "'")
@@ -84,7 +69,7 @@ shinyServer(function(input, output, session){
   })
   
   output$nNmax <- renderUI({
-    if (lengthGene[[1]]!=0 & lengthGene[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(user_values$Gene) & !is.null(user_values$GeneFormat)) {
+    if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat)) & (!is.null(datameth()) | !is.null(dataexpr()))) {
       maxn <- max_sample(sample_size, input$DataType, input$TissueType)[1]
       valor <- min(maxn, 30)
       minn <- 1
@@ -93,24 +78,24 @@ shinyServer(function(input, output, session){
   })
   
   output$nTmax <- renderUI({
-    if (lengthGene[[1]]!=0 & lengthGene[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(user_values$Gene) & !is.null(user_values$GeneFormat)) {
+    if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat)) & (!is.null(datameth()) | !is.null(dataexpr()))) {
       maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
       valor <- min(maxt, 30)
       mint <- 1
       conditionalPanel("input.plotmean == false", numericInput("nT", h5(paste0("Number of tumoral samples to plot (max = ", maxt, ")")), value = valor, min = mint, max = maxt))
-    }
+    } 
   })
   
   output$ZoomControl <- renderUI({
     
-    if(lengthGene[[1]]==0) stop(paste0("The gene ", user_values$Gene, " is not in the exon and probe annotation."))
+    if(geneSize()[[1]]==0) stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the exon and probe annotation."))
     
-    if(lengthGene[[1]]==1) stop(paste0("The gene ", user_values$Gene, " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
+    if(geneSize()[[1]]==1) stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
     
-    if(lengthGene[[1]]!=0 & lengthGene[[1]]!=1 & !is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(user_values$Gene) & !is.null(user_values$GeneFormat)) {
+    if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1){# & !is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
       
-      sGene <- lengthGene[[1]]
-      eGene <- lengthGene[[2]]
+      sGene <- geneSize()[[1]]
+      eGene <- geneSize()[[2]]
       
       if(input$DataType == 'methylation'){
         minGene <- sGene - 100000
@@ -141,56 +126,58 @@ shinyServer(function(input, output, session){
   
   
   output$plot1 <- renderPlot({
-    if(lengthGene[[1]]!=0 & lengthGene[[1]]!=1 & !is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(input$Zoom) & !is.null(user_values$Gene) & !is.null(user_values$GeneFormat)) {
+    if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(input$Zoom) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat)) & (!is.null(datameth()) | !is.null(dataexpr()))) {
       
       if(input$region & input$end > input$Zoom[2]) stop(print(paste0("Region end must be less than ",input$Zoom[2])))
+      if(input$region & input$end < input$Zoom[1]) stop(print(paste0("Region end must be greater than ",input$Zoom[1])))
+      
       if(input$region & input$start < input$Zoom[1]) stop(print(paste0("Region start must be greater than ",input$Zoom[1])))
+      if(input$region & input$start > input$Zoom[2]) stop(print(paste0("Region start must be less than ",input$Zoom[2])))
       
       
       if(input$DataType == 'methylation'){
-        if(meth_data_curr_query$empty){
-          stop(print(paste0("The gene ", user_values$Gene, " does not correspond to any ", meth_data_curr_query[[2]], " or is not in the probe annotation")))
+        if(datameth()[['empty']]){
+          stop(print(paste0("The gene ", isolate(toupper(input$Gene)), " does not correspond to any ", datameth()[['geneNamesType_label']], " or is not in the probe annotation")))
         }else{
-          wanderer_methylation(results = meth_data_curr_query,geneName = as.character(user_values$Gene),
-                               geneNamesType = as.character(user_values$GeneFormat),
+          wanderer_methylation(results = datameth(),geneName = isolate(toupper(input$Gene)),
+                               geneNamesType = isolate(input$GeneFormat),
                                sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end),
                                npointsN = input$nN, npointsT = input$nT,
                                CpGislands = input$CpGi, plotmean = input$plotmean,
                                plotting = TRUE, geneLine = input$geneLine)
         }
       }
-    }
-    if(input$DataType == 'expression'){
-      if(expr_data_curr_query$empty){
-        stop(print(paste0("Your gene ", user_values$Gene, " does not correspond to any ", expr_data_curr_query[[2]], " or is not in the exon annotation")))
-      }else{
-        wanderer_expression(results = expr_data_curr_query,
-                            geneName = user_values$Gene,
-                            geneNamesType = user_values$GeneFormat,
-                            sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end),
-                            npointsN = input$nN, npointsT = input$nT,
-                            plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+      if(input$DataType == 'expression'){
+        if(dataexpr()[['empty']]){
+          stop(print(paste0("The gene ", isolate(toupper(input$Gene)), " does not correspond to any ", dataexpr()[['geneNamesType_label']], " or is not in the exon annotation")))
+        }else{
+          wanderer_expression(results = dataexpr(), geneName = isolate(toupper(input$Gene)),
+                              geneNamesType = isolate(input$GeneFormat),
+                              sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end),
+                              npointsN = input$nN, npointsT = input$nT,
+                              plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+        }
+        
       }
-      
     }
     
   }, height = 1000, width = 1000)
   
   ## test end
   output$downloadPlot <- downloadHandler(
-
-    filename = function() { paste0("Wanderer_", input$Gene, '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
+    
+    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {
       png(file, width = 1000, height = 1000)
       if(input$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results = meth_data_curr_query, geneName = input$Gene, 
-                                        geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, 
+        regplot <- wanderer_methylation(results = datameth(), geneName = isolate(toupper(input$Gene)), 
+                                        geneNamesType = isolate(input$GeneFormat), sampleSize = sample_size, tissue = input$TissueType, 
                                         zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT, CpGislands = input$CpGi, 
                                         plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
       }
       if(input$DataType == 'expression'){
-        regplot <- wanderer_expression(results = expr_data_curr_query, geneName = input$Gene, 
-                                       geneNamesType = input$GeneFormat, sampleSize = sample_size, tissue = input$TissueType, 
+        regplot <- wanderer_expression(results = dataexpr(), geneName = isolate(toupper(input$Gene)), 
+                                       geneNamesType = isolate(input$GeneFormat), sampleSize = sample_size, tissue = input$TissueType, 
                                        zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT, plotmean = input$plotmean, 
                                        plotting = TRUE, geneLine = input$geneLine)
       }
@@ -199,17 +186,17 @@ shinyServer(function(input, output, session){
     }
   )
   output$downloadPlotPDF <- downloadHandler(
-
-    filename = function() { paste0("Wanderer_", input$Gene, '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
+    
+    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
     content = function(file) {
       pdf(file, width = 10, height = 13)
       if(input$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results = meth_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat, 
+        regplot <- wanderer_methylation(results = datameth(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat), 
                                         sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN,
                                         npointsT = input$nT, CpGislands = input$CpGi, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
       }
       if(input$DataType == 'expression'){
-        regplot <- wanderer_expression(results = expr_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat,
+        regplot <- wanderer_expression(results = dataexpr(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat),
                                        sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN, 
                                        npointsT = input$nT, plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
       }
@@ -218,17 +205,17 @@ shinyServer(function(input, output, session){
     }
   )
   output$downloadNData <- downloadHandler(
-
-    filename = function() { paste0("Wanderer_", input$Gene, '_', input$DataType, '_', input$TissueType, '_Normal_', Sys.Date(), '.txt') },
+    
+    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_Normal_', Sys.Date(), '.txt') },
     content = function(file) {
       if(input$DataType == 'methylation'){
-        results <- wanderer_methylation(results = meth_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat,
+        results <- wanderer_methylation(results = datameth(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat),
                                         sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean, plotting = FALSE, geneLine = input$geneLine)
         write.table(results[[1]], file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
       if(input$DataType == 'expression'){
-        results <- wanderer_expression(results = expr_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat,
+        results <- wanderer_expression(results = dataexpr(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat),
                                        sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = FALSE, geneLine = input$geneLine)
         write.table(results[[1]], file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
@@ -236,17 +223,17 @@ shinyServer(function(input, output, session){
     }
   )
   output$downloadTData <- downloadHandler(
-
-    filename = function() { paste0("Wanderer_", input$Gene, '_', input$DataType, '_', input$TissueType, '_Tumor_', Sys.Date(), '.txt') },
+    
+    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_Tumor_', Sys.Date(), '.txt') },
     content = function(file) {
       if(input$DataType == 'methylation'){
-        results <- wanderer_methylation(results = meth_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat,
+        results <- wanderer_methylation(results = datameth(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat),
                                         sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean, plotting = FALSE, geneLine = input$geneLine)
         write.table(results[[2]], file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
       if(input$DataType == 'expression'){
-        results <- wanderer_expression(results = expr_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat,
+        results <- wanderer_expression(results = dataexpr(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat),
                                        sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = FALSE, geneLine = input$geneLine)
         write.table(results[[2]], file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
@@ -254,17 +241,17 @@ shinyServer(function(input, output, session){
     }
   )
   output$downloadPData <- downloadHandler(
-
-    filename = function() { paste0("Wanderer_", input$Gene, '_', input$DataType, '_', input$TissueType, '_annotations_', Sys.Date(), '.txt') },
+    
+    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_annotations_', Sys.Date(), '.txt') },
     content = function(file) {
       if(input$DataType == 'methylation'){
-        results <- wanderer_methylation(results = meth_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat,
+        results <- wanderer_methylation(results = datameth(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat),
                                         sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean, plotting = FALSE, geneLine = input$geneLine)
         write.table(results[[3]], file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
       if(input$DataType == 'expression'){
-        results <- wanderer_expression(results = expr_data_curr_query, geneName = input$Gene, geneNamesType = input$GeneFormat,
+        results <- wanderer_expression(results = dataexpr(), geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat),
                                        sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = FALSE, geneLine = input$geneLine)
         write.table(results[[3]], file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
