@@ -9,8 +9,6 @@
 
 wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, tissue, zoom, npointsN, npointsT, plotmean, plotting, geneLine){
   
-  
-  
   options(scipen=20)
   
   tissue_label <- sampleSize[sampleSize[,3]==tissue,1]
@@ -18,13 +16,13 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
   
   ddN<-results[[1]]
   ddT<-results[[2]]
-  probes<-results[[3]]
+  exons<-results[[3]]
   
   #axis limits
-  gmin <- unique(probes$genestart[probes[,paste0(geneNamesType)] == geneName])
-  gmax <- unique(probes$geneend[probes[,paste0(geneNamesType)] == geneName])
-  gstrand <- unique(probes$strand[probes[,paste0(geneNamesType)] == geneName])
-  gchr <- unique(probes$chr[probes[,paste0(geneNamesType)] == geneName])
+  gmin <- unique(exons$genestart[exons[,paste0(geneNamesType)] == geneName])
+  gmax <- unique(exons$geneend[exons[,paste0(geneNamesType)] == geneName])
+  gstrand <- unique(exons$strand[exons[,paste0(geneNamesType)] == geneName])
+  gchr <- unique(exons$chr[exons[,paste0(geneNamesType)] == geneName])
   
   
   
@@ -33,11 +31,13 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
   postep <- xmax - xmin
   positions <- round(seq(xmin, xmax, postep/5),0)
   
-  probes2 <- probes[probes$exon_start >= xmin & probes$exon_start <= xmax,]
-  ddN2 <- ddN[ddN$exon%in%probes2$exon,]
-  ddT2 <- ddT[ddT$exon%in%probes2$exon,]
+  exons2 <- exons[exons$exon_start+1 >= xmin & exons$exon_start <= xmax,]
+  ddN2 <- ddN[ddN$exon%in%exons2$exon,]
+  ddT2 <- ddT[ddT$exon%in%exons2$exon,]
   
-  if(dim(probes2)[1] > 0){# stop(paste0("There are not exons in this region"))
+    
+  if(dim(exons2)[1] > 0){
+    #if(dim(exons2)[1] ==1) plotmean<-TRUE
     
     
     if(positions[2]-positions[1]>=100000) escala <- 100000
@@ -46,8 +46,7 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
     if(positions[2]-positions[1]<5000 & positions[2]-positions[1]>=1000) escala <- 1000
     if(positions[2]-positions[1]<1000) escala <- 0
     
-        
-    
+  
     sampN <- c(2:dim(ddN2)[2])
     sampT <- c(2:dim(ddT2)[2])
     
@@ -82,17 +81,17 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
         #plot for Normals
         par(mai = par()$mai + c(2,0,1,0))
         
-        plot(probes2$exon_start, ddN2[,sampN[1]], type = "b", xlim = c(xmin, xmax), 
+        plot(exons2$exon_start, ddN2[,sampN[1]], type = "b", xlim = c(xmin, xmax), 
              pch = 1, cex = 0.7, axes = FALSE, col = "black", ylim = c(-0.2, ymax), 
              ylab = "Expression log2(rpkm + 1)", xlab = "", las = 1)
-        for(pl in sampN[-1]) lines(probes2$exon_start, ddN2[,pl], type = "b", pch = 1, cex = 0.7, col = "black")
+        for(pl in sampN[-1]) lines(exons2$exon_start, ddN2[,pl], type = "b", pch = 1, cex = 0.7, col = "black")
         title(paste0("Expression of ", geneName, " in Normal\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
-        axis(1, labels = probes2$exon, at = probes2$exon_start, col.axis = FALSE)
+        axis(1, labels = exons2$exon, at = exons2$exon_start, col.axis = FALSE)
         axis(2, labels = seq(0, ymax, 1), at = seq(0, ymax, 1), las = 1)
         axis(3, labels = positions, at = positions, col.axis = FALSE) 
         
         par(xpd = FALSE)
-        mtext(side = 1, text = probes2$exon, at = probes2$exon_start, las = 3, line = 1) 
+        mtext(side = 1, text = exons2$exon, at = exons2$exon_start, las = 3, line = 1) 
         mtext(side = 3, text = positions, at = positions, las = 1, line = 1, cex = 1) 
         
         
@@ -104,23 +103,23 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
         
         if(escala!=0){
           par(xpd = TRUE)
-          arrows(xmin, ymax + 2, xmin + escala, ymax + 2, lwd = 2,  length=0.05, angle=90, code=3)
-          text(x = xmin + (escala/2), y = ymax + 2.5, labels = paste0((escala/1000),"Kb"))
+          arrows(xmin, ymax + 2.5, xmin + escala, ymax + 2.5, lwd = 2,  length=0.05, angle=90, code=3)
+          text(x = xmin + (escala/2), y = ymax + 3, labels = paste0((escala/1000),"Kb"))
         }
         par(xpd = FALSE)
         
         #plot for Tumors
-        plot(probes2$exon_start, ddT2[,sampT[1]], type = "b", xlim = c(xmin, xmax), 
+        plot(exons2$exon_start, ddT2[,sampT[1]], type = "b", xlim = c(xmin, xmax), 
              pch = 1, cex = 0.7, axes = FALSE, col = "black", ylim = c(-0.2, ymax),
              ylab = "Expression log2(rpkm + 1)", xlab = "", las = 1)
-        for(pl in sampT[-1]) lines(probes2$exon_start, ddT2[,pl], type = "b", pch = 1, cex = 0.7, col = "black")
+        for(pl in sampT[-1]) lines(exons2$exon_start, ddT2[,pl], type = "b", pch = 1, cex = 0.7, col = "black")
         title(paste0("Expression of ", geneName, " in Tumor\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
-        axis(1, labels = probes2$exon, at = probes2$exon_start, col.axis = FALSE)
+        axis(1, labels = exons2$exon, at = exons2$exon_start, col.axis = FALSE)
         axis(2, labels = seq(0, ymax, 1), at = seq(0, ymax, 1), las = 1)
         axis(3, labels = positions, at = positions, col.axis = FALSE) 
         
         par(xpd = FALSE)
-        mtext(side = 1, text = probes2$exon, at = probes2$exon_start, las = 3, line = 1) 
+        mtext(side = 1, text = exons2$exon, at = exons2$exon_start, las = 3, line = 1) 
         mtext(side = 3, text = positions, at = positions, las = 1, line = 1, cex = 1) 
         
         if(geneLine){
@@ -142,16 +141,16 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
         
         #plot for Normals
         par(mai = par()$mai + c(2,0,1,0))
-        boxplot(t(ddN2[,2:dim(ddN2)[2]]), at = probes2$exon_start, names = NULL, xlim = c(xmin, xmax), 
+        boxplot(t(ddN2[,2:dim(ddN2)[2]]), at = exons2$exon_start, names = NULL, xlim = c(xmin, xmax), 
                 pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, ymax), 
                 ylab = "Expression log2(rpkm + 1)", xlab = "", las = 1, boxwex = (xmax-xmin)*0.03, varwidth = FALSE)
         title(paste0("Expression of ", geneName, " in Normal\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
-        axis(1, labels = probes2$exon, at = probes2$exon_start, col.axis = FALSE)
+        axis(1, labels = exons2$exon, at = exons2$exon_start, col.axis = FALSE)
         axis(2, labels = seq(0, ymax, 1), at = seq(0, ymax, 1), las = 1)
         axis(3, labels = positions, at = positions, col.axis = FALSE) 
         
         par(xpd = FALSE)
-        mtext(side = 1, text = probes2$exon, at = probes2$exon_start, las = 3, line = 1) 
+        mtext(side = 1, text = exons2$exon, at = exons2$exon_start, las = 3, line = 1) 
         mtext(side = 3, text = positions, at = positions, las = 1, line = 1, cex = 1) 
         
         
@@ -167,16 +166,16 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
         par(xpd = FALSE)
         
         #plot for Tumors
-        boxplot(t(ddT2[,2:dim(ddT2)[2]]), at = probes2$exon_start, names = NULL, xlim = c(xmin, xmax), 
+        boxplot(t(ddT2[,2:dim(ddT2)[2]]), at = exons2$exon_start, names = NULL, xlim = c(xmin, xmax), 
                 pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, ymax), 
                 ylab = "Expression log2(rpkm + 1)", xlab = "", las = 1, boxwex = (xmax-xmin)*0.03, varwidth = FALSE)#, border = "#dd4814")
         title(paste0("Expression of ", geneName, " in Tumor\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
-        axis(1, labels = probes2$exon, at = probes2$exon_start, col.axis = FALSE)
+        axis(1, labels = exons2$exon, at = exons2$exon_start, col.axis = FALSE)
         axis(2, labels = seq(0, ymax, 1), at = seq(0, ymax, 1), las = 1)
         axis(3, labels = positions, at = positions, col.axis = FALSE) 
         
         par(xpd = FALSE)
-        mtext(side = 1, text = probes2$exon, at = probes2$exon_start, las = 3, line = 1) 
+        mtext(side = 1, text = exons2$exon, at = exons2$exon_start, las = 3, line = 1) 
         mtext(side = 3, text = positions, at = positions, las = 1, line = 1, cex = 1) 
         
         
@@ -189,7 +188,7 @@ wanderer_expression <- function(results, geneName, geneNamesType, sampleSize, ti
       }
     }
     
-    plotting_results <- list(ddN2 = ddN2, ddT2 = ddT2, probes2 = probes2)
+    plotting_results <- list(ddN2 = ddN2, ddT2 = ddT2, exons2 = exons2)
     
     options(scipen=0)
     

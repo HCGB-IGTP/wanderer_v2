@@ -3,11 +3,10 @@ library(shiny)
 library(RPostgreSQL)
 
 # the file containing the db parameters
-#SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-#SRC <- '/imppc/labs/maplab/share/izaskun2anna/wanderer/current'
-#SRC <- '/imppc/labs/maplab/share/anna2izaskun/Wanderer/current'
-#SRC <- '/imppc/labs/maplab/adiez/region_profile/wanderer/current'
+# SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+# SRC <- '/imppc/labs/maplab/share/anna2izaskun/Wanderer/current'
 SRC <- '/data/shiny/apps/wanderer'
+
 DB_CONF <- file.path(SRC, 'db.txt')
 
 source(file.path(SRC, 'GeneSize.R'))
@@ -39,21 +38,25 @@ shinyServer(function(input, output, session){
   
   
   datameth <- reactive({
-    if(input$goButton == 0) {
-      methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
-    }else{
-      if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
-        methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat), tissue = input$TissueType)
+    if(input$DataType == 'methylation'){
+      if(input$goButton == 0) {
+        methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
+      }else{
+        if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
+          methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat), tissue = input$TissueType)
+        }
       }
     }
   })
   
   dataexpr <- reactive({
-    if(input$goButton == 0) {
-      expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
-    }else{
-      if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
-        expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat), tissue = input$TissueType)
+    if(input$DataType == 'expression'){
+      if(input$goButton == 0) {
+        expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
+      }else{
+        if (geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene))) & !is.null(isolate(input$GeneFormat))) {
+          expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = isolate(input$GeneFormat), tissue = input$TissueType)
+        }
       }
     }
   })
@@ -96,7 +99,8 @@ shinyServer(function(input, output, session){
       
       sGene <- geneSize()[[1]]
       eGene <- geneSize()[[2]]
-      
+    
+    
       if(input$DataType == 'methylation'){
         minGene <- sGene - 100000
         maxGene <- eGene + 100000
@@ -107,7 +111,8 @@ shinyServer(function(input, output, session){
         maxGene <- eGene
         tcks <- round(seq(sGene, eGene, (eGene-sGene)/5),0)
       }
-      sliderInput("Zoom", label = h5("Zoom"), min = minGene, max = maxGene, value = c(sGene, eGene), step = 1000, ticks = tcks, width = "800px")
+      sliderInput("Zoom", label = h5("Zoom"), min = minGene, max = maxGene, value = c(sGene, eGene), ticks = tcks, step = 1000, width = "800px")
+      
       
     }
   })
