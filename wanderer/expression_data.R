@@ -8,18 +8,11 @@
 
 expression_data <- function(con, geneName, geneNamesType, tissue){
   
-  
   if (geneNamesType == "genename") geneNamesType_label <- "Gene Name"
   if (geneNamesType == "emsemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
   
-  
-  
   exonsaux <- dbSendQuery(con, statement = paste0("select * from annotations.exons_annot where ", geneNamesType, " = '", geneName, "' limit 1"))
   exonsaux <- fetch(exonsaux, n = -1)
-  if(dim(exonsaux)[1] == 0){
-    results <- list(empty = TRUE, geneNamesType_label)
-    stop(paste0("There are not exons in this region"))
-  }  
   
   ############################################
   #RNAseq annotation download
@@ -63,9 +56,21 @@ expression_data <- function(con, geneName, geneNamesType, tissue){
     }
     if(dim(exons)[1] == 0) stop(paste0("There are not exons in this region"))
     
+    colnames(ddN) <- toupper(colnames(ddN))
+    colnames(ddT) <- toupper(colnames(ddT))
+    for(i in 1:6){
+      colnames(ddN) <- sub("_","-",colnames(ddN))
+      colnames(ddT) <- sub("_","-",colnames(ddT))
+    }
+    
+    results <- list(ddN, ddT, exons, empty = FALSE, geneNamesType_label)
+    
+  } else{
+    
+    results <- list(empty = TRUE, geneNamesType_label)
+    stop(paste0("There are not exons in this region"))
+    
   }
-  
-  results <- list(ddN, ddT, exons, empty = FALSE, geneNamesType_label)
   
   return(results)
 }
