@@ -54,12 +54,16 @@ shinyServer(function(input, output, session){
     }
     
     
-    if (geneFormat() == "genename") geneNamesType_label <- "Gene Name"
-    if (geneFormat() == "emsemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
+    if (geneFormat() == "genename")
+        geneNamesType_label <- "Gene Name"
+    if (geneFormat() == "emsemblgeneid")
+        geneNamesType_label <- "Ensembl Gene ID"
     
-    if(geneSize[[1]]==0) stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the ", geneNamesType_label, " annotation."))
+    if(geneSize[[1]]==0)
+        stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the ", geneNamesType_label, " annotation."))
     
-    if(geneSize[[1]]==1) stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
+    if(geneSize[[1]]==1)
+        stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
     
     if(geneSize[[1]]!=0 & geneSize[[1]]!=1){
       
@@ -76,7 +80,7 @@ shinyServer(function(input, output, session){
         tcks <- (tcks%/%1000)*1000
         tcks <- format(tcks, big.mark = ',')        
       }
-      if(input$DataType == 'expression'){
+      else if (input$DataType == 'expression'){
         minGene <- sGene
         maxGene <- eGene
         tcks <- seq(sGene, eGene, (eGene-sGene)/5)
@@ -118,7 +122,8 @@ shinyServer(function(input, output, session){
   #################################################
   #Filtering Methylation data
   datamethfilt <- reactive({
-    if(input$region & ((input$end > input$Zoom[2]) | (input$end < input$Zoom[1]) | (input$start < input$Zoom[1]) | (input$start > input$Zoom[2]))) stop(print(paste0("The region must be between ", input$Zoom[1], " and ", input$Zoom[2])))
+    if(input$region & ((input$end > input$Zoom[2]) | (input$end < input$Zoom[1]) | (input$start < input$Zoom[1]) | (input$start > input$Zoom[2])))
+        stop(print(paste0("The region must be between ", input$Zoom[1], " and ", input$Zoom[2])))
     
     if(input$DataType == 'methylation'){
       if(datameth()[['empty']]){
@@ -201,8 +206,7 @@ shinyServer(function(input, output, session){
                                CpGislands = input$CpGi, plotmean = input$plotmean,
                                plotting = TRUE, geneLine = input$geneLine)
         }
-      }
-      if(input$DataType == 'expression'){
+      } else if(input$DataType == 'expression'){
         if(dataexprfilt()[['empty']]){
           stop(print(paste0("There are not exons in this region")))
         }else{
@@ -228,8 +232,7 @@ shinyServer(function(input, output, session){
                              geneNamesType = geneFormat(), CpGislands = input$CpGi,
                              geneLine = input$geneLine, plotting = TRUE)
         }
-      }
-      if(input$DataType == 'expression'){
+      } else if(input$DataType == 'expression'){
         if(!dataexprfilt()[['empty']]){
           stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                              geneNamesType = geneFormat(),
@@ -251,8 +254,7 @@ shinyServer(function(input, output, session){
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
                                         plotting = TRUE, geneLine = input$geneLine)
-      }
-      if(input$DataType == 'expression'){
+      } else if(input$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
@@ -270,8 +272,7 @@ shinyServer(function(input, output, session){
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
                                         plotting = TRUE, geneLine = input$geneLine)
-      }
-      if(input$DataType == 'expression'){
+      } else if(input$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)

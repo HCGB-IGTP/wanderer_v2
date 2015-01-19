@@ -46,7 +46,8 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
   grupsf<-c(rep(noms[1],dim(dd1)[2]),rep(noms[2],dim(dd2)[2]))
   
   #ajustem el model
-  fit<-lmFit(mdd,design=model.matrix(~grupsf),na.rm=TRUE)
+  ## fit<-lmFit(mdd,design=model.matrix(~grupsf),na.rm=TRUE)
+  fit<-lmFit(mdd,design=model.matrix(~as.factor(grupsf)),na.rm=TRUE)
   colnames(fit$coefficients)<-row.names(contrasts(as.factor(grupsf)))
   #moderated-t
   fit2<-contrasts.fit(fit,contrasts=contrasts(as.factor(grupsf)))

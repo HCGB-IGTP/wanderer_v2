@@ -29,7 +29,8 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
   noms<-unique(grupsf) 
   
   #ajustem el model
-  fit<-lmFit(dd,design=model.matrix(~grupsf),na.rm=TRUE)
+  ## fit<-lmFit(dd,design=model.matrix(~grupsf),na.rm=TRUE)
+  fit<-lmFit(dd,design=model.matrix(~as.factor(grupsf)),na.rm=TRUE)
   colnames(fit$coefficients)<-row.names(contrasts(as.factor(grupsf)))
   #moderated-t
   fit2<-contrasts.fit(fit,contrasts=contrasts(as.factor(grupsf)))
