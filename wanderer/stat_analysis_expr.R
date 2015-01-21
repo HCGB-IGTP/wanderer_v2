@@ -18,33 +18,23 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
   xmin <- results_filt$xmin
   xmax <- results_filt$xmax
   
+  #wilcoxon test
+  results<-data.frame(exon=0,wilcox_stat=0,pval=0)
+  for(j in 1:dim(ddN)[1]){
+    test<-wilcox.test(x=as.numeric(ddN[j,]),y=as.numeric(ddT[j,]))
+    results[j,]<-c(rownames(ddN)[j],test$statistic,test$p.value)
+  }
   
-  grupsf <- c(rep("Normal",dim(ddN)[2]), rep("Tumor",dim(ddT)[2]))
-  nom_sample <- c(colnames(ddN), colnames(ddT))
-  
-  dd <- cbind(ddN, ddT)
-  colnames(dd) <- paste0(grupsf, "_", nom_sample)
-  
-  
-  noms<-unique(grupsf) 
-  
-  #ajustem el model
-  ## fit<-lmFit(dd,design=model.matrix(~grupsf),na.rm=TRUE)
-  fit<-lmFit(dd,design=model.matrix(~as.factor(grupsf)),na.rm=TRUE)
-  colnames(fit$coefficients)<-row.names(contrasts(as.factor(grupsf)))
-  #moderated-t
-  fit2<-contrasts.fit(fit,contrasts=contrasts(as.factor(grupsf)))
-  qwe<-eBayes(fit2)
-  
-  
-  #taula final
-  results<-topTable(qwe,number=dim(dd)[1],adjust="BH")
-  results<-data.frame(id=row.names(results),results,stringsAsFactors=FALSE)
-  results_stats<-merge(exons2,results,by.y="id",by.x="exon")
-  
+  results$adj.pval<-p.adjust(results$pval, method="BH")
+  results_stats<-merge(exons2,results,by="exon")
+  results_stats<-results_stats[order(results_stats$exon_start),]
   ########################################################################################################
   #plot
   if(plotting){
+    
+    asterisc<-results_stats$adj.pval<0.05
+    pasterisc<-exons2$exon
+    pasterisc[asterisc]<-paste0("* ",exons2$exon[asterisc])
     
     #axis limits
     gmin <- unique(exons2$genestart[exons2[,paste0(geneNamesType)] == geneName])
@@ -66,7 +56,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     #y axis  
     ymax <- max(ddT[,-1], ddN[,-1])
     
-    par(mai = par()$mai + c(0.3,0,1,0))
+    par(mai = par()$mai + c(0.5,0,1,0))
     layout(matrix(c(1,2), 1, 2, byrow = TRUE), widths=c(3.2,0.8))
     
     plot(exons2$exon_start, mddN, type="b",xlim = c(xmin, xmax), 
@@ -77,12 +67,12 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     
     
     title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
-    axis(1, labels = exons2$exon, at = exons2$exon_start, col.axis = FALSE)
+    axis(1, labels = pasterisc, at = exons2$exon_start, col.axis = FALSE)
     axis(2, labels = seq(0, ymax, 1), at = seq(0, ymax, 1), las = 1)
     axis(3, labels = positions, at = positions, col.axis = FALSE) 
     
     par(xpd = FALSE)
-    mtext(side = 1, text = exons2$exon, at = exons2$exon_start, las = 3, line = 1) 
+    mtext(side = 1, text = pasterisc, at = exons2$exon_start, las = 3, line = 1) 
     mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
     
     

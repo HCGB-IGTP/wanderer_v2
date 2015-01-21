@@ -1,7 +1,7 @@
 
 library(shiny)
 library(RPostgreSQL)
-library(limma)
+## library(limma)
 
 # the file containing the db parameters
 SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
