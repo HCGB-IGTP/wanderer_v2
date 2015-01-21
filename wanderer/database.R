@@ -7,13 +7,13 @@ library(RPostgreSQL)
 
 # the file containing the db parameters
 
-SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+#SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
 #SRC <- '/data/shiny/apps/correlational'
 ## DB_CONF <- file.path(SRC, 'db.txt')
 
 # returns a unique connection
 db_connect <- function(db_conf_fn) {
-    drv <- dbDriver("PostgreSQL")
+    drv <- dbDriver("PostgreSQL", max.con = 100)
 
     db_conf <- get_db_parameters(db_conf_fn)
     

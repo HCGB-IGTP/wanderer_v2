@@ -18,7 +18,8 @@
     <script src="shared/bootstrap/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="shared/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
-    <title></title>
+    <title>TCGA Wanderer: An interactive viewer to explore DNA methylation and gene expression data in human cancer </title>
+    <meta name="keywords" content="TCGA,cancer,methylation,expression,profile,wanderer,data">
     <link rel="stylesheet" type="text/css" href="united.css"/>
     <script>$(function() { $("[data-toggle='popover']").popover(); })</script>
     <link rel="stylesheet" type="text/css" href="shared/font-awesome/css/font-awesome.min.css"/>
@@ -46,10 +47,10 @@
               <a href="#tab-1846-1" data-toggle="tab" data-value="main_tabpanel">Wanderer</a>
             </li>
             <li>
-              <a href="doc.html" data-toggle="tab">Documentation</a>
+              <a href="doc.html">Documentation</a>
             </li>
             <li>
-              <a href="support.html" data-toggle="tab">Support</a>
+              <a href="support.html">Support</a>
             </li>
           </ul>
         </div>
@@ -64,9 +65,10 @@
 	    <div class="container">
               <div>
                 <img src="wanderer_logo.png" style="float:left; padding: 1px 2px 1px 1px;"/>
-                <h2 style="color:#dd4814; float:left; padding: 0px 20px 20px 20px;">An interactive viewer to explore<br> DNA methylation and gene expression data<br>in human cancer</h2>
+                <h3 style="color:#dd4814; float:left; padding: 0px 20px 10px 20px;">An interactive viewer to explore DNA methylation<br>and gene expression data in human cancer</h3>
               </div>
 	    </div>
+      <br>
           </section>
           <div class="row-fluid">
             <div class="span3 offset1">
@@ -77,13 +79,6 @@
 </label>
 <input id="Gene" type="text" value="BRCA1"/>
 <span class="help-block">Examples: BRCA1 or ENSG00000012048</span>
-<!--<label class="control-label" for="GeneFormat">
-    <h5>Format</h5>
-</label>
-<select id="GeneFormat"><option value="genename" selected>Gene Symbol</option>
-  <option value="emsemblgeneid">Ensembl Gene ID</option></select>
-<!-- <script type="application/json" data-for="GeneFormat" data-nonempty="">{}</script> -->
-<!-- <span class="help-block">Examples: BRCA1 or ENSG00000012048</span> -->
 <span class="help-block">Tip: Gene symbols look like TP53 or BRCA1 whereas Ensembl Gene IDs start by ENSG</span>
 <button id="goButton" type="button" class="btn action-button  btn-primary">Refresh</button>
 </div>
@@ -165,15 +160,17 @@
     <br>
   </div>
   <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
+  <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%"></div>
   <br>
   <div align = "center">
     <a id="downloadPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG plot</a>  
     <a id="downloadPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF plot</a> 
-    <a id="downloadPlotSVG" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> SVG plot</a> 
-
     <a id="downloadNData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Normals data</a>  
     <a id="downloadTData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Tumors data</a> 
-    <a id="downloadPData" class="btn shiny-download-link" href="" target="_blank"> <i class="fa fa-download"></i> Annotation</a>
+    <a id="downloadPData" class="btn shiny-download-link" href="" target="_blank"> <i class="fa fa-download"></i> Annotations & Statistcal Analysis</a>
+        <a id="downloadMeanPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG Mean plot</a>  
+    <a id="downloadMeanPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF Mean plot</a> 
+    
   </div>
 </div> <!-- shiny flow end -->
 <!-- <hr/> -->

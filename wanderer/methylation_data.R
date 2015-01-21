@@ -7,27 +7,19 @@
 #function to query methylation data of a gene from db
 
 methylation_data <- function(con, geneName, geneNamesType, tissue){
-  
-  
-  
+    
   if (geneNamesType == "genename") geneNamesType_label <- "Gene Name"
   if (geneNamesType == "emsemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
   
-  
-  
   probesaux <- dbSendQuery(con, statement = paste0("select * from annotations.humanmethylation450kannot where ", geneNamesType, " = '", geneName, "' limit 1"))
   probesaux <- fetch(probesaux, n = -1)
-  if(dim(probesaux)[1] == 0){
-    results <- list(empty = TRUE, geneNamesType_label)
-  }
-  
   
   ################
   #methylation array annotation download
   if(dim(probesaux)[1] > 0){
     probes <- dbSendQuery(con, statement = paste0("select * from annotations.humanmethylation450kannot
             where chr = '", probesaux[2], "' and probestart > (select genestart-", 110000,
-            " as sstart from annotations.humanmethylation450kannot
+                                                  " as sstart from annotations.humanmethylation450kannot
             where ", geneNamesType, " = '", geneName, "' limit 1)
             and probeend < (select geneend+", 110000, " as send from annotations.humanmethylation450kannot
             where ", geneNamesType, " = '", geneName, "' limit 1);"))
@@ -72,7 +64,19 @@ methylation_data <- function(con, geneName, geneNamesType, tissue){
     }
     if(dim(probes)[1] == 0) stop(paste0("There are not probes in this region"))
     
+    colnames(ddN) <- toupper(colnames(ddN))
+    colnames(ddT) <- toupper(colnames(ddT))
+    for(i in 1:6){
+      colnames(ddN) <- sub("_","-",colnames(ddN))
+      colnames(ddT) <- sub("_","-",colnames(ddT))
+    }
+    
     results <- list(ddN, ddT, probes, empty = FALSE, geneNamesType_label)
+    
+  } else{
+    stop(paste0("There are not probes in this region"))
+    results <- list(empty = TRUE, geneNamesType_label)
   }
+  
   return(results)
 }
