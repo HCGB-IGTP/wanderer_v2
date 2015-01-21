@@ -39,59 +39,202 @@ shinyServer(function(input, output, session){
       } else{
         GeneFormat <- "genename"
       }
+      ## updateSliderInput(session, 'Zoom',  value = c(sGene, eGene))
     }
   })
+
+  ## test start
+
+  rv <- reactiveValues(geneSize = NULL, geneNamesType_label = NULL,
+                       eGene = NULL, sGene = NULL, minGene = NULL, maxGene = NULL)
+  
+  observe({
+
+      if(input$goButton == 0) {
+          geneSize <- GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')   
+      } else{
+          geneSize <- GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
+      }
+      
+      ## geneSize <- GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())
+      if (geneFormat() == "genename")
+          geneNamesType_label <- "Gene Name"
+      if (geneFormat() == "emsemblgeneid")
+          geneNamesType_label <- "Ensembl Gene ID"
+      
+      if(geneSize[[1]]==0)
+          stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the ", geneNamesType_label, " annotation."))
+      
+      if(geneSize[[1]]==1)
+          stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
+      
+      if(geneSize[[1]]!=0 & geneSize[[1]]!=1){
+          
+          sGene <- geneSize[[1]]
+          eGene <- geneSize[[2]]
+          sGene <- ((sGene%/%1000)-1)*1000
+          eGene <- ((eGene%/%1000)+1)*1000
+          
+          
+          if(input$DataType == 'methylation'){
+              minGene <- sGene - 100000
+              maxGene <- eGene + 100000
+              tcks <- c(seq(minGene, sGene,(sGene-minGene)/3), seq(eGene, maxGene, (maxGene-eGene)/3))
+              tcks <- (tcks%/%1000)*1000
+              tcks <- format(tcks, big.mark = ',')        
+          }
+          else if (input$DataType == 'expression'){
+              minGene <- sGene
+              maxGene <- eGene
+              tcks <- seq(sGene, eGene, (eGene-sGene)/5)
+              tcks <- (tcks%/%1000)*1000
+              tcks <- format(tcks, big.mark = ',')        
+          }
+      }
+
+      ## rv$geneSize <- geneSize
+      ## rv$geneNamesType_label <- geneNamesType_label
+      ## rv$eGene <- eGene
+      ## rv$sGene <- sGene
+      ## rv$minGene <- minGene
+      ## rv$maxGene <- maxGene
+      ## rv$tcks <- tcks
+      
+      ## rv <<- rv
+
+      geneSize <<- geneSize
+      geneNamesType_label <<- geneNamesType_label
+      eGene <<- eGene
+      sGene <<- sGene
+      minGene <<- minGene
+      maxGene <<- maxGene
+      tcks <<- tcks
+      
+      ## rv <<- rv
+
+      
+  })
+
+  
+  ## observe({
+
+  ##     if(input$goButton > 0) {
+  ##         updateSliderInput(session, 'Zoom',  value = c(rv$sGene, rv$eGene))
+          
+  ##     }
+  ## })
+
+  ## test end
   
   
   #################################################
   #zoom
   output$ZoomControl <- renderUI({
     
-    if(input$goButton == 0) {
-      geneSize <- GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')  
-    }else{
-      geneSize <- GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
-    }
+  ##   if(input$goButton == 0) {
+  ##     geneSize <- GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')   
+  ## } else{
+  ##     geneSize <- GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
+  ##   }
     
     
-    if (geneFormat() == "genename")
-        geneNamesType_label <- "Gene Name"
-    if (geneFormat() == "emsemblgeneid")
-        geneNamesType_label <- "Ensembl Gene ID"
     
-    if(geneSize[[1]]==0)
-        stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the ", geneNamesType_label, " annotation."))
+  ##   if (geneFormat() == "genename")
+  ##       geneNamesType_label <- "Gene Name"
+  ##   if (geneFormat() == "emsemblgeneid")
+  ##       geneNamesType_label <- "Ensembl Gene ID"
     
-    if(geneSize[[1]]==1)
-        stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
+  ##   if(geneSize[[1]]==0)
+  ##       stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the ", geneNamesType_label, " annotation."))
     
-    if(geneSize[[1]]!=0 & geneSize[[1]]!=1){
+  ##   if(geneSize[[1]]==1)
+  ##       stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
+    
+  ##   if(geneSize[[1]]!=0 & geneSize[[1]]!=1){
       
-      sGene <- geneSize[[1]]
-      eGene <- geneSize[[2]]
-      sGene <- ((sGene%/%1000)-1)*1000
-      eGene <- ((eGene%/%1000)+1)*1000
+  ##     sGene <- geneSize[[1]]
+  ##     eGene <- geneSize[[2]]
+  ##     sGene <- ((sGene%/%1000)-1)*1000
+  ##     eGene <- ((eGene%/%1000)+1)*1000
       
       
-      if(input$DataType == 'methylation'){
-        minGene <- sGene - 100000
-        maxGene <- eGene + 100000
-        tcks <- c(seq(minGene, sGene,(sGene-minGene)/3), seq(eGene, maxGene, (maxGene-eGene)/3))
-        tcks <- (tcks%/%1000)*1000
-        tcks <- format(tcks, big.mark = ',')        
-      }
-      else if (input$DataType == 'expression'){
-        minGene <- sGene
-        maxGene <- eGene
-        tcks <- seq(sGene, eGene, (eGene-sGene)/5)
-        tcks <- (tcks%/%1000)*1000
-        tcks <- format(tcks, big.mark = ',')        
-      }
-      
+  ##     if(input$DataType == 'methylation'){
+  ##       minGene <- sGene - 100000
+  ##       maxGene <- eGene + 100000
+  ##       tcks <- c(seq(minGene, sGene,(sGene-minGene)/3), seq(eGene, maxGene, (maxGene-eGene)/3))
+  ##       tcks <- (tcks%/%1000)*1000
+  ##       tcks <- format(tcks, big.mark = ',')        
+  ##     }
+  ##     else if (input$DataType == 'expression'){
+  ##       minGene <- sGene
+  ##       maxGene <- eGene
+  ##       tcks <- seq(sGene, eGene, (eGene-sGene)/5)
+  ##       tcks <- (tcks%/%1000)*1000
+  ##       tcks <- format(tcks, big.mark = ',')        
+  ##     }
+      if(input$goButton > -1)
       sliderInput("Zoom", label = h5("Zoom"), min = minGene, max = maxGene, value = c(sGene, eGene), ticks = tcks, step = 1000, width = "800px")
-    }
+
+      ## sliderInput("Zoom", label = h5("Zoom2"), min = minGene, max = maxGene, value = c(sGene, eGene), ticks = tcks, step = 1000, width = "800px")
+
+      ## updateSliderInput(session, 'Zoom',  value = c(sGene, eGene))
+      ## sliderInput("Zoom", label = h5("Zoom"), min = rv$minGene, max = rv$maxGene, value = c(rv$sGene, rv$eGene), ticks = rv$tcks, step = 1000, width = "800px")
+
+  ## }
   })
-  
+
+  ##  #zoom
+  ## output$ZoomControl <- renderUI({
+    
+  ##   if(input$goButton == 0) {
+  ##     geneSize <- GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')  
+  ##   }else{
+  ##     geneSize <- GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
+  ##   }
+    
+    
+  ##   if (geneFormat() == "genename")
+  ##       geneNamesType_label <- "Gene Name"
+  ##   if (geneFormat() == "emsemblgeneid")
+  ##       geneNamesType_label <- "Ensembl Gene ID"
+    
+  ##   if(geneSize[[1]]==0)
+  ##       stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the ", geneNamesType_label, " annotation."))
+    
+  ##   if(geneSize[[1]]==1)
+  ##       stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
+    
+  ##   if(geneSize[[1]]!=0 & geneSize[[1]]!=1){
+      
+  ##     sGene <- geneSize[[1]]
+  ##     eGene <- geneSize[[2]]
+  ##     sGene <- ((sGene%/%1000)-1)*1000
+  ##     eGene <- ((eGene%/%1000)+1)*1000
+      
+      
+  ##     if(input$DataType == 'methylation'){
+  ##       minGene <- sGene - 100000
+  ##       maxGene <- eGene + 100000
+  ##       tcks <- c(seq(minGene, sGene,(sGene-minGene)/3), seq(eGene, maxGene, (maxGene-eGene)/3))
+  ##       tcks <- (tcks%/%1000)*1000
+  ##       tcks <- format(tcks, big.mark = ',')        
+  ##     }
+  ##     else if (input$DataType == 'expression'){
+  ##       minGene <- sGene
+  ##       maxGene <- eGene
+  ##       tcks <- seq(sGene, eGene, (eGene-sGene)/5)
+  ##       tcks <- (tcks%/%1000)*1000
+  ##       tcks <- format(tcks, big.mark = ',')        
+  ##     }
+      
+  ##     sliderInput("Zoom", label = h5("Zoom"), min = minGene, max = maxGene, value = c(sGene, eGene), ticks = tcks, step = 1000, width = "800px")
+
+  ##     ## sliderInput("Zoom", label = h5("Zoom2"), min = minGene, max = maxGene, value = c(sGene, eGene), ticks = tcks, step = 1000, width = "800px")
+
+  ##     ## updateSliderInput(session, 'Zoom',  value = c(sGene, eGene))
+  ##   }
+  ## })
+
   #################################################
   #region specification
   output$regionlimit <- renderUI({
@@ -200,6 +343,7 @@ shinyServer(function(input, output, session){
       if(input$DataType == 'methylation'){
         if(datamethfilt()[['empty']]){
           stop(print(paste0("There are not probes in this region")))
+          ## here
         }else{
           wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
