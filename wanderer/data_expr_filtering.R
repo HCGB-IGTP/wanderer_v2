@@ -17,9 +17,9 @@ data_expr_filtering <- function(results, sampleSize, tissue, zoom){
   ddT2 <- ddT[ddT$EXON%in%exons2$exon,]
   
   if(dim(exons2)[1]>0){
-    results_filt <- list(ddN2 = ddN2, ddT2 = ddT2, exons2 = exons2, xmax = xmax, xmin = xmin, tissue_label = tissue_label, empty = FALSE)
+    results_filt <- list(ddN2 = ddN2, ddT2 = ddT2, exons2 = exons2, xmax = xmax, xmin = xmin, tissue_label = tissue_label)
   } else{
-    results_filt <- list(empty = TRUE)
+    results_filt <- list(exons2 = data.frame())
   }
   
   return(results_filt)  

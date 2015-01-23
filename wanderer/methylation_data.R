@@ -7,7 +7,7 @@
 #function to query methylation data of a gene from db
 
 methylation_data <- function(con, geneName, geneNamesType, tissue){
-    
+  
   if (geneNamesType == "genename") geneNamesType_label <- "Gene Name"
   if (geneNamesType == "emsemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
   
@@ -25,7 +25,6 @@ methylation_data <- function(con, geneName, geneNamesType, tissue){
             where ", geneNamesType, " = '", geneName, "' limit 1);"))
     
     probes <- fetch(probes, n = -1)
-    if(dim(probes)[1] == 0) stop(paste0("There are not probes in this region"))
     if(dim(probes)[1] != 0){
       probes <- probes[order(probes$probe),]
       ordering <- order(probes$probestart)
@@ -61,21 +60,21 @@ methylation_data <- function(con, geneName, geneNamesType, tissue){
         ddT <- ddT[-naN,]
         ddN <- ddN[-naN,]
       }
+      colnames(ddN) <- toupper(colnames(ddN))
+      colnames(ddT) <- toupper(colnames(ddT))
+      for(i in 1:6){
+        colnames(ddN) <- sub("_","-",colnames(ddN))
+        colnames(ddT) <- sub("_","-",colnames(ddT))
+      }
+      
+      results <- list(ddN, ddT, probes, empty = FALSE, geneNamesType_label)
+    } else{
+      results <- list(empty = TRUE, geneNamesType_label)
+      stop(paste0("There are not probes in this region"))
     }
-    if(dim(probes)[1] == 0) stop(paste0("There are not probes in this region"))
-    
-    colnames(ddN) <- toupper(colnames(ddN))
-    colnames(ddT) <- toupper(colnames(ddT))
-    for(i in 1:6){
-      colnames(ddN) <- sub("_","-",colnames(ddN))
-      colnames(ddT) <- sub("_","-",colnames(ddT))
-    }
-    
-    results <- list(ddN, ddT, probes, empty = FALSE, geneNamesType_label)
-    
   } else{
-    stop(paste0("There are not probes in this region"))
     results <- list(empty = TRUE, geneNamesType_label)
+    stop(paste0("There are not probes in this region"))
   }
   
   return(results)

@@ -24,6 +24,10 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
   gmax <- unique(probes2$geneend[probes2[,paste0(geneNamesType)] == geneName])
   gstrand <- unique(probes2$genestrand[probes2[,paste0(geneNamesType)] == geneName])
   gchr <- unique(probes2$chr[probes2[,paste0(geneNamesType)] == geneName])
+  if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
+  if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
+  if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
+  
   
   posmin <- ((xmin%/%1000)-1)*1000
   posmax <- ((xmax%/%1000)+1)*1000
@@ -81,7 +85,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       par(xpd = FALSE)
       mtext(side = 1, text = probes2$probe, at = probes2$cg_start, las = 3, col = colort, line = 1) 
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
-      if(geneLine){
+      if(geneLine & !is.null(gmin)){
         if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
       }
@@ -109,7 +113,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       mtext(side = 1, text = probes2$probe, at = probes2$cg_start, las = 3, col = colort, line = 1)
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       
-      if(geneLine){
+      if(geneLine & !is.null(gmin)){
         if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
       }
@@ -136,7 +140,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       mtext(side = 1, text = probes2$probe, at = probes2$cg_start, las = 3, col = colort, line = 1)
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       
-      if(geneLine){
+      if(geneLine & !is.null(gmin)){
         if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
       }
@@ -163,7 +167,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       mtext(side = 1, text = probes2$probe, at = probes2$cg_start, las = 3, col = colort, line = 1)
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       
-      if(geneLine){
+      if(geneLine & !is.null(gmin)){
         if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
       }

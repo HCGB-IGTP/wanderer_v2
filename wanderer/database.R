@@ -13,7 +13,7 @@ library(RPostgreSQL)
 
 # returns a unique connection
 db_connect <- function(db_conf_fn) {
-    drv <- dbDriver("PostgreSQL", max.con = 100)
+    drv <- dbDriver("PostgreSQL")
 
     db_conf <- get_db_parameters(db_conf_fn)
     

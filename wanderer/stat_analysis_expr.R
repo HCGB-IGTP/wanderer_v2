@@ -28,6 +28,10 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
   results$adj.pval<-p.adjust(results$pval, method="BH")
   results_stats<-merge(exons2,results,by="exon")
   results_stats<-results_stats[order(results_stats$exon_start),]
+  aux1<-which(colnames(results_stats)=="emsemblgeneid")
+  colnames(results_stats)[aux1]<-"ENSEMBL_geneID"
+  aux2<-which(colnames(results_stats)=="emsembltransid")  
+  colnames(results_stats)[aux2]<-"ENSEMBL_transcriptID"
   ########################################################################################################
   #plot
   if(plotting){
@@ -41,7 +45,9 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     gmax <- unique(exons2$geneend[exons2[,paste0(geneNamesType)] == geneName])
     gstrand <- unique(exons2$strand[exons2[,paste0(geneNamesType)] == geneName])
     gchr <- unique(exons2$chr[exons2[,paste0(geneNamesType)] == geneName])
-    
+    if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
+    if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
+    if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
     
     posmin <- ((xmin%/%1000)-1)*1000
     posmax <- ((xmax%/%1000)+1)*1000
@@ -56,14 +62,14 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     #y axis  
     ymax <- max(ddT[,-1], ddN[,-1])
     
-    par(mai = par()$mai + c(0.5,0,1,0))
+    par(mai = par()$mai + c(1,0,1,0))
     layout(matrix(c(1,2), 1, 2, byrow = TRUE), widths=c(3.2,0.8))
     
     plot(exons2$exon_start, mddN, type="b",xlim = c(xmin, xmax), 
          pch =  1, cex = 0.7, axes = FALSE, col = "forestgreen", ylim = c(-0.2, ymax), 
          ylab = "Mean Expression log2(rpkm + 1)", xlab = "", las = 1, lwd=1.2) 
     lines(exons2$exon_start, mddT, col="darkred", lwd=1.2)
-    points(exons2$exon_start, mddT, col="darkred", pch=1)
+    points(exons2$exon_start, mddT, col="darkred", pch=1, cex = 0.7)
     
     
     title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
@@ -76,7 +82,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
     
     
-    if(geneLine){
+    if(geneLine & !is.null(gmin)){
       if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
       if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
     }

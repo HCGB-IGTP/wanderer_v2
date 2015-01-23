@@ -17,12 +17,10 @@ data_meth_filtering <- function(results, sampleSize, tissue, zoom){
   ddT2 <- ddT[ddT$PROBE%in%probes2$probe,]
   
   if(dim(probes2)[1]>0){
-    results_filt <- list(ddN2 = ddN2, ddT2 = ddT2, probes2 = probes2, xmax = xmax, xmin = xmin, tissue_label = tissue_label, empty = FALSE)
+    results_filt <- list(ddN2 = ddN2, ddT2 = ddT2, probes2 = probes2, xmax = xmax, xmin = xmin, tissue_label = tissue_label)
   } else{
-    results_filt <- list(empty = TRUE)
+    results_filt <- list(probes2 = data.frame())
   }
-  print(results_filt$empty)
-
   return(results_filt)  
   
 }

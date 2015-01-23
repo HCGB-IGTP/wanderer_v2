@@ -26,6 +26,10 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
   gmax <- unique(exons2$geneend[exons2[,paste0(geneNamesType)] == geneName])
   gstrand <- unique(exons2$strand[exons2[,paste0(geneNamesType)] == geneName])
   gchr <- unique(exons2$chr[exons2[,paste0(geneNamesType)] == geneName])
+  if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
+  if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
+  if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
+  
   
   
   posmin <- ((xmin%/%1000)-1)*1000
@@ -87,7 +91,7 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
         mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
         
         
-        if(geneLine){
+        if(geneLine & !is.null(gmin)){
           if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
           if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         }
@@ -114,7 +118,7 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
         mtext(side = 1, text = exons2$exon, at = exons2$exon_start, las = 3, line = 1) 
         mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
         
-        if(geneLine){
+        if(geneLine & !is.null(gmin)){
           if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
           if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         }
@@ -146,7 +150,7 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
         mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
         
         
-        if(geneLine){
+        if(geneLine & !is.null(gmin)){
           if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
           if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         }
@@ -173,7 +177,7 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
         mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
         
         
-        if(geneLine){
+        if(geneLine & !is.null(gmin)){
           if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
           if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
         }
