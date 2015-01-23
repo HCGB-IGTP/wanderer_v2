@@ -15,7 +15,7 @@ library(RPostgreSQL)
 db_connect <- function(db_conf_fn) {
     drv <- dbDriver("PostgreSQL")
 
-    db_conf <- get_db_parameters(db_conf_fn)
+    db_conf <- get_db_parameters(db_conf_fn, max.con = 100)
     
     con <- dbConnect(drv,
                      user = db_conf[['user']],

@@ -3,8 +3,8 @@ library(shiny)
 library(RPostgreSQL)
 
 # the file containing the db parameters
-#SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-SRC <- '/data/shiny/apps/wanderer'
+SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+#SRC <- '/data/shiny/apps/wanderer'
 
 DB_CONF <- file.path(SRC, 'db.txt')
 
@@ -379,7 +379,11 @@ shinyServer(function(input, output, session){
       dev.off()
     }
   )
-  
+
+  cancel.onSessionEnded <- session$onSessionEnded(function() {
+      dbDisconnect(con)
+  })
+
   
   #on.exit(dbDisconnect(con), add = TRUE)
   
