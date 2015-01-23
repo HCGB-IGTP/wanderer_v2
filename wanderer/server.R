@@ -3,10 +3,9 @@ library(shiny)
 library(RPostgreSQL)
 
 # the file containing the db parameters
-SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-#SRC <- '/imppc/labs/maplab/share/izaskun2anna/wanderer/current'
-#SRC <- '/imppc/labs/maplab/share/anna2izaskun/Wanderer/current'
-#SRC <- '/imppc/labs/maplab/adiez/region_profile/Wanderer_16_01_15'
+#SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+SRC <- '/data/shiny/apps/wanderer'
+
 DB_CONF <- file.path(SRC, 'db.txt')
 
 source(file.path(SRC, 'GeneSize.R'))
