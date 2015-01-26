@@ -56,11 +56,13 @@ shinyServer(function(input, output, session){
 
   ## 127.0.0.1:6681?Gene=BRCA1&sGene=41195000&eGene=41278000&start=41195000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&goButton=1&plotmean=FALSE&geneLine=TRUE&CpGi=FALSE&nN=30&nT=30&region=TRUE
 
+  ## http://127.0.0.1:3013/?Gene=BRCA1&start=41198000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&goButton=1&plotmean=FALSE&geneLine=TRUE&CpGi=FALSE&nN=30&nT=10&region=TRUE
+
   query$Zoom <- as.numeric(c(query$start, query$end))
   query$start <- as.numeric(query$start)
   query$end <- as.numeric(query$end)
-  query$eGene <- as.numeric(query$eGene)
-  query$sGene <- as.numeric(query$sGene)
+  ## query$eGene <- as.numeric(query$eGene)
+  ## query$sGene <- as.numeric(query$sGene)
   query$nN <- as.numeric(query$nN)
   query$nT <- as.numeric(query$nT)
   query$plotmean <- as.logical(query$plotmean)

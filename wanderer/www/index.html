@@ -65,125 +65,40 @@
 	    <div class="container">
               <div>
                 <img src="wanderer_logo.png" style="float:left; padding: 1px 2px 1px 1px;"/>
-                <h3 style="color:#dd4814; float:left; padding: 0px 20px 10px 20px;">An interactive viewer to explore DNA methylation<br>and gene expression data in human cancer</h3>
+                <h3 style="color:#dd4814; float:left; padding: 0px 20px 10px 20px;">An API to explore DNA methylation<br>and gene expression data in human cancer</h3>
               </div>
 	    </div>
-      <br>
-          </section>
+            <br>
+          </section>          
+
           <div class="row-fluid">
-            <div class="span3 offset1">
-              <div class="well bs-component">
-                <!--<h4>Gene identifier</h4>-->
-                <label for="Gene">
-                  <h4>Gene Name or Ensemble Gene Id</h5>
-</label>
-<input id="Gene" type="text" value="BRCA1"/>
-<span class="help-block">Examples: BRCA1 or ENSG00000012048</span>
-<span class="help-block">Tip: Gene symbols look like TP53 or BRCA1 whereas Ensembl Gene IDs start by ENSG</span>
-<button id="goButton" type="button" class="btn action-button  btn-primary">Refresh</button>
-</div>
+            <div align = "center">
 
-<h4>Dataset</h4>
-<div id="Tissues" class="shiny-html-output"></div>
-<!-- <hr/> -->
-<label class="control-label" for="DataType">
-  <h5>Data Type:</h5>
-</label>
-<select id="DataType"><option value="methylation" selected>450k Methylation Array</option>
-  <option value="expression">Illumina HiSeq RNAseq</option></select>
-<span class="help-block">We offer level 3 TCGA data for methylation arrays (450k Infinium chip) and expression (Illumina HiSeq RNAseq, summarized by exons).</span>
-<hr/>
-<h4>Plotting parameters</h4>
-<br>
-<!-- <hr/> -->
-<label class="checkbox" for="geneLine">
-  <input id="geneLine" type="checkbox" checked="checked"/>
-  <span>
-    <h5>
-      Show gene location
-      <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as an orange arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
-        <b>?</b>
-      </a>
-    </h5>
-  </span>
-</label>
-<!-- <hr/> -->
-<div data-display-if="input.DataType == &#39;methylation&#39;">
-  <label class="checkbox" for="CpGi">
-    <input id="CpGi" type="checkbox" checked="checked"/>
-    <span>
-      <h5>
-        Highlight CpG islands
-        <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="CpG islands are displayed in green color in the x-axis. Only allowed for Illumina 450k methylation data." data-animation="TRUE" data-placement="right" data-trigger="hover">
-          <b>?</b>
-        </a>
-      </h5>
-    </span>
-  </label>
-</div> <!-- if data display end -->
-<div>
-  <label class="checkbox" for="plotmean">
-    <input id="plotmean" type="checkbox"/>
-    <span>
-      <h5>Boxplot all the data
-        <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Switch from line plots to boxplots. Line plots depict as many samples as the user asked to plot (see below); boxplots take advantage of all the data available for the project at once." data-animation="TRUE" data-placement="right" data-trigger="hover"><b>?</b></a>
-      </h5>
-    </span>
-  </label>
-</div>
-<hr/>
-<div id="nNmax" class="shiny-html-output"></div>
-<!-- <hr/> -->
-<div id="nTmax" class="shiny-html-output"></div>
-<hr/>
-</div>
-<div class="span7">
-  <!-- <hr/> -->
-  <div class="shiny-flow-layout" align="center">
-    <div>
-      <div id="ZoomControl" class="shiny-html-output"></div>
-    </div>
-    <hr/>
-        <div>
-      <div id="numberpoints" class="shiny-html-output"></div>
-    </div>
-    <hr/>
-    <div>
-      <label class="checkbox" for="region">
-        <input id="region" type="checkbox"/>
-        <span>
-          <h5>Specify a region</h5>
-        </span>
-      </label>
-    </div>
-    <br>
-    <div id="regionlimit" class="shiny-html-output"></div>
-    <br>
-    <div id="start" class="shiny-html-output"></div>
-    <div id="end" class="shiny-html-output"></div>
-    <br>
-  </div>
-  <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
-  <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%"></div>
-  <br>
-  <div align = "center">
-    <a id="downloadPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG plot</a>  
-    <a id="downloadPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF plot</a> 
-    <a id="downloadNData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Normals data</a>  
-    <a id="downloadTData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Tumors data</a> 
-    <a id="downloadPData" class="btn shiny-download-link" href="" target="_blank"> <i class="fa fa-download"></i> Annotations & Statistical Analysis</a>
-        <a id="downloadMeanPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG Mean plot</a>  
-    <a id="downloadMeanPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF Mean plot</a> 
-    
-  </div>
-</div> <!-- shiny flow end -->
-<!-- <hr/> -->
 
+              <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
+              <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%"></div>
+            </div>
+            <br>
+            <div align = "center">
+              <a id="downloadPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG plot</a>  
+              <a id="downloadPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF plot</a> 
+              <a id="downloadNData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Normals data</a>  
+              <a id="downloadTData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Tumors data</a> 
+              <a id="downloadPData" class="btn shiny-download-link" href="" target="_blank"> <i class="fa fa-download"></i> Annotations & Statistical Analysis</a>
+              <a id="downloadMeanPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG Mean plot</a>  
+              <a id="downloadMeanPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF Mean plot</a> 
+              
+            </div>
+          </div> <!-- shiny flow end -->
+          <!-- <hr/> -->
+
+        </div>
+        
+      </div>
+    </div> <!-- tabpane end -->
 </div>
-</div>
-</div> <!-- tabpane end -->
 <div class="tab-pane" id="tab-1846-2"></div>
-</div>
+
 <br>
 <br>
 <div class="row-fluid">
