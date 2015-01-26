@@ -3,8 +3,8 @@ library(shiny)
 library(RPostgreSQL)
 
 # the file containing the db parameters
-#SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-SRC <- '/data/shiny/apps/wanderer'
+SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+#SRC <- '/data/shiny/apps/wanderer'
 
 DB_CONF <- file.path(SRC, 'db.txt')
 
@@ -28,6 +28,29 @@ shinyServer(function(input, output, session){
   
   #database connection
   con <- db_connect(DB_CONF)
+
+  ##   ## updates start
+  ## updateTextInput(session, "Gene",
+  ##                 value = 'TP53')
+
+  ##  updateSelectInput(session, "DataType",
+  ##                    selected = 'expression')
+
+
+  ##  updateSelectInput(session, "Tissues",
+  ##                    selected = 'coad')
+
+
+  ## ## updateCheckboxInput(session, "region",value = 1)
+  
+  ## ## updateTextInput(session, "start",
+  ##                    ## value = 41267000)
+
+  ##  updateSliderInput(session, "Zoom",               
+  ##              value = c('41248000', '41252000'))
+
+  
+  ## ## updates end
   
   #################################################
   #detect gene format
@@ -42,12 +65,13 @@ shinyServer(function(input, output, session){
       }
     }
   })
+
   
   #################################################
   #Filtering Methylation data
   geneSize <- reactive({
     if(input$goButton == 0) {
-      GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')  
+      GeneSize(con = con, geneName = 'TP53', geneNamesType = 'genename')  
     }else{
       GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
     }
@@ -97,11 +121,11 @@ shinyServer(function(input, output, session){
     if(!is.null(input$Zoom)) conditionalPanel("input.region == true", helpText(paste0("Define a start and an end within the slider's values (min = ", input$Zoom[1],"; max = ", input$Zoom[2],")")))
   })
   
-  output$start <- renderUI({
+  output$starto <- renderUI({
     if(!is.null(input$Zoom)) conditionalPanel("input.region == true", numericInput("start", "Start", value = input$Zoom[1], min = as.numeric(input$Zoom[1]), max = as.numeric(input$Zoom[2])))
   })
   
-  output$end <- renderUI({
+  output$endo <- renderUI({
     if(!is.null(input$Zoom)) conditionalPanel("input.region == true", numericInput("end", "End", value = input$Zoom[2], min = as.numeric(input$Zoom[1]), max = as.numeric(input$Zoom[2])))
   })
   
@@ -111,7 +135,7 @@ shinyServer(function(input, output, session){
   datameth <- reactive({
     if(input$DataType == 'methylation'){
       if(input$goButton == 0) {
-        methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
+        methylation_data(con = con, geneName = 'TP53', geneNamesType = 'genename', tissue = 'brca')  
       }else{
         if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1)  methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
       }
@@ -134,7 +158,7 @@ shinyServer(function(input, output, session){
   dataexpr <- reactive({
     if(input$DataType == 'expression'){
       if(input$goButton == 0) {
-        expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
+        expression_data(con = con, geneName = 'TP53', geneNamesType = 'genename', tissue = 'brca')  
       }else{
         if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1)  expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
       }
@@ -379,6 +403,47 @@ shinyServer(function(input, output, session){
       dev.off()
     }
   )
+
+  ## updates start
+
+  ## input$Gene <<- 'TP53'
+  ## session$sendInputMessage('Gene', 'Tp53')
+
+   updateSelectInput(session, "Tissues",
+                     selected = 'cesc')
+
+  
+  updateNumericInput(session, "goButton",
+                  value = 1)
+
+  
+  updateTextInput(session, "Gene",
+                  value = 'TP53')
+
+  updateTextInput(session, "Gene",
+                  value = 'TP53')
+
+  updateNumericInput(session, "goButton",
+                  value = 2)
+
+  
+   updateSelectInput(session, "DataType",
+                     selected = 'expression')
+
+
+
+
+  updateCheckboxInput(session, "region",value = 1)
+  
+  updateTextInput(session, "start",
+                     value = 7578000)
+
+   ## updateSliderInput(session, "Zoom",               
+   ##             value = c(7578000, 7580000))
+
+  
+  ## updates end
+
 
   cancel.onSessionEnded <- session$onSessionEnded(function() {
       dbDisconnect(con)
