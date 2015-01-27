@@ -34,6 +34,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
   postep <- posmax - posmin
   positions <- round(seq(posmin, posmax, postep/5),0)
   positions <- (positions%/%1000)*1000
+  positions <- positions[positions>=xmin & positions<=xmax]
   
   
   if(positions[2]-positions[1]>=100000) escala <- 100000
@@ -74,9 +75,9 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       par(mai = par()$mai + c(0.3,0,1,0))
       
       plot(probes2$cg_start, ddN2[,sampN[1]], type = "b", xlim = c(xmin, xmax), 
-           pch =  1, cex = 0.7, axes = FALSE, col = "black", ylim = c(-0.2, 1), 
+           pch =  1, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, 1), 
            ylab = "Methylation (beta value)", xlab = "", las = 1)
-      for(pl in sampN[-1]) lines(probes2$cg_start, ddN2[,pl], type = "b", pch =  1, cex = 0.7, col = "black")
+      for(pl in sampN[-1]) lines(probes2$cg_start, ddN2[,pl], type = "b", pch =  1, cex = 0.7, col = "dodgerblue")
       title(paste0("Methylation of ", geneName, " in Normal (n=", length(sampN), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       axis(1, labels = probes2$probe, at = probes2$cg_start, col.axis = FALSE)
       axis(2, labels = seq(0, 1, 0.2), at = seq(0, 1, 0.2), las = 1)
@@ -86,8 +87,8 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       mtext(side = 1, text = probes2$probe, at = probes2$cg_start, las = 3, col = colort, line = 1) 
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       if(geneLine & !is.null(gmin)){
-        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
-        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
+        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
+        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
       }
       box(lwd = 1.5)
       
@@ -101,9 +102,9 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       
       #plot for Tumors
       plot(probes2$cg_start, ddT2[,sampT[1]], type = "b", xlim = c(xmin, xmax), 
-           pch = 1, cex = 0.7, axes = FALSE, col = "black", ylim = c(-0.2, 1),
+           pch = 1, cex = 0.7, axes = FALSE, col = "darkred", ylim = c(-0.2, 1),
            ylab = "Methylation (beta value)", xlab = "", las = 1)
-      for(pl in sampT[-1]) lines(probes2$cg_start, ddT2[,pl], type = "b", pch = 1, cex = 0.7, col = "black")
+      for(pl in sampT[-1]) lines(probes2$cg_start, ddT2[,pl], type = "b", pch = 1, cex = 0.7, col = "darkred")
       title(paste0("Methylation of ", geneName, " in Tumor (n=", length(sampT), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       axis(1, labels = probes2$probe, at = probes2$cg_start, col.axis = FALSE)
       axis(2, labels = seq(0, 1, 0.2), at = seq(0, 1, 0.2), las = 1)
@@ -114,8 +115,8 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       
       if(geneLine & !is.null(gmin)){
-        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
-        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
+        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
+        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
       }
       box(lwd = 1.5)
       
@@ -141,8 +142,8 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       
       if(geneLine & !is.null(gmin)){
-        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
-        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
+        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
+        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
       }
       box(lwd = 1.5)
       
@@ -168,8 +169,8 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       
       if(geneLine & !is.null(gmin)){
-        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
-        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
+        if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
+        if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
       }
       box(lwd = 1.5)
     }

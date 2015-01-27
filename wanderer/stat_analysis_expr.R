@@ -26,6 +26,14 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
   }
   
   results$adj.pval<-p.adjust(results$pval, method="BH")
+  results$Norm_nsamples<-rep(dim(ddN)[2],dim(results)[1])
+  results$Norm_mean<-apply(ddN,1,mean,na.rm=TRUE)
+  results$Norm_sd<-apply(ddN,1,sd,na.rm=TRUE)
+  results$Tum_nsamples<-rep(dim(ddT)[2],dim(results)[1])
+  results$Tum_mean<-apply(ddT,1,mean,na.rm=TRUE)
+  results$Tum_sd<-apply(ddT,1,sd,na.rm=TRUE)
+  results<-results[,c(1,5:10,2:4)]
+  
   results_stats<-merge(exons2,results,by="exon")
   results_stats<-results_stats[order(results_stats$exon_start),]
   aux1<-which(colnames(results_stats)=="emsemblgeneid")
@@ -37,8 +45,10 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
   if(plotting){
     
     asterisc<-results_stats$adj.pval<0.05
+    asterisc[is.na(asterisc)]<-FALSE
+    print(asterisc)
     pasterisc<-exons2$exon
-    pasterisc[asterisc]<-paste0("* ",exons2$exon[asterisc])
+    if(sum(asterisc)>0) pasterisc[asterisc]<-paste0("* ",exons2$exon[asterisc])
     
     #axis limits
     gmin <- unique(exons2$genestart[exons2[,paste0(geneNamesType)] == geneName])
@@ -54,19 +64,17 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     postep <- posmax - posmin
     positions <- round(seq(posmin, posmax, postep/5),0)
     positions <- (positions%/%1000)*1000
-    
+    positions <- positions[positions>=xmin & positions<=xmax]
     
     mddN <- apply(ddN,1,mean,na.rm=TRUE)
     mddT <- apply(ddT,1,mean,na.rm=TRUE)
     
     #y axis  
-    ymax <- max(ddT[,-1], ddN[,-1])
+    ymax <- max(mddN, mddT)+1
     
-    par(mai = par()$mai + c(1,0,1,0))
-    layout(matrix(c(1,2), 1, 2, byrow = TRUE), widths=c(3.2,0.8))
-    
+    par(mai = par()$mai + c(2,0,1,0))
     plot(exons2$exon_start, mddN, type="b",xlim = c(xmin, xmax), 
-         pch =  1, cex = 0.7, axes = FALSE, col = "forestgreen", ylim = c(-0.2, ymax), 
+         pch =  1, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, ymax), 
          ylab = "Mean Expression log2(rpkm + 1)", xlab = "", las = 1, lwd=1.2) 
     lines(exons2$exon_start, mddT, col="darkred", lwd=1.2)
     points(exons2$exon_start, mddT, col="darkred", pch=1, cex = 0.7)
@@ -83,14 +91,12 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     
     
     if(geneLine & !is.null(gmin)){
-      if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
-      if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "#dd4814", lwd = 2, length = 0.1)
+      if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
+      if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
     }
     box(lwd = 1.5)
-
-    plot(1, type = "n", xlim = c(0.5,1.5), ylim = c(0.5, 1.5), axes = FALSE, col="white", xlab = "", ylab = "")
     par(xpd=TRUE)
-    legend(0.2, 1.5, c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")")), lty=1, lwd=1.2, col=c("forestgreen","darkred"))
+    legend(xmin, ymax + (ymax/3), c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")")), lty=1, lwd=1.2, col=c("dodgerblue","darkred"), yjust=0)
     par(xpd=FALSE)
     
   }
