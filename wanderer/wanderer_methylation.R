@@ -130,7 +130,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       #plot for Normals
       par(mai = par()$mai + c(0.3,0,1,0))
       boxplot(t(ddN2[,2:dim(ddN2)[2]]), at = probes2$cg_start, names = NULL, xlim = c(xmin, xmax), 
-              pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, 1), 
+              pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, 1), border = "dodgerblue",
               ylab = "Methylation (beta value)", xlab = "", las = 1, boxwex = (xmax-xmin)*0.03, varwidth = FALSE)
       title(paste0("Methylation of ", geneName, " in Normal (n=", (dim(ddN2)[2]-1), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       axis(1, labels = probes2$probe, at = probes2$cg_start, col.axis = FALSE)
@@ -157,7 +157,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       
       #plot for Tumors
       boxplot(t(ddT2[,2:dim(ddT2)[2]]), at = probes2$cg_start, names = NULL, xlim = c(xmin, xmax), 
-              pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, 1), 
+              pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, 1), border="darkred",
               ylab = "Methylation (beta value)", xlab = "", las = 1, boxwex = (xmax-xmin)*0.03, varwidth = FALSE)
       title(paste0("Methylation of ", geneName, " in Tumor (n=", (dim(ddT2)[2]-1), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       axis(1, labels = probes2$probe, at = probes2$cg_start, col.axis = FALSE)

@@ -139,7 +139,7 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
         #plot for Normals
         par(mai = par()$mai + c(2,0,1,0))
         boxplot(t(ddN2[,2:dim(ddN2)[2]]), at = exons2$exon_start, names = NULL, xlim = c(xmin, xmax), 
-                pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, ymax), 
+                pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, ymax), border="dodgerblue",
                 ylab = "Expression log2(rpkm + 1)", xlab = "", las = 1, boxwex = (xmax-xmin)*0.03, varwidth = FALSE)
         title(paste0("Expression of ", geneName, " in Normal (n=", (dim(ddN2)[2]-1), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
         axis(1, labels = exons2$exon, at = exons2$exon_start, col.axis = FALSE)
@@ -166,7 +166,7 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
         
         #plot for Tumors
         boxplot(t(ddT2[,2:dim(ddT2)[2]]), at = exons2$exon_start, names = NULL, xlim = c(xmin, xmax), 
-                pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, ymax), 
+                pch = 20, cex = 0.5, axes = FALSE, ylim = c(-0.2, ymax), border="darkred",
                 ylab = "Expression log2(rpkm + 1)", xlab = "", las = 1, boxwex = (xmax-xmin)*0.03, varwidth = FALSE)#, border = "#dd4814")
         title(paste0("Expression of ", geneName, " in Tumor (n=", (dim(ddT2)[2]-1), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
         axis(1, labels = exons2$exon, at = exons2$exon_start, col.axis = FALSE)
