@@ -4,7 +4,7 @@ library(RPostgreSQL)
 
 # the file containing the db parameters
 #SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-SRC <- '/data/shiny/apps/wanderer'
+SRC <- '.'
 
 DB_CONF <- file.path(SRC, 'db.txt')
 
@@ -19,10 +19,10 @@ source(file.path(SRC, 'data_meth_filtering.R'))
 source(file.path(SRC, 'data_expr_filtering.R'))
 source(file.path(SRC, 'stat_analysis_meth.R'))
 source(file.path(SRC, 'stat_analysis_expr.R'))
+source(file.path(SRC, 'permalink_modal.R'))
 
 
 sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
-
 
 shinyServer(function(input, output, session){
   
@@ -379,6 +379,28 @@ shinyServer(function(input, output, session){
       dev.off()
     }
   )
+
+  output$permalink_modal <- renderText({
+      if (input$goButton > 0) {
+          url = sprintf('http://192.168.3.67:3939/wanderer_api?Gene=%s&start=%s&end=%s&TissueType=%s&goButton=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&amp;region=TRUE',
+              input$Gene,
+              input$Zoom[1],
+              input$Zoom[2],
+              input$TissueType,
+              input$goButton,
+              input$DataType,
+              input$plotmean,
+              input$geneLine,
+              input$CpGi,
+              input$nN,
+              input$nT)
+      } else {
+          url <- 'http://192.168.3.67:3939/wanderer_api/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30&amp;region=TRUE'
+          
+      }
+
+      generate_modal(url)
+  })
 
   cancel.onSessionEnded <- session$onSessionEnded(function() {
       dbDisconnect(con)
