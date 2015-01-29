@@ -51,15 +51,12 @@ shinyServer(function(input, output, session){
 
   query <- isolate(parseQueryString(session$clientData$url_search))
 
-  print(paste(names(query), query, sep = "=", collapse=", "))
+  ## print(paste(names(query), query, sep = "=", collapse=", "))
 
-  ## 127.0.0.1:6681?Gene=BRCA1&sGene=41195000&eGene=41278000&start=41195000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&goButton=1&plotmean=FALSE&geneLine=TRUE&CpGi=FALSE&nN=30&nT=30&region=TRUE
-
-  ## http://127.0.0.1:3013/?Gene=BRCA1&start=41198000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&goButton=1&plotmean=FALSE&geneLine=TRUE&CpGi=FALSE&nN=30&nT=10&region=TRUE
-
-
+  ## test/?Gene=BRCA1&start=41198000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=FALSE&nN=30&nT=10"
+  
   ## parameter processing
-  query$Gene <- toupper(query$gene)
+  ## query$Gene <- toupper(query$gene)
   query$Zoom <- as.numeric(c(query$start, query$end))
   query$start <- as.numeric(query$start)
   query$end <- as.numeric(query$end)
@@ -74,14 +71,7 @@ shinyServer(function(input, output, session){
 
   api_arguments_allowances <- sort(c('Gene', 'start','end', 'TissueType', 'DataType', 'plotmean',
                                 'geneLine', 'CpGi', 'nN', 'nT', 'region', 'goButton', 'Zoom'))
-
-
-  ## sink('/tmp/sinked')
-  unlink('/tmp/sinked')
   
- 
-
-
   
   #################################################
   #detect gene format
@@ -172,8 +162,8 @@ shinyServer(function(input, output, session){
   #################################################
   #print wanderer plot
   output$plot1 <- renderPlot({
-      ## if (!all(api_arguments_allowances == sort(names(query)))) #| !(query$TissueType %in% sample_size[,1]))
-      ##     stop(error)
+      if (!all(api_arguments_allowances == sort(names(query))) | !(toupper(query$TissueType) %in% sample_size[,2]))
+          stop(error)
 
       if(!is.null(query$TissueType) & !is.null(query$nN) & !is.null(query$nT) & !is.null(toupper(query$Gene)) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) { 
           if(query$region & ((query$end > query$Zoom[2]) | (query$end < query$Zoom[1]) | (query$start < query$Zoom[1]) | (query$start > query$Zoom[2])))
@@ -209,8 +199,8 @@ shinyServer(function(input, output, session){
   #print summary plot
   output$plotStat <- renderPlot({
 
-      ## if (!all(api_arguments_allowances == sort(names(query)))) #| !(query$TissueType %in% sample_size[,1]))
-      ##     stop(error)
+      if (!all(api_arguments_allowances == sort(names(query))) | !(toupper(query$TissueType) %in% sample_size[,2]))
+          stop(error)
 
     if(!is.null(query$TissueType) & !is.null(query$nN) & !is.null(query$nT) & !is.null(toupper(query$Gene)) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
       if(query$DataType == 'methylation'){
