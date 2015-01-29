@@ -2,6 +2,7 @@
 
 library(shiny)
 library(RPostgreSQL)
+library(Cairo)
 
 SRC <- '.'
 
@@ -179,7 +180,7 @@ shinyServer(function(input, output, session){
                                        plotting = TRUE, geneLine = query$geneLine)
               }
           }
-          if(query$DataType == 'expression'){
+          else if(query$DataType == 'expression'){
               if(dim(dataexprfilt()[['exons2']])[1]<=0){
                   stop(error)
               }else{
@@ -226,7 +227,7 @@ shinyServer(function(input, output, session){
   output$downloadPlot <- downloadHandler(
     filename = function() { paste0("Wanderer_", toupper(query$Gene), '_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {
-      png(file, width = 1000, height = 1000)
+      CairoPNG(file, width = 1000, height = 1000)
       if(query$DataType == 'methylation'){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = toupper(query$Gene),
                                         geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
@@ -245,7 +246,7 @@ shinyServer(function(input, output, session){
   output$downloadPlotPDF <- downloadHandler(
     filename = function() { paste0("Wanderer_", toupper(query$Gene), '_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.pdf') },
     content = function(file) {
-      pdf(file, width = 10, height = 13)
+      pdf(file, width = 14, height = 14, useDingbats = FALSE)
       if(query$DataType == 'methylation'){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
                                         geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
@@ -315,7 +316,7 @@ shinyServer(function(input, output, session){
   output$downloadMeanPlot <- downloadHandler(
     filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_Mean_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {
-      png(file, width = 1000, height = 500)
+      CairoPNG(file, width = 1000, height = 500)
       if(query$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = query$CpGi,
@@ -332,7 +333,7 @@ shinyServer(function(input, output, session){
   output$downloadMeanPlotPDF <- downloadHandler(
     filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_Mean_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.pdf') },
     content = function(file) {
-      pdf(file, width = 12, height = 5)
+      pdf(file, width = 14, height = 6, useDingbats = FALSE)
       if(query$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = query$CpGi,

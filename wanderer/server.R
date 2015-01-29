@@ -1,6 +1,8 @@
+#!/usr/bin/env R
 
 library(shiny)
 library(RPostgreSQL)
+library(Cairo)
 
 # the file containing the db parameters
 #SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
@@ -245,7 +247,7 @@ shinyServer(function(input, output, session){
                              geneLine = input$geneLine, plotting = TRUE)
         }
       }
-      if(input$DataType == 'expression'){
+      else if(input$DataType == 'expression'){
         if(dim(dataexprfilt()[['exons2']])[1]>0){
           stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                              geneNamesType = geneFormat(),
@@ -261,14 +263,14 @@ shinyServer(function(input, output, session){
   output$downloadPlot <- downloadHandler(
     filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {
-      png(file, width = 1000, height = 1000)
+      CairoPNG(file, width = 1000, height = 1000)
       if(input$DataType == 'methylation'){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
                                         plotting = TRUE, geneLine = input$geneLine)
       }
-      if(input$DataType == 'expression'){
+      else if(input$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
@@ -280,14 +282,14 @@ shinyServer(function(input, output, session){
   output$downloadPlotPDF <- downloadHandler(
     filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
     content = function(file) {
-      pdf(file, width = 10, height = 13)
+      pdf(file, width = 14, height = 14, useDingbats = FALSE)
       if(input$DataType == 'methylation'){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
                                         plotting = TRUE, geneLine = input$geneLine)
       }
-      if(input$DataType == 'expression'){
+      else if(input$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
@@ -346,31 +348,31 @@ shinyServer(function(input, output, session){
   output$downloadMeanPlot <- downloadHandler(
     filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_Mean_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {
-      png(file, width = 1000, height = 500)
+      CairoPNG(file, width = 1000, height = 500)
       if(input$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = input$CpGi,
                                       geneLine = input$geneLine, plotting = TRUE)
       }
-      if(input$DataType == 'expression'){
+      else if(input$DataType == 'expression'){
         regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(),
                                       geneLine = input$geneLine, plotting = TRUE)
       }
-      print(regplot)
+      ## print(regplot)
       dev.off()
     }
   )
   output$downloadMeanPlotPDF <- downloadHandler(
     filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_Mean_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
     content = function(file) {
-      pdf(file, width = 12, height = 5)
+      pdf(file, width = 14, height = 6, useDingbats = FALSE)
       if(input$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = input$CpGi,
                                       geneLine = input$geneLine, plotting = TRUE)
       }
-      if(input$DataType == 'expression'){
+      else if(input$DataType == 'expression'){
         regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(),
                                       geneLine = input$geneLine, plotting = TRUE)
