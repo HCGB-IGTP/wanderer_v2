@@ -381,16 +381,15 @@ shinyServer(function(input, output, session){
   )
 
   output$permalink_modal <- renderText({
-      location <- 'http://192.168.3.67:3939/wanderer_api'
-      # location <- 'http://gattaca.imppc.org/betawanderer_api'
+      location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
+      
       if (input$goButton > 0) {          
-          url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&goButton=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&amp;region=TRUE',
+          url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
               location,
               input$Gene,
               input$Zoom[1],
               input$Zoom[2],
               input$TissueType,
-              input$goButton,
               input$DataType,
               input$plotmean,
               input$geneLine,
@@ -398,7 +397,7 @@ shinyServer(function(input, output, session){
               input$nN,
               input$nT)
       } else {
-          url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30&amp;region=TRUE', location)
+          url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30', location)
           
       }
 
