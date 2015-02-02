@@ -32,17 +32,17 @@ shinyServer(function(input, output, session){
   con <- db_connect(DB_CONF)
   
   #################################################
-  #detect gene format
+  ##detect gene format
   geneFormat <- reactive({
-    if(input$goButton == 0) {
-      GeneFormat <- "genename"
-    } else{
-      if(substr(isolate(toupper(input$Gene)), 1, 4) == "ENSG"){
-        GeneFormat <- "emsemblgeneid"
+      if(input$goButton == 0) {
+          GeneFormat <- "genename"
       } else{
-        GeneFormat <- "genename"
+          if(substr(isolate(toupper(input$Gene)), 1, 4) == "ENSG"){
+              GeneFormat <- "emsemblgeneid"
+          } else{
+              GeneFormat <- "genename"
+          }
       }
-    }
   })
   
   #################################################
@@ -51,7 +51,8 @@ shinyServer(function(input, output, session){
     if(input$goButton == 0) {
       GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')  
     }else{
-      GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
+        ## if (!is.null(input$Gene))
+            GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
     }
   })
   
@@ -111,14 +112,15 @@ shinyServer(function(input, output, session){
   #################################################
   #Reading Methylation data
   datameth <- reactive({
-    if(input$DataType == 'methylation' & !is.null(input$TissueType) & !is.null(input$Gene)){
-      ## if(input$goButton == 0) {
-        methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
-      ## }else{
-        if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1)
-            methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+      if(input$goButton == 0) {
+          if(input$DataType == 'methylation' & !is.null(input$TissueType)){
+              methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
+          }
       }
-    ## }
+      else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
+          methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+          
+      }
   })
   
   #################################################
@@ -135,12 +137,12 @@ shinyServer(function(input, output, session){
   #################################################
   #Reading Expression data
   dataexpr <- reactive({
-    if(input$DataType == 'expression' & !is.null(input$TissueType) & !is.null(input$Gene)){
-      ## if(input$goButton == 0) {
-      ##   expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
-      ## }else{
-        if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1 )
-            expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+      if(input$goButton == 0) {      
+          if(input$DataType == 'expression' & !is.null(input$TissueType)){
+              expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
+       }
+      } else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1 ) {
+            epression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
       ## }
     }
   })
@@ -158,7 +160,7 @@ shinyServer(function(input, output, session){
   #################################################
   #print the number of probes or exons
   output$numberpoints <- renderText({
-    if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1){
+    if(!is.null(input$TissueType) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1){
       if(input$DataType == 'methylation'){
         if(!is.null(datamethfilt())){
           if(dim(datamethfilt()[['probes2']])[1]==0) printa <- "There are not probes in this region"
@@ -186,23 +188,24 @@ shinyServer(function(input, output, session){
   })
   
   #################################################
-  #number of samples to plot
+  ##number of samples to plot
   output$nNmax <- renderUI({
-    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
-      maxn <- max_sample(sample_size, input$DataType, input$TissueType)[1]
-      valor <- min(maxn, 30)
-      minn <- 1
-      conditionalPanel("input.plotmean == false", numericInput("nN", h5(paste0("Number of normal samples to plot (max = ", maxn, ")")), value = valor, min = minn, max = maxn))
-    }
+      if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
+          maxn <- max_sample(sample_size, input$DataType, input$TissueType)[1]
+          valor <- min(maxn, 30)
+          minn <- 1
+          conditionalPanel("input.plotmean == false", numericInput("nN", h5(paste0("Number of normal samples to plot (max = ", maxn, ")")), value = valor, min = minn, max = maxn))
+      }
   })
   
   output$nTmax <- renderUI({
-    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
-      maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
-      valor <- min(maxt, 30)
-      mint <- 1
-      conditionalPanel("input.plotmean == false", numericInput("nT", h5(paste0("Number of tumoral samples to plot (max = ", maxt, ")")), value = valor, min = mint, max = maxt))
-    } 
+      if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
+          maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
+          valor <- min(maxt, 30)
+          mint <- 1
+          conditionalPanel("input.plotmean == false", numericInput("nT", h5(paste0("Number of tumoral samples to plot (max = ", maxt, ")")), value = valor, min = mint, max = maxt))
+      }
+
   })
   
   

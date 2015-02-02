@@ -23,7 +23,7 @@ db_connect <- function(db_conf_fn) {
                      dbname = db_conf[['dbname']],
                      host = db_conf[['host']],
                      port = db_conf[['port']])
-    
+
     ## on.exit(dbDisconnect(con), add = TRUE)
     return(con)
 
