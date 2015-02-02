@@ -111,13 +111,14 @@ shinyServer(function(input, output, session){
   #################################################
   #Reading Methylation data
   datameth <- reactive({
-    if(input$DataType == 'methylation'){
-      if(input$goButton == 0) {
+    if(input$DataType == 'methylation' & !is.null(input$TissueType) & !is.null(input$Gene)){
+      ## if(input$goButton == 0) {
         methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
-      }else{
-        if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1)  methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+      ## }else{
+        if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1)
+            methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
       }
-    }
+    ## }
   })
   
   #################################################
@@ -134,12 +135,13 @@ shinyServer(function(input, output, session){
   #################################################
   #Reading Expression data
   dataexpr <- reactive({
-    if(input$DataType == 'expression'){
-      if(input$goButton == 0) {
-        expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
-      }else{
-        if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1)  expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
-      }
+    if(input$DataType == 'expression' & !is.null(input$TissueType) & !is.null(input$Gene)){
+      ## if(input$goButton == 0) {
+      ##   expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = 'brca')  
+      ## }else{
+        if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1 )
+            expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+      ## }
     }
   })
   
