@@ -411,6 +411,13 @@ shinyServer(function(input, output, session){
       generate_modal(url)
   })
 
+  output$genome_browser <- renderText({
+      generate_genome_browser_link(chromosome = geneSize()[[3]],
+                                   start = input$Zoom[1],
+                                   end = input$Zoom[2])
+      
+  })
+
   cancel.onSessionEnded <- session$onSessionEnded(function() {
       dbDisconnect(con)
   })

@@ -11,7 +11,7 @@ GeneSize <- function(con, geneName, geneNamesType){
   if(dim(gene)[1] == 0) return(list(0))
   if(dim(gene)[1] > 1) return(list(1))
   
-  if(dim(gene)[1] == 1) return(list(gene$gene_start, gene$gene_end))
+  if(dim(gene)[1] == 1) return(list(gene$gene_start, gene$gene_end, gene$chrom))
 }
 
 
