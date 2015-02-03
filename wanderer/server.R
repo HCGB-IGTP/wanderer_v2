@@ -142,7 +142,7 @@ shinyServer(function(input, output, session){
               expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
        }
       } else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1 ) {
-            epression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+            expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
       ## }
     }
   })
