@@ -388,9 +388,13 @@ shinyServer(function(input, output, session){
   )
 
   output$permalink_modal <- renderText({
-      location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
+      ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
+      location <- 'http://maplab.cat/betawanderer_api'
       
-      if (input$goButton > 0) {          
+      ## if (input$goButton > 0) {
+      if (!is.null(input$Gene) & !is.null(input$Zoom[0]) & !is.null(input$Zoom[1]) & !is.null(input$TissueType) & !is.null(input$DataType)
+          & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {          
+
           url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
               location,
               input$Gene,
