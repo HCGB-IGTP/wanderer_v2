@@ -53,7 +53,7 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
     gmin <- unique(probes2$genestart[probes2[,paste0(geneNamesType)] == geneName])
     gmax <- unique(probes2$geneend[probes2[,paste0(geneNamesType)] == geneName])
     gstrand <- unique(probes2$genestrand[probes2[,paste0(geneNamesType)] == geneName])
-    gchr <- unique(probes2$chr[probes2[,paste0(geneNamesType)] == geneName])
+    gchr <- unique(probes2$chr)
     if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
     if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
     if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL

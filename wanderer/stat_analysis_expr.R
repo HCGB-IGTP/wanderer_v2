@@ -54,7 +54,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     gmin <- unique(exons2$genestart[exons2[,paste0(geneNamesType)] == geneName])
     gmax <- unique(exons2$geneend[exons2[,paste0(geneNamesType)] == geneName])
     gstrand <- unique(exons2$strand[exons2[,paste0(geneNamesType)] == geneName])
-    gchr <- unique(exons2$chr[exons2[,paste0(geneNamesType)] == geneName])
+    gchr <- unique(exons2$chr)
     if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
     if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
     if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
