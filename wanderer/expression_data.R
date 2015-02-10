@@ -28,38 +28,49 @@ expression_data <- function(con, geneName, geneNamesType, tissue){
       exons_collapsed <- paste0("('", paste(exons$exon, collapse="','"), "')")
       
       #methylation array tumor data download
-      ddT <- dbSendQuery(con, paste0("select * from ", tissue, "_tumor.illuminahiseq_rnaseqv2
-          where exon in ", exons_collapsed, ";"))
-      ddT <- fetch(ddT, n = -1)
-      ddT <- ddT[ordering,]
-      ddT[,2:dim(ddT)[2]] <- log2(ddT[,2:dim(ddT)[2]]+1)
+      ddT <- try(dbSendQuery(con, paste0("select * from ", tissue, "_tumor.illuminahiseq_rnaseqv2
+          where exon in ", exons_collapsed, ";")),silent=TRUE)
+      if(class(ddT)=="try-error"){
+        ddT<-NULL
+      } else{
+        ddT <- fetch(ddT, n = -1)
+        ddT <- ddT[ordering,]
+        ddT[,2:dim(ddT)[2]] <- log2(ddT[,2:dim(ddT)[2]]+1)
+        colnames(ddT) <- toupper(colnames(ddT))
+        for(i in 1:6) colnames(ddT) <- sub("_","-",colnames(ddT))
+      }
+      
       
       #methylation array normal data download
-      ddN <- dbSendQuery(con, paste0("select * from ", tissue, "_normal.illuminahiseq_rnaseqv2
-            where exon in ", exons_collapsed, ";"))
-      ddN <- fetch(ddN, n = -1)
-      ddN <- ddN[ordering,]
-      ddN[,2:dim(ddN)[2]] <- log2(ddN[,2:dim(ddN)[2]]+1)
+      ddN <- try(dbSendQuery(con, paste0("select * from ", tissue, "_normal.illuminahiseq_rnaseqv2
+            where exon in ", exons_collapsed, ";")),silent=TRUE)
+      if(class(ddN)=="try-error"){
+        ddN<-NULL
+      } else{
+        ddN <- fetch(ddN, n = -1)
+        ddN <- ddN[ordering,]
+        ddN[,2:dim(ddN)[2]] <- log2(ddN[,2:dim(ddN)[2]]+1)
+        colnames(ddN) <- toupper(colnames(ddN))
+        for(i in 1:6) colnames(ddN) <- sub("_","-",colnames(ddN))
+      }
       
       #removing NA's
-      naT <- which(apply(is.na(ddT), 1, sum) == (dim(ddT)[2] - 1))
-      if(length(naT)>0){
-        exons <- exons[-naT,]
-        ddN <- ddN[-naT,]
-        ddT <- ddT[-naT,]
+      if(!is.null(ddT)){
+        naT <- which(apply(is.na(ddT), 1, sum) == (dim(ddT)[2] - 1))
+        if(length(naT)>0){
+          exons <- exons[-naT,]
+          ddN <- ddN[-naT,]
+          ddT <- ddT[-naT,]
+        }
       }
       
-      naN <- which(apply(is.na(ddN), 1, sum) == (dim(ddN)[2] - 1))
-      if(length(naN)>0){
-        exons <- exons[-naN,]
-        ddT <- ddT[-naN,]
-        ddN <- ddN[-naN,]
-      }
-      colnames(ddN) <- toupper(colnames(ddN))
-      colnames(ddT) <- toupper(colnames(ddT))
-      for(i in 1:6){
-        colnames(ddN) <- sub("_","-",colnames(ddN))
-        colnames(ddT) <- sub("_","-",colnames(ddT))
+      if(!is.null(ddN)){
+        naN <- which(apply(is.na(ddN), 1, sum) == (dim(ddN)[2] - 1))
+        if(length(naN)>0){
+          exons <- exons[-naN,]
+          ddT <- ddT[-naN,]
+          ddN <- ddN[-naN,]
+        }
       }
       
       results <- list(ddN, ddT, exons, empty = FALSE, geneNamesType_label)

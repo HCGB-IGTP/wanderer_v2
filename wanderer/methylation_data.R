@@ -33,39 +33,50 @@ methylation_data <- function(con, geneName, geneNamesType, tissue){
       probes_collapsed <- paste0("('", paste(probes$probe, collapse="','"), "')")
       
       #methylation array tumor data download
-      ddT <- dbSendQuery(con, paste0("select * from ", tissue, "_tumor.humanmethylation450
-          where probe in ", probes_collapsed, ";"))
-      ddT <- fetch(ddT, n = -1)
-      ddT <- ddT[order(ddT$probe),]
-      ddT <- ddT[ordering,]
+      ddT <- try(dbSendQuery(con, paste0("select * from ", tissue, "_tumor.humanmethylation450
+          where probe in ", probes_collapsed, ";")),silent=TRUE)
+      if(class(ddT)=="try-error"){
+        ddT<-NULL
+      }else{
+        ddT <- fetch(ddT, n = -1)
+        ddT <- ddT[order(ddT$probe),]
+        ddT <- ddT[ordering,]
+        colnames(ddT) <- toupper(colnames(ddT))
+        for(i in 1:6) colnames(ddT) <- sub("_","-",colnames(ddT))
+      }
       
       #methylation array normal data download
-      ddN <- dbSendQuery(con, paste0("select * from ", tissue, "_normal.humanmethylation450
-          where probe in ", probes_collapsed, ";"))
-      ddN <- fetch(ddN, n = -1)
-      ddN <- ddN[order(ddN$probe),]
-      ddN <- ddN[ordering,]
+      ddN <- try(dbSendQuery(con, paste0("select * from ", tissue, "_normal.humanmethylation450
+          where probe in ", probes_collapsed, ";")),silent=TRUE)
+      if(class(ddN)=="try-error"){
+        ddN<-NULL
+      }else{
+        ddN <- fetch(ddN, n = -1)
+        ddN <- ddN[order(ddN$probe),]
+        ddN <- ddN[ordering,]
+        colnames(ddN) <- toupper(colnames(ddN))
+        for(i in 1:6) colnames(ddN) <- sub("_","-",colnames(ddN))
+      }
       
       #removing NA's
-      naT <- which(apply(is.na(ddT), 1, sum) == (dim(ddT)[2] - 1))
-      if(length(naT)>0){
-        probes <- probes[-naT,]
-        ddN <- ddN[-naT,]
-        ddT <- ddT[-naT,]
+      if(!is.null(ddT)){
+        naT <- which(apply(is.na(ddT), 1, sum) == (dim(ddT)[2] - 1))
+        if(length(naT)>0){
+          probes <- probes[-naT,]
+          ddN <- ddN[-naT,]
+          ddT <- ddT[-naT,]
+        }
       }
       
-      naN <- which(apply(is.na(ddN), 1, sum) == (dim(ddN)[2] - 1))
-      if(length(naN)>0){
-        probes <- probes[-naN,]
-        ddT <- ddT[-naN,]
-        ddN <- ddN[-naN,]
+      if(!is.null(ddN)){
+        naN <- which(apply(is.na(ddN), 1, sum) == (dim(ddN)[2] - 1))
+        if(length(naN)>0){
+          probes <- probes[-naN,]
+          ddT <- ddT[-naN,]
+          ddN <- ddN[-naN,]
+        }
       }
-      colnames(ddN) <- toupper(colnames(ddN))
-      colnames(ddT) <- toupper(colnames(ddT))
-      for(i in 1:6){
-        colnames(ddN) <- sub("_","-",colnames(ddN))
-        colnames(ddT) <- sub("_","-",colnames(ddT))
-      }
+      
       
       results <- list(ddN, ddT, probes, empty = FALSE, geneNamesType_label)
     } else{

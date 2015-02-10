@@ -6,6 +6,7 @@ library(Cairo)
 
 # the file containing the db parameters
 #SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
+#SRC <- '/imppc/labs/maplab/adiez/region_profile/Wanderer_060215/'
 SRC <- '.'
 
 DB_CONF <- file.path(SRC, 'db.txt')
@@ -24,7 +25,7 @@ source(file.path(SRC, 'stat_analysis_expr.R'))
 source(file.path(SRC, 'permalink_modal.R'))
 
 
-sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
+sample_size <- read.table(file.path(SRC, "samplesN_filtered2.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
 
 shinyServer(function(input, output, session){
   
@@ -34,15 +35,15 @@ shinyServer(function(input, output, session){
   #################################################
   ##detect gene format
   geneFormat <- reactive({
-      if(input$goButton == 0) {
-          GeneFormat <- "genename"
+    if(input$goButton == 0) {
+      GeneFormat <- "genename"
+    } else{
+      if(substr(isolate(toupper(input$Gene)), 1, 4) == "ENSG"){
+        GeneFormat <- "emsemblgeneid"
       } else{
-          if(substr(isolate(toupper(input$Gene)), 1, 4) == "ENSG"){
-              GeneFormat <- "emsemblgeneid"
-          } else{
-              GeneFormat <- "genename"
-          }
+        GeneFormat <- "genename"
       }
+    }
   })
   
   #################################################
@@ -51,8 +52,8 @@ shinyServer(function(input, output, session){
     if(input$goButton == 0) {
       GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')  
     }else{
-        ## if (!is.null(input$Gene))
-            GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
+      ## if (!is.null(input$Gene))
+      GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
     }
   })
   
@@ -112,15 +113,15 @@ shinyServer(function(input, output, session){
   #################################################
   #Reading Methylation data
   datameth <- reactive({
-      if(input$goButton == 0) {
-          if(input$DataType == 'methylation' & !is.null(input$TissueType)){
-              methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
-          }
+    if(input$goButton == 0) {
+      if(input$DataType == 'methylation' & !is.null(input$TissueType)){
+        methylation_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
       }
-      else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
-          methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
-          
-      }
+    }
+    else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
+      methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+      
+    }
   })
   
   #################################################
@@ -137,12 +138,12 @@ shinyServer(function(input, output, session){
   #################################################
   #Reading Expression data
   dataexpr <- reactive({
-      if(input$goButton == 0) {      
-          if(input$DataType == 'expression' & !is.null(input$TissueType)){
-              expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
-       }
-      } else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1 ) {
-            expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+    if(input$goButton == 0) {      
+      if(input$DataType == 'expression' & !is.null(input$TissueType)){
+        expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
+      }
+    } else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1 ) {
+      expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
       ## }
     }
   })
@@ -190,22 +191,24 @@ shinyServer(function(input, output, session){
   #################################################
   ##number of samples to plot
   output$nNmax <- renderUI({
-      if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
-          maxn <- max_sample(sample_size, input$DataType, input$TissueType)[1]
-          valor <- min(maxn, 30)
-          minn <- 1
-          conditionalPanel("input.plotmean == false", numericInput("nN", h5(paste0("Number of normal samples to plot (max = ", maxn, ")")), value = valor, min = minn, max = maxn))
-      }
+    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
+      if(is.null(datamethfilt()$ddN2) | is.null(dataexprfilt()$ddN2)) minn <- 0
+      if(!is.null(datamethfilt()$ddN2) & !is.null(dataexprfilt()$ddN2)) minn <- 1
+      
+      maxn <- max_sample(sample_size, input$DataType, input$TissueType)[1]
+      valor <- min(maxn, 30)
+      conditionalPanel("input.plotmean == false", numericInput("nN", h5(paste0("Number of normal samples to plot (max = ", maxn, ")")), value = valor, min = minn, max = maxn))
+    }
   })
   
   output$nTmax <- renderUI({
-      if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
-          maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
-          valor <- min(maxt, 30)
-          mint <- 1
-          conditionalPanel("input.plotmean == false", numericInput("nT", h5(paste0("Number of tumoral samples to plot (max = ", maxt, ")")), value = valor, min = mint, max = maxt))
-      }
-
+    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
+      maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
+      valor <- min(maxt, 30)
+      mint <- 1
+      conditionalPanel("input.plotmean == false", numericInput("nT", h5(paste0("Number of tumoral samples to plot (max = ", maxt, ")")), value = valor, min = mint, max = maxt))
+    }
+    
   })
   
   
@@ -217,21 +220,25 @@ shinyServer(function(input, output, session){
       
       if(input$DataType == 'methylation'){
         if(dim(datamethfilt()[['probes2']])[1]>0){
-          #           stop(print(paste0("There are not probes in this region")))
-          #         }else{
-          wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
-                               geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                               CpGislands = input$CpGi, plotmean = input$plotmean,
-                               plotting = TRUE, geneLine = input$geneLine)
+          if(is.null(datamethfilt()$ddN2) & is.null(datamethfilt()$ddT2)){
+            stop("There are no samples in this tissue type")
+          } else{
+            wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+                                 geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
+                                 CpGislands = input$CpGi, plotmean = input$plotmean,
+                                 plotting = TRUE, geneLine = input$geneLine)
+          }
         }
       }
       if(input$DataType == 'expression'){
         if(dim(dataexprfilt()[['exons2']])[1]>0){
-          #           stop(print(paste0("There are not exons in this region")))
-          #         }else{
-          wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
-                              geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                              plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+          if(is.null(dataexprfilt()$ddN2) & is.null(dataexprfilt()$ddT2)){
+            stop("There are no samples in this tissue type")
+          } else{
+            wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+                                geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
+                                plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine)
+          }
         }
       }
     }
@@ -244,19 +251,36 @@ shinyServer(function(input, output, session){
   output$plotStat <- renderPlot({
     if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(isolate(toupper(input$Gene))) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
       
-      
       if(input$DataType == 'methylation'){
         if(dim(datamethfilt()[['probes2']])[1]>0){
-          stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
-                             geneNamesType = geneFormat(), CpGislands = input$CpGi,
-                             geneLine = input$geneLine, plotting = TRUE)
+          if(is.null(datamethfilt()$ddN2) | is.null(datamethfilt()$ddT2)){
+            stop("There are not enough samples to perform the statistical analysis")
+          } else{
+            
+            if(dim(datamethfilt()$ddN2)[2]==2 | dim(datamethfilt()$ddT2)[2]==2){
+              stop("There are not enough samples to perform the statistical analysis")
+            } else{
+              stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+                                 geneNamesType = geneFormat(), CpGislands = input$CpGi,
+                                 geneLine = input$geneLine, plotting = TRUE)
+            }
+          }
         }
       }
       else if(input$DataType == 'expression'){
         if(dim(dataexprfilt()[['exons2']])[1]>0){
-          stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
-                             geneNamesType = geneFormat(),
-                             geneLine = input$geneLine, plotting = TRUE)
+          if(is.null(dataexprfilt()$ddN2) | is.null(dataexprfilt()$ddT2)){
+            stop("There are not enough samples to perform the statistical analysis")
+          } else{
+            
+            if(dim(dataexprfilt()$ddN2)[2]==2 | dim(dataexprfilt()$ddT2)[2]==2){
+              stop("There are not enough samples to perform the statistical analysis")
+            } else{
+              stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+                                 geneNamesType = geneFormat(),
+                                 geneLine = input$geneLine, plotting = TRUE)
+            }
+          }
         }
       }
     }
@@ -386,62 +410,62 @@ shinyServer(function(input, output, session){
       dev.off()
     }
   )
-
+  
   output$permalink_modal <- renderText({
-      ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
-      location <- 'http://maplab.cat/betawanderer_api'
+    ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
+    location <- 'http://maplab.cat/betawanderer_api'
+    
+    ## if (input$goButton > 0) {
+    
+    if (input$region & !is.null(input$Gene) & !is.null(input$start) & !is.null(input$end) & !is.null(input$TissueType) & !is.null(input$DataType)
+        & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {  
+      url <- sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
+                     location,
+                     input$Gene,
+                     input$start,
+                     input$end,
+                     input$TissueType,
+                     input$DataType,
+                     input$plotmean,
+                     input$geneLine,
+                     input$CpGi,
+                     input$nN,
+                     input$nT)
+    }
+    else if (!input$region & !is.null(input$Gene) & !is.null(input$Zoom[0]) & !is.null(input$Zoom[1]) & !is.null(input$TissueType) & !is.null(input$DataType)
+             & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {          
       
-      ## if (input$goButton > 0) {
-
-      if (input$region & !is.null(input$Gene) & !is.null(input$start) & !is.null(input$end) & !is.null(input$TissueType) & !is.null(input$DataType)
-          & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {  
-          url <- sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
-                         location,
-                         input$Gene,
-                         input$start,
-                         input$end,
-                         input$TissueType,
-                         input$DataType,
-                         input$plotmean,
-                         input$geneLine,
-                         input$CpGi,
-                         input$nN,
-                         input$nT)
-      }
-       else if (!input$region & !is.null(input$Gene) & !is.null(input$Zoom[0]) & !is.null(input$Zoom[1]) & !is.null(input$TissueType) & !is.null(input$DataType)
-          & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {          
-
-          url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
-              location,
-              input$Gene,
-              input$Zoom[1],
-              input$Zoom[2],
-              input$TissueType,
-              input$DataType,
-              input$plotmean,
-              input$geneLine,
-              input$CpGi,
-              input$nN,
-              input$nT)
-      } else {
-          url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30', location)
-          
-      }
-
-      generate_modal(url)
+      url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
+                    location,
+                    input$Gene,
+                    input$Zoom[1],
+                    input$Zoom[2],
+                    input$TissueType,
+                    input$DataType,
+                    input$plotmean,
+                    input$geneLine,
+                    input$CpGi,
+                    input$nN,
+                    input$nT)
+    } else {
+      url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30', location)
+      
+    }
+    
+    generate_modal(url)
   })
-
+  
   output$genome_browser <- renderText({
-      generate_genome_browser_link(chromosome = geneSize()[[3]],
-                                   start = input$Zoom[1],
-                                   end = input$Zoom[2])
-      
+    generate_genome_browser_link(chromosome = geneSize()[[3]],
+                                 start = input$Zoom[1],
+                                 end = input$Zoom[2])
+    
   })
-
+  
   cancel.onSessionEnded <- session$onSessionEnded(function() {
-      dbDisconnect(con)
+    dbDisconnect(con)
   })
-
+  
   
   #on.exit(dbDisconnect(con), add = TRUE)
   
