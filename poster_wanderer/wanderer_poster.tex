@@ -103,8 +103,11 @@
 \end{minipage}
 %
 \begin{minipage}[t][4em][c]{0.25\linewidth}
-\includegraphics[width=20cm]{figures/logo_imppc.png}\\
+\textcolor{white}{qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqq qqqqqqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqq qqqqqqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqqqqqqq qqqqqqq qqqq}
+\includegraphics[width=20cm]{figures/logo_imppc_igtp.png}\\
 \end{minipage}
+
+
 
 \vspace{1cm} % A bit of extra whitespace between the header and poster content
 
@@ -129,7 +132,12 @@
 \begin{Section}{\textbf{The Cancer Genome Atlas enormous data availability}}
 % Data analysis on human cancer is a hotspot in basic and clinical research. As a group of largely heterogenous and complex disease, cancer research is benefited by coordinated efforts on data acquisition and analysis. The Cancer Genome Atlas (TCGA) is a result of an international effort that offers a multilayered view of the genomics and epigenomics of more than 30 human cancer types. This enormous data availability opens a wide world of possibilities to the research community. For instance, it allows \textit{in silico} hypothesis testing or validation of in-house results through an independent series.\\
 
-The Cancer Genome Atlas (TCGA) initiative is an ambitious project aiming to accelerate our understanding of the molecular basis of cancer by providing large-scale genome information from thousands of clinically characterized cancer samples. The complex and comprehensive  nature of the generated data represents a privileged opportunity for researcher to get insights into the molecular landscapes of cancers. In fact, the landmark papers reporting the original data of each tumor type may just be considered a modest anticipation of the expected overall outcome. Nevertheless,  wet lab experimentalists have very limited access to these data because sophisticated bioinformatic skills are required to manage and analyze such large datasets. Hence, development of interfaces facilitating the visualization and analysis of the information to non-bioinformaticians is essential to get a broad exploitation of this gigantic effort.
+The Cancer Genome Atlas (TCGA) initiative is an ambitious project aiming to accelerate our understanding of the molecular basis of cancer by providing large-scale genome information from thousands of clinically characterized cancer samples. The complex and comprehensive  nature of the generated data represents a privileged opportunity for researchers to get insights into the molecular landscapes of cancers. In fact, the landmark papers reporting the original data of each tumor type may just be considered a modest anticipation of the expected overall outcome.\\
+
+Nevertheless,  wet lab experimentalists have very limited access to these data because sophisticated bioinformatic skills are required to manage and analyze such large datasets. Hence, development of interfaces facilitating the visualization and analysis of the information to non-bioinformaticians is essential to get a broad exploitation of this gigantic effort.\\
+
+
+As experimental researchers with a long track of investigations using both candidate oriented and exploratory type studies, we are fully aware of these shortcomings. Our response has been the development of Wanderer, a very simple and intuitive web tool allowing real time access and visualization of \textbf{gene expression and DNA methylation profiles from TCGA data using gene targeted queries}.\\
 
 
 \end{Section}
@@ -148,9 +156,7 @@ The Cancer Genome Atlas (TCGA) initiative is an ambitious project aiming to acce
 % With this aim we developed a tool, the TCGA Wanderer, that allows to easily retrieve and visualize the regional profiles of groups of samples belonging to a tumor type. The user is only asked to introduce the TCGA dataset (i.e. colon adenocarcinoma), whether the query is related to methylation (Illumina 450k) or expression (RNAseq), and gene symbol or Ensembl ID are valid target identifiers. The result layout summarizes in a upper panel the normal's profile and the lower, the tumor's. Each profile links by lines the selected values by sample, meaning that sample heterogeneity may be easily inspected by eye. Gene location and sense and CpG islands (for methylation plots) are also printed. The plots are highly dynamic, allowing to move through a region and to zoom in and out. Images and the TCGA's data they represent are downloadable just by clicking a button. Currently the we have 19 different datasets available: colon adenocarcinoma (COAD), breast invasive carcinoma (BRCA), lung adenocarcinoma (LUAD) and thyroid carcinoma (THCA), among others.  \\
 
 
-As experimental researchers with a long track of investigations using both candidate oriented and exploratory type studies, we are fully aware of these shortcomings. Our response has been the development of Wanderer, a very simple and intuitive web tool allowing real time access and visualization of gene expression and DNA methylation profiles from TCGA data using gene targeted queries.\\
-
-For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure \ref{fig:1}). Graphs for normal and tumor samples from any of the 19 available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization. Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers.\\
+For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene. Graphs for normal and tumor samples from any of the 19 available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization. Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers.\\
 
 
 \end{Section}
@@ -173,7 +179,7 @@ For any given gene selected by the investigator, the tool provides detailed indi
 
 
 
-\begin{Section}{\textbf{Usage example}}
+\begin{Section}{\textbf{Use case: Exon differential expression visualization}}
 
   \begin{center}\vspace{1cm}
 \includegraphics[width=\linewidth]{./figures/fig3.pdf}
@@ -187,12 +193,12 @@ DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and 
 
 
 
-\begin{Section}{\textbf{Graphical user interface}}
+\begin{Section}{\textbf{Easy-to-use user interface}}
 
   \begin{center}\vspace{1cm}
 \includegraphics[width=\linewidth]{./figures/fig1.pdf}
 \captionof{figure}{
-Snapshot of Wanderer webpage. Boxes indicate the different panels for gene name/ID and dataset selection (a), view customization (b and c), output (d) and data download and links (e). Web access to Wanderer: \href{http://www.maplab.cat/betawanderer}{http://www.maplab.cat/betawanderer}.
+Snapshot of Wanderer webpage. Boxes indicate the different panels for gene name/ID and dataset selection (a), view customization (b and c), output (d) and data download and links (e).
 }
 \end{center}\vspace{1cm}
 
@@ -226,7 +232,7 @@ Snapshot of Wanderer webpage. Boxes indicate the different panels for gene name/
 
 \begin{Section}{\textbf{Availability}}
 
-The user-friendly web application has been developed using R/shiny and is freely accesable at \url{http://172.19.5.24:3838/regional_profiler/} (this will not be the released URL). As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
+The user-friendly web application has been developed using R/shiny and is freely accesable at \url{maplab.cat/betawanderer} (provisional address). As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
 
   
 \end{Section}
@@ -235,17 +241,17 @@ The user-friendly web application has been developed using R/shiny and is freely
 
 
 
-\begin{Section}{\textbf{Even more random text}}
+% \begin{Section}{\textbf{Even more random text}}
 
-\begin{center}\vspace{1cm}
-% \includegraphics[width=0.8\linewidth]{./figures/protege_clouds.pdf}
-% \captionof{figure}{
-% As reflected by tag cloud views, the most abundant class properties (top left) show how different classes (top right) are linked. For instance, \texttt{closest chromatin state to Alu} is a highly used property as well \texttt{8 Insulator} is a common chromatin state. However, some data is attached to given classes as simple attributes (bottom left), such as the genomic location. Finally, all the terms have an explicit hierarchy (bottom right). 
-% }
-\end{center}\vspace{1cm}
+% \begin{center}\vspace{1cm}
+% % \includegraphics[width=0.8\linewidth]{./figures/protege_clouds.pdf}
+% % \captionof{figure}{
+% % As reflected by tag cloud views, the most abundant class properties (top left) show how different classes (top right) are linked. For instance, \texttt{closest chromatin state to Alu} is a highly used property as well \texttt{8 Insulator} is a common chromatin state. However, some data is attached to given classes as simple attributes (bottom left), such as the genomic location. Finally, all the terms have an explicit hierarchy (bottom right). 
+% % }
+% \end{center}\vspace{1cm}
 
 
-\end{Section}
+% \end{Section}
 
 
 %\begin{Section}{\textbf{Acknowledgements}}
