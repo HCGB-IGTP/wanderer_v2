@@ -22,7 +22,7 @@ source(file.path(SRC, 'stat_analysis_meth.R'))
 source(file.path(SRC, 'stat_analysis_expr.R'))
 
 
-sample_size <- read.table(file.path(SRC, "samplesN_filtered.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
+sample_size <- read.table(file.path(SRC, "samplesN_filtered2.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
 
 error <- 'Malformed query'
 
