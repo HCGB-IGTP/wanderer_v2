@@ -31,7 +31,7 @@ shinyServer(function(input, output, session){
   
   #database connection
   con <- db_connect(DB_CONF)
-  
+  ## print(dbGetInfo(con))
   #################################################
   ##detect gene format
   geneFormat <- reactive({
@@ -461,11 +461,22 @@ shinyServer(function(input, output, session){
                                  end = input$Zoom[2])
     
   })
+
+  
+  output$proportionality <- renderText({
+     ## generate_modal('foobar')
+      pop_modal_plot('foobar')
+    
+  })
+
   
   cancel.onSessionEnded <- session$onSessionEnded(function() {
     dbDisconnect(con)
   })
-  
+
+  output$plot_test <- renderPlot({
+      hist(runif(20))
+  })
   
   #on.exit(dbDisconnect(con), add = TRUE)
   
