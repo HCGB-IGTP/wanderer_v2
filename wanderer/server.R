@@ -226,7 +226,7 @@ shinyServer(function(input, output, session){
             wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                  geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                  CpGislands = input$CpGi, plotmean = input$plotmean,
-                                 plotting = TRUE, geneLine = input$geneLine, proportional = (input$proportionality_switch%%2==0))
+                                 plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
           }
         }
       }
@@ -237,7 +237,7 @@ shinyServer(function(input, output, session){
           } else{
             wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                 geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = (input$proportionality_switch%%2==0))
+                                plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
           }
         }
       }
@@ -262,7 +262,7 @@ shinyServer(function(input, output, session){
             } else{
               stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                  geneNamesType = geneFormat(), CpGislands = input$CpGi,
-                                 geneLine = input$geneLine, plotting = TRUE, proportional = (input$proportionality_switch%%2==0))
+                                 geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
             }
           }
         }
@@ -278,7 +278,7 @@ shinyServer(function(input, output, session){
             } else{
               stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                  geneNamesType = geneFormat(),
-                                 geneLine = input$geneLine, plotting = TRUE, proportional = (input$proportionality_switch%%2==0))
+                                 geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
             }
           }
         }
@@ -297,12 +297,12 @@ shinyServer(function(input, output, session){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
-                                        plotting = TRUE, geneLine = input$geneLine, proportional = (input$proportionality_switch%%2==0))
+                                        plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                       plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = (input$proportionality_switch%%2==0))
+                                       plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
       print(regplot)
       dev.off()
@@ -316,12 +316,12 @@ shinyServer(function(input, output, session){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
-                                        plotting = TRUE, geneLine = input$geneLine, proportional = (input$proportionality_switch%%2==0))
+                                        plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                       plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = (input$proportionality_switch%%2==0))
+                                       plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
       print(regplot)
       dev.off()
@@ -360,13 +360,13 @@ shinyServer(function(input, output, session){
       if(input$DataType == 'methylation'){
         results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                      geneNamesType = geneFormat(), CpGislands = input$CpGi,
-                                     geneLine = input$geneLine, plotting = FALSE, proportional = (input$proportionality_switch%%2==0)) 
+                                     geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly) )
         write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
       if(input$DataType == 'expression'){
         results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(),
-                                      geneLine = input$geneLine, plotting = FALSE, proportional = (input$proportionality_switch%%2==0))
+                                      geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly))
         write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
     }
@@ -381,12 +381,12 @@ shinyServer(function(input, output, session){
       if(input$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = input$CpGi,
-                                      geneLine = input$geneLine, plotting = TRUE, proportional = (input$proportionality_switch%%2==0))
+                                      geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
         regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(),
-                                      geneLine = input$geneLine, plotting = TRUE, proportional = (input$proportionality_switch%%2==0))
+                                      geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
       ## print(regplot)
       dev.off()
@@ -399,12 +399,12 @@ shinyServer(function(input, output, session){
       if(input$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = input$CpGi,
-                                      geneLine = input$geneLine, plotting = TRUE, proportional = (input$proportionality_switch%%2==0))
+                                      geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
         regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
                                       geneNamesType = geneFormat(),
-                                      geneLine = input$geneLine, plotting = TRUE, proportional = (input$proportionality_switch%%2==0))
+                                      geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
       print(regplot)
       dev.off()

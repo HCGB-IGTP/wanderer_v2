@@ -96,6 +96,19 @@
               <h4>Plotting parameters</h4>
               <br>
               <!-- <hr/> -->
+
+              <label class="checkbox" for="distribute_uniformly">
+                <input id="distribute_uniformly" type="checkbox"/>
+                <span>
+                  <h5>
+                    Distribute uniformly
+                    <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Switch between distributing probes/exons by their genomic location, or regardless (leaving the same space between them regardless of the physical distances)" data-animation="TRUE" data-placement="right" data-trigger="hover">
+                      <b>?</b>
+                    </a>
+                  </h5>
+                </span>
+              </label>
+
               <label class="checkbox" for="geneLine">
                 <input id="geneLine" type="checkbox" checked="checked"/>
                 <span>
@@ -164,13 +177,7 @@
                 <br>
               </div>
               <div align = "center">
-                <div id="proportionality" class="shiny-html-output"></div>
-                <button id="proportionality_switch" type="button" class="btn action-button">
-                  Switch distances proportionality
-                </button>
-                <pre id="proportionality_switch_reporter" class="shiny-text-output"></pre>
-                <!-- <div id="proportionality_switch" class="shiny-html-output"></div> -->
-
+             
                 <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
                 <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%"></div>
               </div>
