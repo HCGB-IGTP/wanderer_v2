@@ -420,7 +420,7 @@ shinyServer(function(input, output, session){
     
     if (input$region & !is.null(input$Gene) & !is.null(input$start) & !is.null(input$end) & !is.null(input$TissueType) & !is.null(input$DataType)
         & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {  
-      url <- sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
+      url <- sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&distribute_uniformly=%s',
                      location,
                      input$Gene,
                      input$start,
@@ -431,12 +431,13 @@ shinyServer(function(input, output, session){
                      input$geneLine,
                      input$CpGi,
                      input$nN,
-                     input$nT)
+                     input$nT,
+                     input$distribute_uniformly)
     }
     else if (!input$region & !is.null(input$Gene) & !is.null(input$Zoom[0]) & !is.null(input$Zoom[1]) & !is.null(input$TissueType) & !is.null(input$DataType)
              & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {          
       
-      url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s',
+      url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&distribute_uniformly=%s',
                     location,
                     input$Gene,
                     input$Zoom[1],
@@ -447,9 +448,10 @@ shinyServer(function(input, output, session){
                     input$geneLine,
                     input$CpGi,
                     input$nN,
-                    input$nT)
+                    input$nT,
+          input$distribute_uniformly)
     } else {
-      url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30', location)
+      url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30&distribute_uniformly=FALSE', location)
       
     }
     

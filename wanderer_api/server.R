@@ -69,9 +69,10 @@ shinyServer(function(input, output, session){
   ## query$region <- as.logical(query$region)
   query$region <- TRUE
   query$goButton <- 1
+  query$distribute_uniformly <- as.logical(query$distribute_uniformly)
 
   api_arguments_allowances <- sort(c('Gene', 'start','end', 'TissueType', 'DataType', 'plotmean',
-                                'geneLine', 'CpGi', 'nN', 'nT', 'region', 'goButton', 'Zoom'))
+                                'geneLine', 'CpGi', 'nN', 'nT', 'region', 'goButton', 'Zoom', 'distribute_uniformly'))
   
   
   #################################################
@@ -177,7 +178,8 @@ shinyServer(function(input, output, session){
                   wanderer_methylation(results_filt = datamethfilt(), geneName = toupper(query$Gene),
                                        geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
                                        CpGislands = query$CpGi, plotmean = query$plotmean,
-                                       plotting = TRUE, geneLine = query$geneLine)
+                                       plotting = TRUE, geneLine = query$geneLine,
+                                       proportional = !(query$distribute_uniformly))
               }
           }
           else if(query$DataType == 'expression'){
@@ -186,7 +188,8 @@ shinyServer(function(input, output, session){
               }else{
                   wanderer_expression(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                      plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine)
+                                      plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine,
+                                      proportional = !(query$distribute_uniformly)))
               }
           }
 
@@ -208,14 +211,16 @@ shinyServer(function(input, output, session){
         if(dim(datamethfilt()[['probes2']])[1]>0){
           stat_analysis_meth(results_filt = datamethfilt(), geneName = toupper(query$Gene),
                              geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                             geneLine = query$geneLine, plotting = TRUE)
+                             geneLine = query$geneLine, plotting = TRUE,
+                             proportional = !(query$distribute_uniformly))
         }
       }
       if(query$DataType == 'expression'){
         if(dim(dataexprfilt()[['exons2']])[1]>0){
           stat_analysis_expr(results_filt = dataexprfilt(), geneName =toupper(query$Gene),
                              geneNamesType = geneFormat(),
-                             geneLine = query$geneLine, plotting = TRUE)
+                             geneLine = query$geneLine, plotting = TRUE,
+                             proportional = !(query$distribute_uniformly))
         }
       }
     }
@@ -237,7 +242,8 @@ shinyServer(function(input, output, session){
       else if(query$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = toupper(query$Gene),
                                        geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                       plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine)
+                                       plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine,
+                                       proportional = !(query$distribute_uniformly))
       }
 
       dev.off()
@@ -251,12 +257,14 @@ shinyServer(function(input, output, session){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
                                         geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
                                         CpGislands = query$CpGi, plotmean = query$plotmean,
-                                        plotting = TRUE, geneLine = query$geneLine)
+                                        plotting = TRUE, geneLine = query$geneLine,
+                                        proportional = !(query$distribute_uniformly))
       }
       else if(query$DataType == 'expression'){
         regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
                                        geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                       plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine)
+                                       plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine,
+                                       proportional = !(query$distribute_uniformly))
       }
 
       dev.off()
@@ -299,13 +307,17 @@ shinyServer(function(input, output, session){
       if(query$DataType == 'methylation'){
         results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
                                      geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                                     geneLine = query$geneLine, plotting = FALSE) 
+                                     geneLine = query$geneLine, plotting = FALSE,
+                                     proportional = !(query$distribute_uniformly))
+        
         write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
       else if(query$DataType == 'expression'){
         results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(),
-                                      geneLine = query$geneLine, plotting = FALSE)
+                                      geneLine = query$geneLine, plotting = FALSE,
+                                      proportional = !(query$distribute_uniformly))
+        
         write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
     }
@@ -320,12 +332,14 @@ shinyServer(function(input, output, session){
       if(query$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                                      geneLine = query$geneLine, plotting = TRUE)
+                                      geneLine = query$geneLine, plotting = TRUE,
+                                      proportional = !(query$distribute_uniformly))
       }
       else if(query$DataType == 'expression'){
         regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(),
-                                      geneLine = query$geneLine, plotting = TRUE)
+                                      geneLine = query$geneLine, plotting = TRUE,
+                                      proportional = !(query$distribute_uniformly))
       }
       dev.off()
     }
@@ -337,12 +351,14 @@ shinyServer(function(input, output, session){
       if(query$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                                      geneLine = query$geneLine, plotting = TRUE)
+                                      geneLine = query$geneLine, plotting = TRUE,
+                                      proportional = !(query$distribute_uniformly))
       }
       else if(query$DataType == 'expression'){
         regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(),
-                                      geneLine = query$geneLine, plotting = TRUE)
+                                      geneLine = query$geneLine, plotting = TRUE,
+                                      proportional = !(query$distribute_uniformly))
       }
       
       dev.off()
