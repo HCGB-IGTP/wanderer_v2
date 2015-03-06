@@ -412,8 +412,9 @@ shinyServer(function(input, output, session){
   )
   
   output$permalink_modal <- renderText({
-    ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
-    location <- 'http://192.168.3.67:3939/new_wanderer_api/'
+      ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
+      ## location <- 'http://192.168.3.67:3939/new_wanderer_api/'
+      location <- 'http://gattaca.imppc.org:3939/wanderer_api'
     
     ## if (input$goButton > 0) {
     
