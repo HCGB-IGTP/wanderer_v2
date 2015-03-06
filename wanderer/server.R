@@ -463,30 +463,11 @@ shinyServer(function(input, output, session){
   })
 
   
-  output$proportionality <- renderText({
-     ## generate_modal('foobar')
-      pop_modal_plot('foobar')
-    
-  })
-
-  
   cancel.onSessionEnded <- session$onSessionEnded(function() {
     dbDisconnect(con)
   })
 
-  output$plot_test <- renderPlot({
-      hist(runif(20))
-  })
 
-  
-  output$proportionality_switch_reporter <- renderText({
-     ## generate_modal('foobar')
-      ## pop_modal_plot('foobar')
-
-      return(input$proportionality_switch)
-  })
-
-  
   #on.exit(dbDisconnect(con), add = TRUE)
   
 })
