@@ -37,7 +37,7 @@
                 <li class="divider"></li>
                 
                 <li><a href="http://gattaca.imppc.org:3838/methylation_plotter/" target = "_blank">Methylation plotter</a></li>
-                <li><a href="http://www.maplab.cat/betawanderer" target = "_blank">Wanderer</a></li>
+                <li><a href="http://www.maplab.cat/wanderer" target = "_blank">Wanderer</a></li>
 
                 <!-- <li><a href="http://www.maplab.cat/correlations" target = "_blank">Correlations browser</a></li> -->
                 <!-- <li><a href="http://www.maplab.cat/alu_ontology" target = "_blank">Alu Ontology</a></li> -->
@@ -96,12 +96,25 @@
               <h4>Plotting parameters</h4>
               <br>
               <!-- <hr/> -->
+
+              <label class="checkbox" for="distribute_uniformly">
+                <input id="distribute_uniformly" type="checkbox"/>
+                <span>
+                  <h5>
+                    Distribute uniformly
+                    <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Switch between distributing probes/exons by their genomic location, or uniformly." data-animation="TRUE" data-placement="right" data-trigger="hover">
+                      <b>?</b>
+                    </a>
+                  </h5>
+                </span>
+              </label>
+
               <label class="checkbox" for="geneLine">
                 <input id="geneLine" type="checkbox" checked="checked"/>
                 <span>
                   <h5>
                     Show gene location
-                    <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as an orange arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
+                    <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as a black arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
                       <b>?</b>
                     </a>
                   </h5>
@@ -164,11 +177,14 @@
                 <br>
               </div>
               <div align = "center">
+             
                 <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
                 <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%"></div>
               </div>
               <br>
               <div align = "center">
+
+
                 <a id="downloadPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG plot</a>  
                 <a id="downloadPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF plot</a> 
                 <a id="downloadMeanPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG Mean plot</a>  

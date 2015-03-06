@@ -69,9 +69,10 @@ shinyServer(function(input, output, session){
   ## query$region <- as.logical(query$region)
   query$region <- TRUE
   query$goButton <- 1
+  query$distribute_uniformly <- as.logical(query$distribute_uniformly)
 
   api_arguments_allowances <- sort(c('Gene', 'start','end', 'TissueType', 'DataType', 'plotmean',
-                                'geneLine', 'CpGi', 'nN', 'nT', 'region', 'goButton', 'Zoom'))
+                                'geneLine', 'CpGi', 'nN', 'nT', 'region', 'goButton', 'Zoom', 'distribute_uniformly'))
   
   
   #################################################
@@ -177,7 +178,8 @@ shinyServer(function(input, output, session){
                   wanderer_methylation(results_filt = datamethfilt(), geneName = toupper(query$Gene),
                                        geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
                                        CpGislands = query$CpGi, plotmean = query$plotmean,
-                                       plotting = TRUE, geneLine = query$geneLine)
+                                       plotting = TRUE, geneLine = query$geneLine,
+                                       proportional = !(query$distribute_uniformly))
               }
           }
           else if(query$DataType == 'expression'){
@@ -186,7 +188,8 @@ shinyServer(function(input, output, session){
               }else{
                   wanderer_expression(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
                                       geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                      plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine)
+                                      plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine,
+                                      proportional = !(query$distribute_uniformly))
               }
           }
 
@@ -196,158 +199,171 @@ shinyServer(function(input, output, session){
   
   
   
-  ##################################################
-  #print summary plot
+##################################################
+                                        #print summary plot
   output$plotStat <- renderPlot({
 
       if (!all(api_arguments_allowances == sort(names(query))) | !(toupper(query$TissueType) %in% sample_size[,2]))
           stop(error)
 
-    if(!is.null(query$TissueType) & !is.null(query$nN) & !is.null(query$nT) & !is.null(toupper(query$Gene)) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
-      if(query$DataType == 'methylation'){
-        if(dim(datamethfilt()[['probes2']])[1]>0){
-          stat_analysis_meth(results_filt = datamethfilt(), geneName = toupper(query$Gene),
-                             geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                             geneLine = query$geneLine, plotting = TRUE)
-        }
+      if(!is.null(query$TissueType) & !is.null(query$nN) & !is.null(query$nT) & !is.null(toupper(query$Gene)) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
+          if(query$DataType == 'methylation'){
+              if(dim(datamethfilt()[['probes2']])[1]>0){
+                  stat_analysis_meth(results_filt = datamethfilt(), geneName = toupper(query$Gene),
+                                     geneNamesType = geneFormat(), CpGislands = query$CpGi,
+                                     geneLine = query$geneLine, plotting = TRUE,
+                                     proportional = !(query$distribute_uniformly))
+              }
+          }
+          if(query$DataType == 'expression'){
+              if(dim(dataexprfilt()[['exons2']])[1]>0){
+                  stat_analysis_expr(results_filt = dataexprfilt(), geneName =toupper(query$Gene),
+                                     geneNamesType = geneFormat(),
+                                     geneLine = query$geneLine, plotting = TRUE,
+                                     proportional = !(query$distribute_uniformly))
+              }
+          }
       }
-      if(query$DataType == 'expression'){
-        if(dim(dataexprfilt()[['exons2']])[1]>0){
-          stat_analysis_expr(results_filt = dataexprfilt(), geneName =toupper(query$Gene),
-                             geneNamesType = geneFormat(),
-                             geneLine = query$geneLine, plotting = TRUE)
-        }
-      }
-    }
   }, height = 500, width = 1000)
   
   
-  #################################################
-  #dowload plot as png & pdf
+#################################################
+                                        #dowload plot as png & pdf
   output$downloadPlot <- downloadHandler(
-    filename = function() { paste0("Wanderer_", toupper(query$Gene), '_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.png') },
-    content = function(file) {
-      CairoPNG(file, width = 1000, height = 1000)
-      if(query$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = toupper(query$Gene),
-                                        geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                        CpGislands = query$CpGi, plotmean = query$plotmean,
-                                        plotting = TRUE, geneLine = query$geneLine)
-      }
-      else if(query$DataType == 'expression'){
-        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = toupper(query$Gene),
-                                       geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                       plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine)
-      }
+      filename = function() { paste0("Wanderer_", toupper(query$Gene), '_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.png') },
+      content = function(file) {
+          CairoPNG(file, width = 1000, height = 1000)
+          if(query$DataType == 'methylation'){
+              regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = toupper(query$Gene),
+                                              geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
+                                              CpGislands = query$CpGi, plotmean = query$plotmean,
+                                              plotting = TRUE, geneLine = query$geneLine)
+          }
+          else if(query$DataType == 'expression'){
+              regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = toupper(query$Gene),
+                                             geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
+                                             plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine,
+                                             proportional = !(query$distribute_uniformly))
+          }
 
-      dev.off()
-    }
-  )
+          dev.off()
+      }
+      )
   output$downloadPlotPDF <- downloadHandler(
-    filename = function() { paste0("Wanderer_", toupper(query$Gene), '_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.pdf') },
-    content = function(file) {
-      pdf(file, width = 14, height = 14, useDingbats = FALSE)
-      if(query$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
-                                        geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                        CpGislands = query$CpGi, plotmean = query$plotmean,
-                                        plotting = TRUE, geneLine = query$geneLine)
-      }
-      else if(query$DataType == 'expression'){
-        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
-                                       geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
-                                       plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine)
-      }
+      filename = function() { paste0("Wanderer_", toupper(query$Gene), '_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.pdf') },
+      content = function(file) {
+          pdf(file, width = 14, height = 14, useDingbats = FALSE)
+          if(query$DataType == 'methylation'){
+              regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
+                                              geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
+                                              CpGislands = query$CpGi, plotmean = query$plotmean,
+                                              plotting = TRUE, geneLine = query$geneLine,
+                                              proportional = !(query$distribute_uniformly))
+          }
+          else if(query$DataType == 'expression'){
+              regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
+                                             geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
+                                             plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine,
+                                             proportional = !(query$distribute_uniformly))
+          }
 
-      dev.off()
-    }
-  )
+          dev.off()
+      }
+      )
   
   
-  #################################################
-  #dowload Normal data
+#################################################
+                                        #dowload Normal data
   output$downloadNData <- downloadHandler(
-    
-    filename = function() { paste0("Wanderer_", isolate(toupper(query$Gene)), '_', query$DataType, '_', query$TissueType, '_Normal_', Sys.Date(), '.txt') },
-    content = function(file) {
-      if(query$DataType == 'methylation')
-          write.table(datamethfilt()$ddN2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
-      else if(query$DataType == 'expression')
-          write.table(dataexprfilt()$ddN2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
-    }
-  )
-  
-  #################################################
-  #dowload Tumor data
-  output$downloadTData <- downloadHandler(
-    
-    filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_', query$DataType, '_', query$TissueType, '_Tumor_', Sys.Date(), '.txt') },
-    content = function(file) {
-      if(query$DataType == 'methylation')
-          write.table(datamethfilt()$ddT2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
-      else if(query$DataType == 'expression')
-          write.table(dataexprfilt()$ddT2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)      
-    }
-  )
-  
-  #################################################
-  #dowload probe annotation and statistical analysis
-  output$downloadPData <- downloadHandler(
-    
-    filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_', query$DataType, '_', query$TissueType, '_annotations_and_statistical_analysis_', Sys.Date(), '.txt') },
-    content = function(file) {
-      if(query$DataType == 'methylation'){
-        results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
-                                     geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                                     geneLine = query$geneLine, plotting = FALSE) 
-        write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
-      }
-      else if(query$DataType == 'expression'){
-        results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
-                                      geneNamesType = geneFormat(),
-                                      geneLine = query$geneLine, plotting = FALSE)
-        write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
-      }
-    }
-  )
-  
-  #################################################
-  #dowload plot as png & pdf
-  output$downloadMeanPlot <- downloadHandler(
-    filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_Mean_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.png') },
-    content = function(file) {
-      CairoPNG(file, width = 1000, height = 500)
-      if(query$DataType == 'methylation'){
-        regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
-                                      geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                                      geneLine = query$geneLine, plotting = TRUE)
-      }
-      else if(query$DataType == 'expression'){
-        regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
-                                      geneNamesType = geneFormat(),
-                                      geneLine = query$geneLine, plotting = TRUE)
-      }
-      dev.off()
-    }
-  )
-  output$downloadMeanPlotPDF <- downloadHandler(
-    filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_Mean_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.pdf') },
-    content = function(file) {
-      pdf(file, width = 14, height = 6, useDingbats = FALSE)
-      if(query$DataType == 'methylation'){
-        regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
-                                      geneNamesType = geneFormat(), CpGislands = query$CpGi,
-                                      geneLine = query$geneLine, plotting = TRUE)
-      }
-      else if(query$DataType == 'expression'){
-        regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
-                                      geneNamesType = geneFormat(),
-                                      geneLine = query$geneLine, plotting = TRUE)
-      }
       
-      dev.off()
-    }
-  )
+      filename = function() { paste0("Wanderer_", isolate(toupper(query$Gene)), '_', query$DataType, '_', query$TissueType, '_Normal_', Sys.Date(), '.txt') },
+      content = function(file) {
+          if(query$DataType == 'methylation')
+              write.table(datamethfilt()$ddN2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
+          else if(query$DataType == 'expression')
+              write.table(dataexprfilt()$ddN2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
+      }
+      )
+  
+#################################################
+                                        #dowload Tumor data
+  output$downloadTData <- downloadHandler(
+      
+      filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_', query$DataType, '_', query$TissueType, '_Tumor_', Sys.Date(), '.txt') },
+      content = function(file) {
+          if(query$DataType == 'methylation')
+              write.table(datamethfilt()$ddT2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
+          else if(query$DataType == 'expression')
+              write.table(dataexprfilt()$ddT2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)      
+      }
+      )
+  
+#################################################
+                                        #dowload probe annotation and statistical analysis
+  output$downloadPData <- downloadHandler(
+      
+      filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_', query$DataType, '_', query$TissueType, '_annotations_and_statistical_analysis_', Sys.Date(), '.txt') },
+      content = function(file) {
+          if(query$DataType == 'methylation'){
+              results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
+                                           geneNamesType = geneFormat(), CpGislands = query$CpGi,
+                                           geneLine = query$geneLine, plotting = FALSE,
+                                           proportional = !(query$distribute_uniformly))
+              
+              write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
+          }
+          else if(query$DataType == 'expression'){
+              results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
+                                            geneNamesType = geneFormat(),
+                                            geneLine = query$geneLine, plotting = FALSE,
+                                            proportional = !(query$distribute_uniformly))
+              
+              write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
+          }
+      }
+      )
+  
+#################################################
+                                        #dowload plot as png & pdf
+  output$downloadMeanPlot <- downloadHandler(
+      filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_Mean_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.png') },
+      content = function(file) {
+          CairoPNG(file, width = 1000, height = 500)
+          if(query$DataType == 'methylation'){
+              regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
+                                            geneNamesType = geneFormat(), CpGislands = query$CpGi,
+                                            geneLine = query$geneLine, plotting = TRUE,
+                                            proportional = !(query$distribute_uniformly))
+          }
+          else if(query$DataType == 'expression'){
+              regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
+                                            geneNamesType = geneFormat(),
+                                            geneLine = query$geneLine, plotting = TRUE,
+                                            proportional = !(query$distribute_uniformly))
+          }
+          dev.off()
+      }
+      )
+  output$downloadMeanPlotPDF <- downloadHandler(
+      filename = function() { paste0("Wanderer_", (toupper(query$Gene)), '_Mean_', query$DataType, '_', query$TissueType, '_', Sys.Date(), '.pdf') },
+      content = function(file) {
+          pdf(file, width = 14, height = 6, useDingbats = FALSE)
+          if(query$DataType == 'methylation'){
+              regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = (toupper(query$Gene)),
+                                            geneNamesType = geneFormat(), CpGislands = query$CpGi,
+                                            geneLine = query$geneLine, plotting = TRUE,
+                                            proportional = !(query$distribute_uniformly))
+          }
+          else if(query$DataType == 'expression'){
+              regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
+                                            geneNamesType = geneFormat(),
+                                            geneLine = query$geneLine, plotting = TRUE,
+                                            proportional = !(query$distribute_uniformly))
+          }
+          
+          dev.off()
+      }
+      )
 
   cancel.onSessionEnded <- session$onSessionEnded(function() {
       dbDisconnect(con)

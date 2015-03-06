@@ -3,7 +3,7 @@
 ###############################################
 
 
-stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands, geneLine, plotting){
+stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands, geneLine, plotting, proportional){
   
   ddN2 <- results_filt$ddN2
   row.names(ddN2) <- ddN2[,1]
@@ -19,8 +19,6 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
   } else{
     
     tissue_label <- results_filt$tissue_label
-    xmin <- results_filt$xmin
-    xmax <- results_filt$xmax
     
     #wilcoxon test
     results<-data.frame(probe=0,wilcox_stat=0,pval=0)
@@ -51,22 +49,35 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
       pasterisc<-probes2$probe
       if(sum(asterisc)>0) pasterisc[asterisc]<-paste0("* ",probes2$probe[asterisc])
       
+      if(proportional){
+        xmin <- results_filt$xmin
+        xmax <- results_filt$xmax
+        
+        #axis limits
+        gmin <- unique(probes2$genestart[probes2[,paste0(geneNamesType)] == geneName])
+        gmax <- unique(probes2$geneend[probes2[,paste0(geneNamesType)] == geneName])
+        gstrand <- unique(probes2$genestrand[probes2[,paste0(geneNamesType)] == geneName])
+        gchr <- unique(probes2$chr)
+        if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
+        if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
+        if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
+        
+        posmin <- ((xmin%/%1000)-1)*1000
+        posmax <- ((xmax%/%1000)+1)*1000
+        postep <- posmax - posmin
+        positions <- round(seq(posmin, posmax, postep/5),0)
+        positions <- (positions%/%1000)*1000
+        positions <- positions[positions>=xmin & positions<=xmax]
+      }
       
-      #axis limits
-      gmin <- unique(probes2$genestart[probes2[,paste0(geneNamesType)] == geneName])
-      gmax <- unique(probes2$geneend[probes2[,paste0(geneNamesType)] == geneName])
-      gstrand <- unique(probes2$genestrand[probes2[,paste0(geneNamesType)] == geneName])
-      gchr <- unique(probes2$chr)
-      if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
-      if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
-      if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
+      if(!proportional){
+        xmin <- 1
+        xmax <- dim(probes2)[1]
+        probes2$cg_start <- seq(xmin,xmax,1)
+        
+        gmin <- gmax <- gchr <- NULL
+      }
       
-      posmin <- ((xmin%/%1000)-1)*1000
-      posmax <- ((xmax%/%1000)+1)*1000
-      postep <- posmax - posmin
-      positions <- round(seq(posmin, posmax, postep/5),0)
-      positions <- (positions%/%1000)*1000
-      positions <- positions[positions>=xmin & positions<=xmax]
       
       
       mddN <- apply(ddN,1,mean,na.rm=TRUE)
@@ -83,13 +94,15 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
            ylab = "Mean Methylation (beta value)", xlab = "", las = 1, lwd=1.2) 
       lines(probes2$cg_start, mddT, col="darkred", lwd=1.2)
       points(probes2$cg_start, mddT, col="darkred", pch=5, cex = 0.7)
-      title(paste0("Mean Methylation of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
+      if(proportional) title(paste0("Mean Methylation of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
+      if(!proportional) title(paste0("Mean Methylation of ", geneName, "\n" ,tissue_label))
+      
       axis(1, labels = pasterisc, at = probes2$cg_start, col.axis = FALSE)
       axis(2, labels = seq(0, 1, 0.2), at = seq(0, 1, 0.2), las = 1)
-      axis(3, labels = positions, at = positions, col.axis = FALSE) 
+      if(proportional) axis(3, labels = positions, at = positions, col.axis = FALSE) 
       mtext(side = 1, text = pasterisc, at = probes2$cg_start, las = 3, col = colort, line = 1) 
-      mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
-      if(geneLine & !is.null(gmin)){
+      if(proportional) mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
+      if(proportional & geneLine & !is.null(gmin)){
         if(gstrand == -1) arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
         if(gstrand == 1) arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
       }
@@ -100,7 +113,7 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
       
     }
   }
-
-return(results_stats)
-
+  
+  return(results_stats)
+  
 }

@@ -3,7 +3,7 @@
 ###############################################
 
 
-stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, plotting){
+stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, plotting, proportional){
   
   ddN2 <- results_filt$ddN2
   row.names(ddN2) <- ddN2[,1]
@@ -20,8 +20,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
   } else{
     
     tissue_label <- results_filt$tissue_label
-    xmin <- results_filt$xmin
-    xmax <- results_filt$xmax
+
     
     #wilcoxon test
     results<-data.frame(exon=0,wilcox_stat=0,pval=0)
@@ -55,6 +54,11 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
       pasterisc<-exons2$exon
       if(sum(asterisc)>0) pasterisc[asterisc]<-paste0("* ",exons2$exon[asterisc])
       
+      
+      if(proportional){
+            xmin <- results_filt$xmin
+      xmax <- results_filt$xmax
+      
       #axis limits
       gmin <- unique(exons2$genestart[exons2[,paste0(geneNamesType)] == geneName])
       gmax <- unique(exons2$geneend[exons2[,paste0(geneNamesType)] == geneName])
@@ -70,7 +74,16 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
       positions <- round(seq(posmin, posmax, postep/5),0)
       positions <- (positions%/%1000)*1000
       positions <- positions[positions>=xmin & positions<=xmax]
+      }
       
+      if(!proportional){
+        xmin <- 1
+        xmax <- dim(exons2)[1]
+        exons2$exon_start <- seq(xmin,xmax,1)
+        
+        gmin <- gmax <- gchr <- NULL
+      }
+     
       mddN <- apply(ddN,1,mean,na.rm=TRUE)
       mddT <- apply(ddT,1,mean,na.rm=TRUE)
       
@@ -83,19 +96,19 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
            ylab = "Mean Expression log2(rpkm + 1)", xlab = "", las = 1, lwd=1.2) 
       lines(exons2$exon_start, mddT, col="darkred", lwd=1.2)
       points(exons2$exon_start, mddT, col="darkred", pch=1, cex = 0.7)
+      if(proportional) title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
+      if(!proportional) title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label))
       
-      
-      title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       axis(1, labels = pasterisc, at = exons2$exon_start, col.axis = FALSE)
       axis(2, labels = seq(0, ymax, 1), at = seq(0, ymax, 1), las = 1)
-      axis(3, labels = positions, at = positions, col.axis = FALSE) 
+      if(proportional) axis(3, labels = positions, at = positions, col.axis = FALSE) 
       
       par(xpd = FALSE)
       mtext(side = 1, text = pasterisc, at = exons2$exon_start, las = 3, line = 1) 
-      mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
+      if(proportional) mtext(side = 3, text = format(positions, big.mark=','), at = positions, las = 1, line = 1, cex = 1) 
       
       
-      if(geneLine & !is.null(gmin)){
+      if(proportional & geneLine & !is.null(gmin)){
         if(gstrand == "-") arrows(gmax, -0.2, gmin, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
         if(gstrand == "+") arrows(gmin, -0.2, gmax, -0.2, cex = 2, col = "black", lwd = 2, length = 0.1)
       }
