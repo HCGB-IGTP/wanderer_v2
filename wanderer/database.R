@@ -19,7 +19,7 @@ db_connect <- function(db_conf_fn) {
     
     con <- dbConnect(drv,
                      user = db_conf[['user']],
-                     password = db_conf[['password']],
+                     ## password = db_conf[['password']],
                      dbname = db_conf[['dbname']],
                      host = db_conf[['host']],
                      port = db_conf[['port']])
