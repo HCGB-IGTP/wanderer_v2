@@ -88,7 +88,7 @@
 \begin{frontmatter}
 
 \begin{fmbox}
-\dochead{Research}
+\dochead{Methodology}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -274,13 +274,14 @@ Wanderer (\url{http://maplab.cat/wanderer}) is a very intuitive Web tool allowin
 
 
 
-Data analysis on human cancer is a hotspot in basic and clinical research. As a group of largely heterogenous and complex disease, cancer research is benefited by coordinated efforts on data acquisition and analysis. The Cancer Genome Atlas (TCGA) is a result of an international effort that offers a multilayered view of the genomics and epigenomics of more than 30 human cancer types \cite{weinstein2013cancer}. This enormous data availability opens a wide world of possibilities to the research community. For instance, it allows \textit{in silico} hypothesis testing or validation of in-house results through an independent series.\\
+Data analysis on human cancer is a hotspot in basic and clinical research. As a group of largely heterogenous and complex disease, cancer research is benefited by coordinated efforts on data acquisition and analysis. The Cancer Genome Atlas (TCGA) is a result of an international consortium that offers a multilayered view of the genomics and epigenomics of more than 30 human cancer types \cite{weinstein2013cancer}. This enormous data availability opens a wide world of possibilities to the research community. For instance, it allows \textit{in silico} hypothesis testing or validation of in-house results through an independent series.\\
 
 
 % The TCGA serves the information in three tiers according to the degree of its bioinformatical processing: raw, lightly and heavily analyzed data (named levels 1, 2 and 3). Data not belonging uniquely to an individual, such as level 3 and de-identified clinical data, is open access; on the other hand, the download of protected data, such as raw sequencing files, requires authentication via the The Cancer Genomics Hub (CGHub)\cite{wilks2014cancer}. Finally, although the open access data tier offers immediate access to the information, some projects restrict the dissemination of the results brought by its use until a first global analysis is published by the consortia.\\
 
-The TCGA Data Portal is the gateway to retrieve the TCGA information. Basically, offers a text file for each processed sample belonging to a dataset subjected to a platform; compressed packages for multiple samples are allowed. For instance, it allows downloading 992 files with the clinical data related to samples of the Colon Adenocarcinoma (COAD) dataset, but only provides RNAseq results for 303 of them. It is worth noting that as the number of files and their sizes increase, further processing of this information exceeds the spredsheet-based analysis capabilities and requires some amount of bioinformatics knowledge, (i.e. programming under the R statistical environment). Comprehensive and integrative analysis is indeed dependent on informatics solutions, such as TCGA Assembler \cite{zhu2014tcga} or the cBioPortal\cite{gao2013integrative}.\\
+% The TCGA Data Portal is the gateway to retrieve the TCGA information. Basically, offers a text file for each processed sample belonging to a dataset subjected to a platform; compressed packages for multiple samples are allowed. For instance, it allows downloading 992 files with the clinical data related to samples of the Colon Adenocarcinoma (COAD) dataset, but only provides RNAseq results for 303 of them. It is worth noting that as the number of files and their sizes increase, further processing of this information exceeds the spredsheet-based analysis capabilities and requires some amount of bioinformatics knowledge, (i.e. programming under the R statistical environment). Comprehensive and integrative analysis is indeed dependent on informatics solutions, such as TCGA Assembler \cite{zhu2014tcga} or the cBioPortal\cite{gao2013integrative}.\\
 
+The TCGA Data Portal is the gateway to retrieve the TCGA information. Basically, offers a text file for each processed sample belonging to a dataset subjected to a platform; compressed packages for multiple samples are allowed. For instance, it allows downloading 992 files with the clinical data related to samples of the Colon Adenocarcinoma (COAD) dataset, but only provides RNAseq results for 303 of them. It is worth noting that as the number of files and their sizes increase, further processing of this information exceeds the spredsheet-based analysis capabilities and requires some amount of bioinformatics knowledge, (i.e. programming under the R statistical environment). Comprehensive and integrative analysis is indeed dependent on informatics solutions, such as the cBioPortal \cite{gao2013integrative}.\\
 
 The complex and comprehensive  nature of the generated data represents a privileged opportunity for researcher to get insights into the molecular landscapes of cancers. In fact, the landmark papers reporting the original data of each tumor type may just be considered a modest anticipation of the expected overall outcome. Nevertheless,  wet lab experimentalists have very limited access to these data because sophisticated bioinformatic skills are required to manage and analyze such large datasets. Hence, development of interfaces facilitating the visualization and analysis of the information to non-bioinformaticians is essential to get a broad exploitation of this gigantic effort.\\
 
@@ -289,12 +290,15 @@ The availability of such a large amount of data is exciting to the cancer resear
 
 \section*{Results and discussion}
 
-\subsection*{Web interface}
+\subsection*{Basic usage}
 
 % With this aim we developed a tool, the TCGA Wanderer, that allows to easily retrieve and visualize the regional profiles of groups of samples belonging to a tumor type. 
 
 For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure 1). Graphs for normal and tumor samples from any of the available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization. Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers.\\
  
+\subsection*{Plotting versatity}
+
+\subsection*{Access and download}
 
 \subsection*{Usage examples}
  
@@ -310,9 +314,13 @@ Some example of issues that can be resolved by querying Wanderer (and not easily
 % A typical use case for experimentalists and clinicians is the assessment of biological questions such as which region of a CpG island should be analyzed to find the largest abnormal DNA methylation in tumor samples; and whether this one the same for different tumor types. TCGA Wanderer offers a simple and intuitive set of plots and statistical tests to tackle the behaviour of the queried gene (Figure 2).\\
 
 \section*{Conclusions}
+Wanderer is freely accessable at \url{http://maplab.cat/wanderer}. As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
 
-The user-friendly web application has been developed using R/shiny and is freely accessable at \url{http://maplab.cat/wanderer}. As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
 
+
+\section*{Methods}
+
+The user-friendly web application has been developed using R/shiny and a PostgreSQL backend using an eXtreme programming software development methodology.
 
 % TODO afegir lo dels boxplots
 
