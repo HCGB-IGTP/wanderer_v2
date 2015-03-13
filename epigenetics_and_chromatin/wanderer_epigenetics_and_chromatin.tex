@@ -1,0 +1,415 @@
+%% BioMed_Central_Tex_Template_v1.06
+%%                                      %
+%  bmc_article.tex            ver: 1.06 %
+%                                       %
+
+%%IMPORTANT: do not delete the first line of this template
+%%It must be present to enable the BMC Submission system to
+%%recognise this template!!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                     %%
+%%  LaTeX template for BioMed Central  %%
+%%     journal article submissions     %%
+%%                                     %%
+%%          <8 June 2012>              %%
+%%                                     %%
+%%                                     %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%% For instructions on how to fill out this Tex template           %%
+%% document please refer to Readme.html and the instructions for   %%
+%% authors page on the biomed central website                      %%
+%% http://www.biomedcentral.com/info/authors/                      %%
+%%                                                                 %%
+%% Please do not use \input{...} to include other tex files.       %%
+%% Submit your LaTeX manuscript as one .tex document.              %%
+%%                                                                 %%
+%% All additional figures and files should be attached             %%
+%% separately and not embedded in the \TeX\ document itself.       %%
+%%                                                                 %%
+%% BioMed Central currently use the MikTex distribution of         %%
+%% TeX for Windows) of TeX and LaTeX.  This is available from      %%
+%% http://www.miktex.org                                           %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% additional documentclass options:
+%  [doublespacing]
+%  [linenumbers]   - put the line numbers on margins
+
+%%% loading packages, author definitions
+
+%\documentclass[twocolumn]{bmcart}% uncomment this for twocolumn layout and comment line below
+\documentclass{bmcart}
+
+%%% Load packages
+%\usepackage{amsthm,amsmath}
+%\RequirePackage{natbib}
+\RequirePackage{hyperref}
+\usepackage[utf8]{inputenc} %unicode support
+%\usepackage[applemac]{inputenc} %applemac support if unicode package fails
+%\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                             %%
+%%  If you wish to display your graphics for   %%
+%%  your own use using includegraphic or       %%
+%%  includegraphics, then comment out the      %%
+%%  following two lines of code.               %%
+%%  NB: These line *must* be included when     %%
+%%  submitting to BMC.                         %%
+%%  All figure files must be submitted as      %%
+%%  separate graphics through the BMC          %%
+%%  submission process, not included in the    %%
+%%  submitted article.                         %%
+%%                                             %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\def\includegraphic{}
+\def\includegraphics{}
+
+
+
+%%% Put your definitions there:
+\startlocaldefs
+\endlocaldefs
+
+
+%%% Begin ...
+\begin{document}
+
+%%% Start of article front matter
+\begin{frontmatter}
+
+\begin{fmbox}
+\dochead{Research}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% Enter the title of your article here     %%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Wanderer, an interactive viewer to explore DNA methylation and gene expression data in human cancer}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% Enter the authors here                   %%
+%%                                          %%
+%% Specify information, if available,       %%
+%% in the form:                             %%
+%%   <key>={<id1>,<id2>}                    %%
+%%   <key>=                                 %%
+%% Comment or delete the keys which are     %%
+%% not used. Repeat \author command as much %%
+%% as required.                             %%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\author[
+   addressref={aff1,aff2},
+   % corref={aff1},
+   email={adiez@imppc.org},
+   noteref={n1}
+]{\inits{A}\fnm{Anna} \snm{Díez-Villanueva}}
+\author[
+   addressref={aff1,aff2},                   % id's of addresses, e.g. {aff1,aff2}
+   % corref={aff1},                       % id of corresponding address, if any
+   noteref={n1},                        % id's of article notes, if any
+   email={imallona@imppc.org}   % email address
+]{\inits{I}\fnm{Izaskun} \snm{Mallona}}
+\author[
+   addressref={aff1,aff2},
+   corref={aff2},
+   % noteref={n2},
+   email={mpeinado@imppc.org}
+]{\inits{MA}\fnm{Miguel A.} \snm{Peinado}}
+
+
+
+% \author[
+%    addressref={aff1},                   % id's of addresses, e.g. {aff1,aff2}
+%    corref={aff1},                       % id of corresponding address, if any
+%    noteref={n1},                        % id's of article notes, if any
+%    email={jane.e.doe@cambridge.co.uk}   % email address
+% ]{\inits{JE}\fnm{Jane E} \snm{Doe}}
+% \author[
+%    addressref={aff1,aff2},
+%    email={john.RS.Smith@cambridge.co.uk}
+% ]{\inits{JRS}\fnm{John RS} \snm{Smith}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% Enter the authors' addresses here        %%
+%%                                          %%
+%% Repeat \address commands as much as      %%
+%% required.                                %%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\address[id=aff1]{%                           % unique id
+  \orgname{Institute of Predictive and Personalized Medicine of Cancer (IMPPC)}, % university, etc
+  \street{Can Ruti Campus. Ctra. de Can Ruti, camí de les escoles, s/n},                     %
+  \postcode{08916},                                % post or zip code
+  \city{Badalona},                              % city
+  \cny{Spain}                                    % country
+}
+
+
+\address[id=aff2]{%                           % unique id
+  \orgname{Health Research Institute Germans Trias i Pujol (IGTP) }, % university, etc
+  \street{Can Ruti Campus. Ctra. de Can Ruti, camí de les escoles, s/n},                     %
+  \postcode{08916},                                % post or zip code
+  \city{Badalona},                              % city
+  \cny{Spain}                                    % country
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% Enter short notes here                   %%
+%%                                          %%
+%% Short notes will be after addresses      %%
+%% on first page.                           %%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{artnotes}
+%\note{Sample of title note}     % note to the article
+\note[id=n1]{Equal contributor} % note, connected to author
+% \note[id=n2]{Corresponding author}
+\end{artnotes}
+
+\end{fmbox}% comment this for two column layout
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% The Abstract begins here                 %%
+%%                                          %%
+%% Please refer to the Instructions for     %%
+%% authors on http://www.biomedcentral.com  %%
+%% and include the section headings         %%
+%% accordingly for your article type.       %%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{abstractbox}
+
+
+\begin{abstract}
+Wanderer (\url{http://maplab.cat/betawanderer}) is a very intuitive Web tool allowing real time access and visualization of gene expression and DNA methylation profiles from The Cancer Genome Atlas (TCGA) data. Given a gene query, the Web resource provides a comprehensive overview of its expression and DNA methylation. Tumor and normal tissue data are easily compared, giving graphical outputs to aid researchers to explore alterations across samples. The tool takes advantage of the Illumina Infinium 450k platform to scrutinize the probes inside or in the vicinity of the queried gene. Gene expression is inspected exon by exon. The simple interface eases cancer genomics profiling to experimentalists and clinicians without bioinformatics expertise.
+
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% The keywords begin here                  %%
+%%                                          %%
+%% Put each keyword in separate \kwd{}.     %%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{keyword}
+\kwd{data visualization}
+\kwd{TCGA}
+\kwd{methylation}
+\kwd{expression}
+\end{keyword}
+
+% MSC classifications codes, if any
+%\begin{keyword}[class=AMS]
+%\kwd[Primary ]{}
+%\kwd{}
+%\kwd[; secondary ]{}
+%\end{keyword}
+
+\end{abstractbox}
+%
+%\end{fmbox}% uncomment this for twcolumn layout
+
+\end{frontmatter}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% The Main Body begins here                %%
+%%                                          %%
+%% Please refer to the instructions for     %%
+%% authors on:                              %%
+%% http://www.biomedcentral.com/info/authors%%
+%% and include the section headings         %%
+%% accordingly for your article type.       %%
+%%                                          %%
+%% See the Results and Discussion section   %%
+%% for details on how to create sub-sections%%
+%%                                          %%
+%% use \cite{...} to cite references        %%
+%%  \cite{koon} and                         %%
+%%  \cite{oreg,khar,zvai,xjon,schn,pond}    %%
+%%  \nocite{smith,marg,hunn,advi,koha,mouse}%%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%% start of article main body
+% <put your article body there>
+
+%%%%%%%%%%%%%%%%
+%% Background %%
+%%
+
+\section*{Background}
+
+
+
+
+
+Data analysis on human cancer is a hotspot in basic and clinical research. As a group of largely heterogenous and complex disease, cancer research is benefited by coordinated efforts on data acquisition and analysis. The Cancer Genome Atlas (TCGA) is a result of an international effort that offers a multilayered view of the genomics and epigenomics of more than 30 human cancer types \cite{weinstein2013cancer}. This enormous data availability opens a wide world of possibilities to the research community. For instance, it allows \textit{in silico} hypothesis testing or validation of in-house results through an independent series.\\
+
+
+The TCGA serves the information in three tiers according to the degree of its bioinformatical processing: raw, lightly and heavily analyzed data (named levels 1, 2 and 3). Data not belonging uniquely to an individual, such as level 3 and de-identified clinical data, is open access; on the other hand, the download of protected data, such as raw sequencing files, requires authentication via the The Cancer Genomics Hub (CGHub)\cite{wilks2014cancer}. Finally, although the open access data tier offers immediate access to the information, some projects restrict the dissemination of the results brought by its use until a first global analysis is published by the consortia.\\
+
+The TCGA Data Portal is the gateway to retrieve the TCGA information. Basically, offers a text file for each processed sample belonging to a dataset subjected to a platform; compressed packages for multiple samples are allowed. For instance, it allows downloading 992 files with the clinical data related to samples of the Colon Adenocarcinoma (COAD) dataset, but only provides RNAseq results for 303 of them. It is worth noting that as the number of files and their sizes increase, further processing of this information exceeds the spredsheet-based analysis capabilities and requires some amount of bioinformatics knowledge, (i.e. programming under the R statistical environment). Comprehensive and integrative analysis is indeed dependent on informatics solutions, such as TCGA Assembler \cite{zhu2014tcga} or the cBioPortal\cite{gao2013integrative}.\\
+
+
+The complex and comprehensive  nature of the generated data represents a privileged opportunity for researcher to get insights into the molecular landscapes of cancers. In fact, the landmark papers reporting the original data of each tumor type may just be considered a modest anticipation of the expected overall outcome. Nevertheless,  wet lab experimentalists have very limited access to these data because sophisticated bioinformatic skills are required to manage and analyze such large datasets. Hence, development of interfaces facilitating the visualization and analysis of the information to non-bioinformaticians is essential to get a broad exploitation of this gigantic effort.\\
+
+The availability of such a large amount of data is exciting to the cancer research community as it helps to check candidate \textit{loci}. For instance, as some genes show aberrant promoter hypermethylation and therefore silencing during the tumor progression \cite{jones2002fundamental}, experimentalists might query the expression and methylation profiles of their candidate \textit{loci} on tumoral and normal matched tissues. However, the Data Portal does not allow to query individual genomic locations but rather offers bulky, whole genome datasets. To our knowledge, although much effort has been done on facilitating the access to TCGA data, none of the published tools allows an user-friendly interface to solve this kind of queries. We believe that this candidate and exploratory approaches might be particularly benefited by using RNASeq and methylation data. Our response has been the development of Wanderer, a very simple and intuitive web tool allowing real time access and visualization of gene expression and DNA methylation profiles from TCGA data using gene targeted queries.\\
+
+% With this aim we developed a tool, the TCGA Wanderer, that allows to easily retrieve and visualize the regional profiles of groups of samples belonging to a tumor type. 
+
+For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure 1). Graphs for normal and tumor samples from any of the available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization. Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers.\\
+ 
+A typical use case for experimentalists and clinicians is the assessment of biological questions such as which region of a CpG island should be analyzed to find the largest abnormal DNA methylation in tumor samples; and whether this one the same for different tumor types. TCGA Wanderer offers a simple and intuitive set of plots and statistical tests to tackle the behaviour of the queried gene (Figure 2).\\
+
+The user-friendly web application has been developed using R/shiny and is freely accessable at \url{maplab.cat/betawanderer} (provisional address). As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
+
+
+% TODO afegir lo dels boxplots
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                          %%
+%% Backmatter begins here                   %%
+%%                                          %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{backmatter}
+
+\section*{Competing interests}
+  The authors declare that they have no competing interests.
+
+\section*{Author's contributions}
+   ADV, IM and MAP conceived the project. ADV downloaded the data and coded the plots and statistical analysis. IM designed the database and the interface to it. ADV and IM implemented the application and designed the web page. IM and MAP wrote the paper. All the authors read and approved it.
+
+\section*{Acknowledgements}
+This work was supported by grants from the Spanish Ministry of Economy and Knowledge (SAF2011/23638, PTA2011-5655-I) and from Generalitat de Catalunya (2009 SGR1356). The application published here is based upon data generated by the TCGA Research Network: http://cancergenome.nih.gov/. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                  The Bibliography                       %%
+%%                                                         %%
+%%  Bmc_mathpys.bst  will be used to                       %%
+%%  create a .BBL file for submission.                     %%
+%%  After submission of the .TEX file,                     %%
+%%  you will be prompted to submit your .BBL file.         %%
+%%                                                         %%
+%%                                                         %%
+%%  Note that the displayed Bibliography will not          %%
+%%  necessarily be rendered by Latex exactly as specified  %%
+%%  in the online Instructions for Authors.                %%
+%%                                                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% if your bibliography is in bibtex format, use those commands:
+\bibliographystyle{bmc-mathphys} % Style BST file
+
+
+
+% \bibliographystyle{plain}
+\bibliography{wanderer_paper}      % Bibliography file (usually '*.bib' )
+
+
+% or include bibliography directly:
+% \begin{thebibliography}
+% \bibitem{b1}
+% \end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                               %%
+%% Figures                       %%
+%%                               %%
+%% NB: this is for captions and  %%
+%% Titles. All graphics must be  %%
+%% submitted separately and NOT  %%
+%% included in the Tex document  %%
+%%                               %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% Do not use \listoffigures as most will included as separate files
+
+\section*{Figures}
+  \begin{figure}[h!]
+  \caption{\csentence{Snapshot of Wanderer webpage.}
+Boxes indicate the different panels for gene name/ID and dataset selection (\textbf{a}), view customization (\textbf{b} and \textbf{c}), output (\textbf{d}) and data download and links (\textbf{e}).
+}
+      \end{figure}
+
+      \begin{figure}[h!]
+        \caption{\csentence{DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and Prostate adenocarcinomas (PRAD).}
+DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and Prostate adenocarcinomas (PRAD). Note that cg1077290 probe (*) is already very methylated in colon normal tissue, offering poor discriminat resolution to detect tumor hypermethylation compared with the rest of CpG island probes (labeled in green). In contrast, this probe (cg1077290) shows the highest level of hypermethylation in Prostate cancers (PRAD) and remains unmethylated in normal, resulting as the most discriminant variable in tis type of cancer.
+}
+
+      \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                               %%
+%% Tables                        %%
+%%                               %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Use of \listoftables is discouraged.
+%%
+\section*{Tables}
+\begin{table}[h!]
+\caption{Sample table title. This is where the description of the table should go.}
+      \begin{tabular}{cccc}
+        \hline
+           & B1  &B2   & B3\\ \hline
+        A1 & 0.1 & 0.2 & 0.3\\
+        A2 & ... & ..  & .\\
+        A3 & ..  & .   & .\\ \hline
+      \end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                               %%
+%% Additional Files              %%
+%%                               %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Additional Files}
+  \subsection*{Additional file 1 --- Sample additional file title}
+    Additional file descriptions text (including details of how to
+    view the file, if it is in a non-standard format or the file extension).  This might
+    refer to a multi-page table or a figure.
+
+  \subsection*{Additional file 2 --- Sample additional file title}
+    Additional file descriptions text.
+
+
+\end{backmatter}
+\end{document}
