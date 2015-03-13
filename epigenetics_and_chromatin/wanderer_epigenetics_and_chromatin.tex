@@ -129,7 +129,7 @@
 ]{\inits{I}\fnm{Izaskun} \snm{Mallona}}
 \author[
    addressref={aff1,aff2},
-   corref={aff2},
+   corref={aff1,aff2},
    % noteref={n2},
    email={mpeinado@imppc.org}
 ]{\inits{MA}\fnm{Miguel A.} \snm{Peinado}}
@@ -157,17 +157,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+
+
+
 \address[id=aff1]{%                           % unique id
-  \orgname{Institute of Predictive and Personalized Medicine of Cancer (IMPPC)}, % university, etc
-  \street{Can Ruti Campus. Ctra. de Can Ruti, camí de les escoles, s/n},                     %
-  \postcode{08916},                                % post or zip code
-  \city{Badalona},                              % city
-  \cny{Spain}                                    % country
+  \orgname{Health Research Institute Germans Trias i Pujol (IGTP) }, % university, etc
+  % \street{Can Ruti Campus. Ctra. de Can Ruti, camí de les escoles, s/n},                     %
+  % \postcode{08916},                                % post or zip code
+  % \city{Badalona},                              % city
+  % \cny{Spain}                               
+  % country
 }
 
-
 \address[id=aff2]{%                           % unique id
-  \orgname{Health Research Institute Germans Trias i Pujol (IGTP) }, % university, etc
+  \orgname{Institute of Predictive and Personalized Medicine of Cancer (IMPPC)}, % university, etc
   \street{Can Ruti Campus. Ctra. de Can Ruti, camí de les escoles, s/n},                     %
   \postcode{08916},                                % post or zip code
   \city{Badalona},                              % city
@@ -205,7 +208,7 @@
 
 
 \begin{abstract}
-Wanderer (\url{http://maplab.cat/betawanderer}) is a very intuitive Web tool allowing real time access and visualization of gene expression and DNA methylation profiles from The Cancer Genome Atlas (TCGA) data. Given a gene query, the Web resource provides a comprehensive overview of its expression and DNA methylation. Tumor and normal tissue data are easily compared, giving graphical outputs to aid researchers to explore alterations across samples. The tool takes advantage of the Illumina Infinium 450k platform to scrutinize the probes inside or in the vicinity of the queried gene. Gene expression is inspected exon by exon. The simple interface eases cancer genomics profiling to experimentalists and clinicians without bioinformatics expertise.
+Wanderer (\url{http://maplab.cat/wanderer}) is a very intuitive Web tool allowing real time access and visualization of gene expression and DNA methylation profiles from The Cancer Genome Atlas (TCGA) data. Given a gene query, the Web resource provides a comprehensive overview of its expression and DNA methylation. Tumor and normal tissue data are easily compared, giving graphical outputs to aid researchers to explore alterations across samples. The tool takes advantage of the Illumina Infinium 450k platform to scrutinize the probes inside or in the vicinity of the queried gene. Gene expression is inspected exon by exon. The simple interface eases cancer genomics profiling to experimentalists and clinicians without bioinformatics expertise.
 
 \end{abstract}
 
@@ -274,7 +277,7 @@ Wanderer (\url{http://maplab.cat/betawanderer}) is a very intuitive Web tool all
 Data analysis on human cancer is a hotspot in basic and clinical research. As a group of largely heterogenous and complex disease, cancer research is benefited by coordinated efforts on data acquisition and analysis. The Cancer Genome Atlas (TCGA) is a result of an international effort that offers a multilayered view of the genomics and epigenomics of more than 30 human cancer types \cite{weinstein2013cancer}. This enormous data availability opens a wide world of possibilities to the research community. For instance, it allows \textit{in silico} hypothesis testing or validation of in-house results through an independent series.\\
 
 
-The TCGA serves the information in three tiers according to the degree of its bioinformatical processing: raw, lightly and heavily analyzed data (named levels 1, 2 and 3). Data not belonging uniquely to an individual, such as level 3 and de-identified clinical data, is open access; on the other hand, the download of protected data, such as raw sequencing files, requires authentication via the The Cancer Genomics Hub (CGHub)\cite{wilks2014cancer}. Finally, although the open access data tier offers immediate access to the information, some projects restrict the dissemination of the results brought by its use until a first global analysis is published by the consortia.\\
+% The TCGA serves the information in three tiers according to the degree of its bioinformatical processing: raw, lightly and heavily analyzed data (named levels 1, 2 and 3). Data not belonging uniquely to an individual, such as level 3 and de-identified clinical data, is open access; on the other hand, the download of protected data, such as raw sequencing files, requires authentication via the The Cancer Genomics Hub (CGHub)\cite{wilks2014cancer}. Finally, although the open access data tier offers immediate access to the information, some projects restrict the dissemination of the results brought by its use until a first global analysis is published by the consortia.\\
 
 The TCGA Data Portal is the gateway to retrieve the TCGA information. Basically, offers a text file for each processed sample belonging to a dataset subjected to a platform; compressed packages for multiple samples are allowed. For instance, it allows downloading 992 files with the clinical data related to samples of the Colon Adenocarcinoma (COAD) dataset, but only provides RNAseq results for 303 of them. It is worth noting that as the number of files and their sizes increase, further processing of this information exceeds the spredsheet-based analysis capabilities and requires some amount of bioinformatics knowledge, (i.e. programming under the R statistical environment). Comprehensive and integrative analysis is indeed dependent on informatics solutions, such as TCGA Assembler \cite{zhu2014tcga} or the cBioPortal\cite{gao2013integrative}.\\
 
@@ -283,13 +286,32 @@ The complex and comprehensive  nature of the generated data represents a privile
 
 The availability of such a large amount of data is exciting to the cancer research community as it helps to check candidate \textit{loci}. For instance, as some genes show aberrant promoter hypermethylation and therefore silencing during the tumor progression \cite{jones2002fundamental}, experimentalists might query the expression and methylation profiles of their candidate \textit{loci} on tumoral and normal matched tissues. However, the Data Portal does not allow to query individual genomic locations but rather offers bulky, whole genome datasets. To our knowledge, although much effort has been done on facilitating the access to TCGA data, none of the published tools allows an user-friendly interface to solve this kind of queries. We believe that this candidate and exploratory approaches might be particularly benefited by using RNASeq and methylation data. Our response has been the development of Wanderer, a very simple and intuitive web tool allowing real time access and visualization of gene expression and DNA methylation profiles from TCGA data using gene targeted queries.\\
 
+
+\section*{Results and discussion}
+
+\subsection*{Web interface}
+
 % With this aim we developed a tool, the TCGA Wanderer, that allows to easily retrieve and visualize the regional profiles of groups of samples belonging to a tumor type. 
 
 For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure 1). Graphs for normal and tumor samples from any of the available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization. Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers.\\
  
-A typical use case for experimentalists and clinicians is the assessment of biological questions such as which region of a CpG island should be analyzed to find the largest abnormal DNA methylation in tumor samples; and whether this one the same for different tumor types. TCGA Wanderer offers a simple and intuitive set of plots and statistical tests to tackle the behaviour of the queried gene (Figure 2).\\
 
-The user-friendly web application has been developed using R/shiny and is freely accessable at \url{maplab.cat/betawanderer} (provisional address). As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
+\subsection*{Usage examples}
+ 
+Some example of issues that can be resolved by querying Wanderer (and not easily reachable without this tool) include:
+\begin{itemize}
+\item Are different samples expressing the same gene isoforms? Which exon(s) should I analyze to find the largest difference between normal and tumor? See example in Figure \ref{fig:2}.
+\item Which region of the CpG island should I analyze to find the largest abnormal DNA methylation in tumor samples? Is it the same for different tumor types? See example in Figure \ref{fig:3}.
+\item Are methylation changes in the CpG island of my favorite gene specific? Or rather, are they consequence of a regional phenomenon? See example in Figure \ref{fig:4}.
+\end{itemize}
+
+
+
+% A typical use case for experimentalists and clinicians is the assessment of biological questions such as which region of a CpG island should be analyzed to find the largest abnormal DNA methylation in tumor samples; and whether this one the same for different tumor types. TCGA Wanderer offers a simple and intuitive set of plots and statistical tests to tackle the behaviour of the queried gene (Figure 2).\\
+
+\section*{Conclusions}
+
+The user-friendly web application has been developed using R/shiny and is freely accessable at \url{http://maplab.cat/wanderer}. As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
 
 
 % TODO afegir lo dels boxplots
@@ -362,53 +384,82 @@ This work was supported by grants from the Spanish Ministry of Economy and Knowl
 %% Do not use \listoffigures as most will included as separate files
 
 \section*{Figures}
-  \begin{figure}[h!]
+
+\begin{figure}[h!]
   \caption{\csentence{Snapshot of Wanderer webpage.}
-Boxes indicate the different panels for gene name/ID and dataset selection (\textbf{a}), view customization (\textbf{b} and \textbf{c}), output (\textbf{d}) and data download and links (\textbf{e}).
-}
-      \end{figure}
+    Boxes indicate the different panels for gene name/ID and dataset selection (\textbf{a}), view customization (\textbf{b} and \textbf{c}), output (\textbf{d}) and data download and links (\textbf{e}).
+  }
+  \label{fig:1}
+\end{figure}
 
-      \begin{figure}[h!]
-        \caption{\csentence{DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and Prostate adenocarcinomas (PRAD).}
-DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and Prostate adenocarcinomas (PRAD). Note that cg1077290 probe (*) is already very methylated in colon normal tissue, offering poor discriminat resolution to detect tumor hypermethylation compared with the rest of CpG island probes (labeled in green). In contrast, this probe (cg1077290) shows the highest level of hypermethylation in Prostate cancers (PRAD) and remains unmethylated in normal, resulting as the most discriminant variable in tis type of cancer.
-}
 
-      \end{figure}
+\begin{figure}[h!]
+  \caption{\csentence{DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and Prostate adenocarcinomas (PRAD).}
+    DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and Prostate adenocarcinomas (PRAD). Note that cg1077290 probe (*) is already very methylated in colon normal tissue, offering poor discriminat resolution to detect tumor hypermethylation compared with the rest of CpG island probes (labeled in green). In contrast, this probe (cg1077290) shows the highest level of hypermethylation in Prostate cancers (PRAD) and remains unmethylated in normal, resulting as the most discriminant variable in tis type of cancer.
+  }
+  \label{fig:2}
+\end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                               %%
-%% Tables                        %%
-%%                               %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Use of \listoftables is discouraged.
-%%
-\section*{Tables}
-\begin{table}[h!]
-\caption{Sample table title. This is where the description of the table should go.}
-      \begin{tabular}{cccc}
-        \hline
-           & B1  &B2   & B3\\ \hline
-        A1 & 0.1 & 0.2 & 0.3\\
-        A2 & ... & ..  & .\\
-        A3 & ..  & .   & .\\ \hline
-      \end{tabular}
-\end{table}
+\begin{figure}[h!]
+  \caption{\csentence{Gene expression profile of TP53 in Cervical Squamous Cell carcinoma (CESC) and Colon adenocarcinoma (COAD).}
+ Gene expression profile of TP53 in Cervical Squamous Cell carcinoma (CESC) and Colon adenocarcinoma (COAD). TP53 expression levels are consistently reproduced among most exons in all COADs. In contrast, exon 11 reads counts do not reflect the variation observed in other exons in CESCs (see enlarged inset for comparison with exon 10).
+    % \begin{description}
+    % \item Gene: TP53
+    % \item Region displayed: chr17:7564000-7591000
+    % \item Datasets: Cervical Squamous Cell Carcinoma (CESC) and Colon carcinoma (COAD)
+    % \item Data Type: Illumina HiSeq RNA
+    % \item \textit{API access:}
+    % \item CESC: \burl{http://maplab.cat/betawanderer\_api?Gene=tp53&start=7564000&end=7591000&TissueType=cesc&DataType=expression&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=3&nT=30}
+    % \item COAD: \burl{http://maplab.cat/betawanderer\_api?Gene=tp53&start=7564000&end=7591000&TissueType=coad&DataType=expression&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30}
+    % \end{description}
+  }
+  \label{fig:3}
+\end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                               %%
-%% Additional Files              %%
-%%                               %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[h!]
+  \caption{\csentence{DNA methylation profile of the genomic region flanking the EN1 gene.}
+DNA methylation profile of the genomic region flanking the EN1 gene. Note the large number of CpG islands (green probes) and that in Colon  adenocarcinomas (COAD),the whole region is hypermethylated, while in Breast cancer,  regions of hypomethylation and hypermethylation may be observed. The graphs display the average methylation values of each dataset. Probes marked with an asterisk denote statistically significant differences between normal and tumor samples.
+  }
+  \label{fig:4}
+\end{figure}
 
-\section*{Additional Files}
-  \subsection*{Additional file 1 --- Sample additional file title}
-    Additional file descriptions text (including details of how to
-    view the file, if it is in a non-standard format or the file extension).  This might
-    refer to a multi-page table or a figure.
 
-  \subsection*{Additional file 2 --- Sample additional file title}
-    Additional file descriptions text.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%                               %%
+% %% Tables                        %%
+% %%                               %%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% %% Use of \listoftables is discouraged.
+% %%
+% \section*{Tables}
+% \begin{table}[h!]
+% \caption{Sample table title. This is where the description of the table should go.}
+%       \begin{tabular}{cccc}
+%         \hline
+%            & B1  &B2   & B3\\ \hline
+%         A1 & 0.1 & 0.2 & 0.3\\
+%         A2 & ... & ..  & .\\
+%         A3 & ..  & .   & .\\ \hline
+%       \end{tabular}
+% \end{table}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%                               %%
+% %% Additional Files              %%
+% %%                               %%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \section*{Additional Files}
+%   \subsection*{Additional file 1 --- Sample additional file title}
+%     Additional file descriptions text (including details of how to
+%     view the file, if it is in a non-standard format or the file extension).  This might
+%     refer to a multi-page table or a figure.
+
+%   \subsection*{Additional file 2 --- Sample additional file title}
+%     Additional file descriptions text.
 
 
 \end{backmatter}
