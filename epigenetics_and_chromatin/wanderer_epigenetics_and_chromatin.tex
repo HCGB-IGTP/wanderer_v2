@@ -305,21 +305,23 @@ Graphical representation are highly dynamic, being rendered on the fly. Once sel
 \item A glyph depicting the actual gene location and strandness can be added. 
 \item Methylation probes belonging to a CpG island can be highlighted in green. 
 \item Distance between probes or exons can be selected to be proportional to the actual genomic location or to be uniform; in the case of methylation, this facilitates visualization of CpG-dense regions, such as CpG islands. 
-\item In order to ease sample profiling, Wanderer draws line plots by default. In this representation, the scrutinized exons or CpGs belonging to the same sample are linked by lines. The user can enter the number of samples to be represented this way. A random sampling (with a random seed so the result is repeatable) is therefore performed.
-\item However, all the data can be taken into account at once ticking the 'Boxplot all the data' checkbox.
+\item In order to ease sample profiling, Wanderer draws line plots by default. In this representation, the scrutinized exons or CpGs belonging to the same sample are linked by lines. The user can enter the number of samples to be represented this way. A random sampling (with a random seed so the result is repeatable) is therefore performed. However, all the data can be taken into account at once ticking the 'Boxplot all the data' checkbox.
 
 \end{itemize}
 
 
 \subsection*{Statistical analysis, access and download}
 
-Wanderer performs Wilcoxon rank sum test comparisons on normal \textit{vs} tumor when there is at least an observation in each group. An independent test is performed for each CpG or exon, being the p-value FDR corrected for multiple testing. Although this is reported automatedly, we note that addressing the significance on few observations and without inspecting the data distribution might be meaningless. Even though the number of samples to draw as line-plots can be entered manually, the statistical analysis is performed with the complete dataset.\\
+Wanderer performs Wilcoxon rank sum test comparisons on normal \textit{vs} tumor when there is at least an observation in each group. An independent test is performed for each CpG or exon, being the p-value FDR corrected for multiple testing. Although this is reported automatedly, we note that addressing the significance on few observations and without inspecting the data distribution might be meaningless. Even though the number of samples to draw as line-plots can be reduced manually, the statistical analysis is performed with the complete dataset.\\
 
-Graphics can be readily downloaded in either raster (PNG) or vector (PDF) formats. Probe annotations, statistical analysis and raw data for either normal and tumor samples can be easily download as text files (comma-separated values, CSV) that can be easily processed using spreadsheet software. A link pointing to the UCSC Genome Browser's profile of the scrutinized regions is readily produced.\\
+Graphics can be readily downloaded in either raster (PNG) or vector (PDF) formats. Probe annotations, statistical analysis and raw data for either normal and tumor samples can be easily download as text files (comma-separated values, CSV) that can be processed using spreadsheet software. A link pointing to the UCSC Genome Browser's profile of the scrutinized regions is readily produced.\\
 
-In order to offer batch analysis, data sharing and linking from other Web tools we provide Wanderer\_api (\url{http://maplab.cat/wanderer_api}). This application is a simple version of Wanderer that receives \\
+We provide a simplified flavour of the Web tool named Wanderer\_api (\url{http://maplab.cat/wanderer_api}) that offers batch analysis as well data sharing and linking from other Web resources. Wanderer\_api has the same capabilities as Wanderer does but receives the parameters parsing arguments from the URL. This allows, for instance, programmatic access to bulk query the tool.
 
-esulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external server
+
+% In order to offer batch analysis, data sharing and linking from other Web tools we provide a simplified flavour of Wanderer. This application, Wanderer\_api (\url{http://maplab.cat/wanderer_api}), receives the  
+
+% esulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external server
 
 \subsection*{Usage examples}
  
