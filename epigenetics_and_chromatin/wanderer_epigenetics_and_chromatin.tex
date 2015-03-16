@@ -340,7 +340,9 @@ Some example of issues that can be resolved by querying Wanderer (and not easily
 
 \subsection*{Differences with previous software}
 
-The cBioPortal offers analysis, download and visualization for TCGA data \cite{gao2013integrative}.
+Integrative data mining of TCGA data is a hot area in clinical bioinformatics. Given the enormous abundance of data, some of the tools are primarily focused on data retrieval, such as TCGA Assembler \citep{zhu2014tcga}; and further annotation and indexing, such as Firehose \citep{robbins2013self}. A second group of analytical platforms are devoted to provide a comprehensive view of the genetic, epigenetic and proteomic layers of TCGA by linking to the clinical features. An outstanding example is cBioPortal, that delivers, for instance, survival analysis \citep{gao2013integrative}. Regulome explorer shows associations between clinical and molecular features and provides a circular-based visualization of the data, among others \citep{cancer2012comprehensive}. Finally, and based in genomic coordinates, the UCSC Genome Browser also provides TCGA-related genome-wide data visualization \citep{sanborn2010ucs}. Some tools are dedicated to a given layer of data, as MethHC focuses on methylation \citep{huang2014methhc}.\\
+
+To our understanding Wanderer complements these panorama offering a new profiling tool whose major advantage is simplicity of use and ease of application. To wet lab researchers and clinicians, visualization of per-sample expression and methylation profiling is a need when working on candidate approaches. The exploration of expression trends, exon by exon; or methylation changes, with the richest available methylation chip, gives at a glance an overview of
 
 \section*{Conclusions}
 Wanderer provides an intuitive interface to explore gene-associated profiles of expression and methylation data produced at TCGA. Wanderer is freely accessable at \url{http://maplab.cat/wanderer}. As it is hosted in a shiny server, the final user only needs a web browser to run it and requires no installation, being platform-indepedent and runnable on commodity computers, such as low-memory laptops.\\
@@ -349,7 +351,7 @@ Wanderer provides an intuitive interface to explore gene-associated profiles of 
 
 \section*{Methods}
 
-The user-friendly web application has been developed using R/shiny and a PostgreSQL backend using an eXtreme programming software development methodology. The source code is available under the GPL v2 terms at \url{https://sourceforge.net/projects/tcga-wanderer/}.
+The user-friendly web application has been developed using R/shiny and a PostgreSQL backend using an eXtreme programming software development methodology. Data was downloaded with TCGA Assembler. Source code is available under the GPL v2 terms at \url{https://sourceforge.net/projects/tcga-wanderer/}.
 
 % TODO afegir lo dels boxplots
 
