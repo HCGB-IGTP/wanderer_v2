@@ -110,17 +110,21 @@
                 </span>
               </label>
 
-              <label class="checkbox" for="geneLine">
-                <input id="geneLine" type="checkbox" checked="checked"/>
-                <span>
-                  <h5>
-                    Show gene location
-                    <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as a black arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
-                      <b>?</b>
-                    </a>
-                  </h5>
-                </span>
-              </label>
+              <div data-display-if="input.distribute_uniformly==false">
+
+                <label class="checkbox" for="geneLine">
+                  <input id="geneLine" type="checkbox" checked="checked"/>
+                  <span>
+                    <h5>
+                      Show gene location
+                      <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as a black arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
+                        <b>?</b>
+                      </a>
+                    </h5>
+                  </span>
+                </label>
+              </div>
+
               <!-- <hr/> -->
               <div data-display-if="input.DataType == &#39;methylation&#39;">
                 <label class="checkbox" for="CpGi">
