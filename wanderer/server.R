@@ -32,13 +32,26 @@ shinyServer(function(input, output, session){
   #database connection
   con <- db_connect(DB_CONF)
   ## print(dbGetInfo(con))
+  
+    
+  #################################################
+  #Gene Name
+  geneNameSaved <- reactive({
+    if(input$goButton == 0) {
+      GeneNameSaved <- 'BRCA1'
+    }else{
+      GeneNameSaved <- isolate(toupper(input$Gene))
+    }
+  })
+  
+  
   #################################################
   ##detect gene format
   geneFormat <- reactive({
     if(input$goButton == 0) {
       GeneFormat <- "genename"
     } else{
-      if(substr(isolate(toupper(input$Gene)), 1, 4) == "ENSG"){
+      if(substr(geneNameSaved(), 1, 4) == "ENSG"){
         GeneFormat <- "emsemblgeneid"
       } else{
         GeneFormat <- "genename"
@@ -47,13 +60,13 @@ shinyServer(function(input, output, session){
   })
   
   #################################################
-  #Filtering Methylation data
+  #Gene Size
   geneSize <- reactive({
     if(input$goButton == 0) {
       GeneSize(con = con, geneName = 'BRCA1', geneNamesType = 'genename')  
     }else{
       ## if (!is.null(input$Gene))
-      GeneSize(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat())  
+      GeneSize(con = con, geneName = geneNameSaved(), geneNamesType = geneFormat())  
     }
   })
   
@@ -64,9 +77,9 @@ shinyServer(function(input, output, session){
     if (geneFormat() == "genename") geneNamesType_label <- "Gene Name"
     if (geneFormat() == "emsemblgeneid") geneNamesType_label <- "Ensembl Gene ID"
     
-    if(geneSize()[[1]]==0) stop(paste0("The gene ", isolate(toupper(input$Gene)), " is not in the ", geneNamesType_label, " annotation."))
+    if(geneSize()[[1]]==0) stop(paste0("The gene ", geneNameSaved(), " is not in the ", geneNamesType_label, " annotation."))
     
-    if(geneSize()[[1]]==1) stop(paste0("The gene ", isolate(toupper(input$Gene)), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
+    if(geneSize()[[1]]==1) stop(paste0("The gene ", geneNameSaved(), " appears more than once in the genome. Please introduce an Ensembl (ENSG) identifier instead."))
     
     if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1){
       
@@ -119,7 +132,7 @@ shinyServer(function(input, output, session){
       }
     }
     else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
-      methylation_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+      methylation_data(con = con, geneName = geneNameSaved(), geneNamesType = geneFormat(), tissue = input$TissueType)
       
     }
   })
@@ -143,7 +156,7 @@ shinyServer(function(input, output, session){
         expression_data(con = con, geneName = 'BRCA1', geneNamesType = 'genename', tissue = input$TissueType)  
       }
     } else if(input$goButton > 0 & geneSize()[[1]]!=0 & geneSize()[[1]]!=1 ) {
-      expression_data(con = con, geneName = isolate(toupper(input$Gene)), geneNamesType = geneFormat(), tissue = input$TissueType)
+      expression_data(con = con, geneName = geneNameSaved(), geneNamesType = geneFormat(), tissue = input$TissueType)
       ## }
     }
   })
@@ -191,7 +204,7 @@ shinyServer(function(input, output, session){
   #################################################
   ##number of samples to plot
   output$nNmax <- renderUI({
-    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
+    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(geneNameSaved())) {
       if(is.null(datamethfilt()$ddN2) | is.null(dataexprfilt()$ddN2)) minn <- 0
       if(!is.null(datamethfilt()$ddN2) & !is.null(dataexprfilt()$ddN2)) minn <- 1
       
@@ -202,7 +215,7 @@ shinyServer(function(input, output, session){
   })
   
   output$nTmax <- renderUI({
-    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(isolate(toupper(input$Gene)))) {
+    if (!is.null(input$DataType) & !is.null(input$TissueType) & !is.null(geneNameSaved())) {
       maxt <- max_sample(sample_size, input$DataType, input$TissueType)[2]
       valor <- min(maxt, 30)
       mint <- 1
@@ -215,7 +228,7 @@ shinyServer(function(input, output, session){
   #################################################
   #print wanderer plot
   output$plot1 <- renderPlot({
-    if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(isolate(toupper(input$Gene))) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
+    if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(geneNameSaved()) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
       if(input$region & ((input$end > input$Zoom[2]) | (input$end < input$Zoom[1]) | (input$start < input$Zoom[1]) | (input$start > input$Zoom[2]))) stop(print(paste0("The region must be between ", input$Zoom[1], " and ", input$Zoom[2])))
       
       if(input$DataType == 'methylation'){
@@ -223,7 +236,7 @@ shinyServer(function(input, output, session){
           if(is.null(datamethfilt()$ddN2) & is.null(datamethfilt()$ddT2)){
             stop("There are no samples in this tissue type")
           } else{
-            wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+            wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                  geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                  CpGislands = input$CpGi, plotmean = input$plotmean,
                                  plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
@@ -235,7 +248,7 @@ shinyServer(function(input, output, session){
           if(is.null(dataexprfilt()$ddN2) & is.null(dataexprfilt()$ddT2)){
             stop("There are no samples in this tissue type")
           } else{
-            wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+            wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                 geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                 plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
           }
@@ -249,7 +262,7 @@ shinyServer(function(input, output, session){
   ##################################################
   #print summary plot
   output$plotStat <- renderPlot({
-    if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(isolate(toupper(input$Gene))) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
+    if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(geneNameSaved()) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
       
       if(input$DataType == 'methylation'){
         if(dim(datamethfilt()[['probes2']])[1]>0){
@@ -260,7 +273,7 @@ shinyServer(function(input, output, session){
             if(dim(datamethfilt()$ddN2)[2]==2 | dim(datamethfilt()$ddT2)[2]==2){
               stop("There are not enough samples to perform the statistical analysis")
             } else{
-              stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+              stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                  geneNamesType = geneFormat(), CpGislands = input$CpGi,
                                  geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
             }
@@ -276,7 +289,7 @@ shinyServer(function(input, output, session){
             if(dim(dataexprfilt()$ddN2)[2]==2 | dim(dataexprfilt()$ddT2)[2]==2){
               stop("There are not enough samples to perform the statistical analysis")
             } else{
-              stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+              stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                  geneNamesType = geneFormat(),
                                  geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
             }
@@ -290,17 +303,17 @@ shinyServer(function(input, output, session){
   #################################################
   #dowload plot as png & pdf
   output$downloadPlot <- downloadHandler(
-    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
+    filename = function() { paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {
       CairoPNG(file, width = 1000, height = 1000)
       if(input$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
                                         plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
-        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
@@ -309,17 +322,17 @@ shinyServer(function(input, output, session){
     }
   )
   output$downloadPlotPDF <- downloadHandler(
-    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
+    filename = function() { paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
     content = function(file) {
       pdf(file, width = 14, height = 14, useDingbats = FALSE)
       if(input$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                         CpGislands = input$CpGi, plotmean = input$plotmean,
                                         plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
-        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
                                        plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
       }
@@ -333,7 +346,7 @@ shinyServer(function(input, output, session){
   #dowload Normal data
   output$downloadNData <- downloadHandler(
     
-    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_Normal_', Sys.Date(), '.txt') },
+    filename = function() { paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_', Sys.Date(), '.txt') },
     content = function(file) {
       if(input$DataType == 'methylation')  write.table(datamethfilt()$ddN2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       if(input$DataType == 'expression')  write.table(dataexprfilt()$ddN2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
@@ -344,7 +357,7 @@ shinyServer(function(input, output, session){
   #dowload Tumor data
   output$downloadTData <- downloadHandler(
     
-    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_Tumor_', Sys.Date(), '.txt') },
+    filename = function() { paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_', Sys.Date(), '.txt') },
     content = function(file) {
       if(input$DataType == 'methylation')  write.table(datamethfilt()$ddT2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       if(input$DataType == 'expression')  write.table(dataexprfilt()$ddT2, file = file, sep = "\t", row.names = FALSE, quote = FALSE)      
@@ -355,16 +368,16 @@ shinyServer(function(input, output, session){
   #dowload probe annotation and statistical analysis
   output$downloadPData <- downloadHandler(
     
-    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_', input$DataType, '_', input$TissueType, '_annotations_and_statistical_analysis_', Sys.Date(), '.txt') },
+    filename = function() { paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_annotations_and_statistical_analysis_', Sys.Date(), '.txt') },
     content = function(file) {
       if(input$DataType == 'methylation'){
-        results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+        results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                      geneNamesType = geneFormat(), CpGislands = input$CpGi,
                                      geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly) )
         write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
       }
       if(input$DataType == 'expression'){
-        results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+        results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                       geneNamesType = geneFormat(),
                                       geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly))
         write.table(results, file = file, sep = "\t", row.names = FALSE, quote = FALSE)        
@@ -375,16 +388,16 @@ shinyServer(function(input, output, session){
   #################################################
   #dowload plot as png & pdf
   output$downloadMeanPlot <- downloadHandler(
-    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_Mean_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
+    filename = function() { paste0("Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.png') },
     content = function(file) {
       CairoPNG(file, width = 1000, height = 500)
       if(input$DataType == 'methylation'){
-        regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                       geneNamesType = geneFormat(), CpGislands = input$CpGi,
                                       geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
-        regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                       geneNamesType = geneFormat(),
                                       geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
@@ -393,16 +406,16 @@ shinyServer(function(input, output, session){
     }
   )
   output$downloadMeanPlotPDF <- downloadHandler(
-    filename = function() { paste0("Wanderer_", isolate(toupper(input$Gene)), '_Mean_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
+    filename = function() { paste0("Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', Sys.Date(), '.pdf') },
     content = function(file) {
       pdf(file, width = 14, height = 6, useDingbats = FALSE)
       if(input$DataType == 'methylation'){
-        regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                       geneNamesType = geneFormat(), CpGislands = input$CpGi,
                                       geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
       else if(input$DataType == 'expression'){
-        regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = isolate(toupper(input$Gene)),
+        regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                       geneNamesType = geneFormat(),
                                       geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
       }
