@@ -183,25 +183,16 @@
               </div>
               <div align = "center">
              
-                <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
-                <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%"></div>
+                <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%;"></div>
+                <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%;"></div>
+                <div  data-display-if="input.DataType == &#39;expression&#39;" id="plotRNAseqGene" class="shiny-plot-output" style="width: 100% ; height: 10%;"></div>
+
               </div>
               <br>
               <div align = "center">
-
-
-                <a id="downloadPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG plot</a>  
-                <a id="downloadPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF plot</a> 
-                <a id="downloadMeanPlot" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PNG Mean plot</a>  
-                <a id="downloadMeanPlotPDF" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> PDF Mean plot</a> 
+                <a id="downloadResults" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Download Data & Results</a>  
               </div>
-              <div align = "center">
-                <a id="downloadNData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Normals data</a>  
-                <a id="downloadTData" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Tumors data</a> 
-                <a id="downloadPData" class="btn shiny-download-link" href="" target="_blank"> <i class="fa fa-download"></i> Annotations & Statistical Analysis</a>
-              </div>
-
-
+                
               <div align = "center">
                 <div id="permalink_modal" class="shiny-html-output"></div>
                 <div id="genome_browser" class="shiny-html-output"></div>
@@ -218,7 +209,7 @@
                   <p>
                     Data have been obtained from the <a href="http://cancergenome.nih.gov/">TCGA Research Network</a>. Some datasets have limitations for usage until a global analysis is published; please contact <a href="mailto:tcga@mail.nih.gov">TCGA</a> before publishing.
                   </p>
-                  <p>&copy; IMPPC, 2014 - Designed and maintained by <a href="mailto:imallona@imppc.org">Izaskun Mallona</a> and <a href="mailto:adiez@imppc.org">Anna D&iacute;ez-Villanueva</a>. Logo by <a href="mailto:judouet@gmail.com">Julien Douet</a>.</p>
+                  <p>&copy; IMPPC, 2014 - Designed and maintained by <a href="mailto:adiez@imppc.org">Anna D&iacute;ez-Villanueva</a> and <a href="mailto:imallona@imppc.org">Izaskun Mallona</a>. Logo by <a href="mailto:judouet@gmail.com">Julien Douet</a>.</p>
                 </div>
               </div>
             </div>

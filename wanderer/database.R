@@ -19,7 +19,7 @@ db_connect <- function(db_conf_fn) {
     
     con <- dbConnect(drv,
                      user = db_conf[['user']],
-                     ## password = db_conf[['password']],
+                     password = db_conf[['password']],
                      dbname = db_conf[['dbname']],
                      host = db_conf[['host']],
                      port = db_conf[['port']])
@@ -38,7 +38,7 @@ get_query <- function(con, stmt) {
 get_db_parameters <- function(conf) {
   params <- read.table(conf, sep = ",", stringsAsFactors = FALSE)
   return(list(user = params$V2[1],
-              ## password = params$V2[2],
+              password = params$V2[2],
               dbname = params$V2[3],
               host = params$V2[4],
               port = params$V2[5]))
