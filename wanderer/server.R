@@ -34,7 +34,6 @@ shinyServer(function(input, output, session){
   
   #database connection
   con <- db_connect(DB_CONF)
-  ## print(dbGetInfo(con))
   
   
   #################################################
@@ -196,8 +195,6 @@ shinyServer(function(input, output, session){
         } 
       }
     }
-    print(dim(dataRNAseqGene()$Normal))
-    
   }, height = 500, width = 1000)
   
   
@@ -332,9 +329,9 @@ shinyServer(function(input, output, session){
   #################################################
   #DOWNLOAD RESULTS
   
-#   ZIPfile <- reactive({
-#     zipFile <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', format(Sys.time(), "%Y-%m-%d_%H:%M:%S"), '.zip')
-#   })
+  #   ZIPfile <- reactive({
+  #     zipFile <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', format(Sys.time(), "%Y-%m-%d_%H:%M:%S"), '.zip')
+  #   })
   
   output$downloadResults <- downloadHandler(
     
@@ -382,10 +379,15 @@ shinyServer(function(input, output, session){
       #################################################
       #dowload Normal data
       fileN <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_', cest_timestamp(), '.csv')
-      if(input$DataType == 'methylation')
+      if(input$DataType == 'methylation'){
+        if(!is.null(datamethfilt()$ddN2)){
           write.table(datamethfilt()$ddN2, file = file.path(tempdir(), fileN), sep = ",", row.names = FALSE, quote = FALSE)        
-      else if(input$DataType == 'expression')
+        }
+      } else if(input$DataType == 'expression'){
+        if(!is.null(dataexprfilt()$ddN2)){
           write.table(dataexprfilt()$ddN2, file = file.path(tempdir(), fileN), sep = ",", row.names = FALSE, quote = FALSE)        
+        }
+      }
       
       
       #################################################
@@ -402,8 +404,15 @@ shinyServer(function(input, output, session){
       #################################################
       #dowload Tumor data
       fileT <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_', cest_timestamp(), '.csv')
-      if(input$DataType == 'methylation')  write.table(datamethfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)        
-      else if(input$DataType == 'expression')   write.table(dataexprfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)        
+      if(input$DataType == 'methylation'){
+        if(!is.null(datamethfilt()$ddT2)){
+          write.table(datamethfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)        
+        }
+      } else if(input$DataType == 'expression'){
+        if(!is.null(dataexprfilt()$ddT2)){
+          write.table(dataexprfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)        
+        }
+      }
       
       
       #################################################
@@ -499,15 +508,15 @@ shinyServer(function(input, output, session){
       
       
       zip(zipfile =  file, files = file.path(tempdir(), c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)), flags = "-j")
-          # stop(file)
+      # stop(file)
       if (file.exists(paste0( file, ".zip")))
         file.rename(paste0(file, ".zip"), file)
-
+      
       ## cleaning the files after compressing and packing them	
       to_delete <-  c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)
       for (fn in to_delete) 
         unlink(file.path(tempdir(),fn))
-	
+      
     },
     contentType = "application/zip"
   )
