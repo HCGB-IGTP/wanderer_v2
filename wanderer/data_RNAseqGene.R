@@ -16,7 +16,7 @@ data_RNAseqGene <- function(con, dataexpr, tissue){
       colnames(ddT) <- toupper(colnames(ddT))
       for(i in 1:6) colnames(ddT) <- sub("_","-",colnames(ddT))
     }
-    
+    ddT[,-1] <- log2(ddT[,-1] + 1)
     
     #RNAseq at gene level normal data download
     ddN <- try(dbSendQuery(con, paste0("select * from ", tissue, "_normal.illuminahiseq_rnaseqv2_by_gene
@@ -28,6 +28,9 @@ data_RNAseqGene <- function(con, dataexpr, tissue){
       colnames(ddN) <- toupper(colnames(ddN))
       for(i in 1:6) colnames(ddN) <- sub("_","-",colnames(ddN))
     }
+    ddN[,-1] <- log2(ddN[,-1] + 1)
+    
+    
     results <- list(ddN, ddT)
     names(results) <- c("Normal", "Tumor")
     
