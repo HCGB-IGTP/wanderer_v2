@@ -32,10 +32,12 @@ sample_size <- read.table(file.path(SRC, "samplesN_filtered2.csv"), sep = ",", s
 
 shinyServer(function(input, output, session){
 
-    observe({
-        write( paste( Sys.time(), input$client_time, sep = "; "), file = "clientTime.txt")
-    })
-    
+    ## get_client_date <- function() {
+    ##     reactive(return(input$clientTime))
+    ## }
+
+    ## write.table(file = 'test', )
+        
   #database connection
   con <- db_connect(DB_CONF)
   
@@ -340,14 +342,15 @@ shinyServer(function(input, output, session){
   output$downloadResults <- downloadHandler(
     
     filename = function(){
-      file.path(paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', cest_timestamp(), '.zip'))
+      file.path(paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.zip'))
     },
     
     content = function(file) {
       
       ######################################
       #wanderer plot in png      
-      f1 <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', cest_timestamp(), '.png')
+      f1 <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
+      
       CairoPNG(file.path(tempdir(),f1), width = 1000, height = 1000)
       if(input$DataType == 'methylation'){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
@@ -364,7 +367,7 @@ shinyServer(function(input, output, session){
       
       #####################################
       #wanderer plot in pdf
-      f2 <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', cest_timestamp(), '.pdf')
+      f2 <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
       pdf(file.path(tempdir(), f2), width = 14, height = 14)
       if(input$DataType == 'methylation'){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
@@ -382,7 +385,7 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload Normal data
-      fileN <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_', cest_timestamp(), '.csv')
+      fileN <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_', client_timestamp(input$clientTime), '.csv')
       if(input$DataType == 'methylation'){
         if(!is.null(datamethfilt()$ddN2)){
           write.table(datamethfilt()$ddN2, file = file.path(tempdir(), fileN), sep = ",", row.names = FALSE, quote = FALSE)        
@@ -397,7 +400,7 @@ shinyServer(function(input, output, session){
       #################################################
       #dowload RNAseq Gene level Normal data
       
-      fileNG <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_RNAseqGENE_', cest_timestamp(), '.csv')
+      fileNG <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_RNAseqGENE_', client_timestamp(input$clientTime), '.csv')
       if(input$DataType == 'expression'){
         if(!is.null(dataRNAseqGene()$Normal)){
           ddN <- RNAseq_data_table(dataRNAseqGene()$Normal, dataexprfilt()$ddN2)
@@ -407,7 +410,7 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload Tumor data
-      fileT <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_', cest_timestamp(), '.csv')
+      fileT <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_', client_timestamp(input$clientTime), '.csv')
       if(input$DataType == 'methylation'){
         if(!is.null(datamethfilt()$ddT2)){
           write.table(datamethfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)        
@@ -422,7 +425,7 @@ shinyServer(function(input, output, session){
       #################################################
       #dowload RNAseq Gene level Normal data
       
-      fileTG <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_RNAseqGENE_', cest_timestamp(), '.csv')
+      fileTG <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_RNAseqGENE_', client_timestamp(input$clientTime), '.csv')
       if(input$DataType == 'expression'){
         if(!is.null(dataRNAseqGene()$Tumor)){
           ddT <- RNAseq_data_table(dataRNAseqGene()$Tumor, dataexprfilt()$ddT2)
@@ -432,7 +435,7 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload probe annotation and statistical analysis
-      fileA <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_annotations_and_statistical_analysis_', cest_timestamp(), '.csv')
+      fileA <- paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_annotations_and_statistical_analysis_', client_timestamp(input$clientTime), '.csv')
       if(input$DataType == 'methylation'){
         results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                      geneNamesType = geneFormat(), CpGislands = input$CpGi,
@@ -449,7 +452,7 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload boxplot of RNAseq gene data as png
-      fbox1 <- paste0("Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', cest_timestamp(), '.png')
+      fbox1 <- paste0("Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
       if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(geneNameSaved()) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
         if(input$DataType == 'expression'){
           if(!is.null(dataRNAseqGene())){
@@ -465,7 +468,7 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload boxplot of RNAseq gene data as pdf
-      fbox2 <- paste0("Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', cest_timestamp(), '.pdf')
+      fbox2 <- paste0("Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
       if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(geneNameSaved()) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
         if(input$DataType == 'expression'){
           if(!is.null(dataRNAseqGene())){
@@ -478,7 +481,7 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload mean plot as png
-      fmean1 <- paste0("Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', cest_timestamp(), '.png')
+      fmean1 <- paste0("Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
       CairoPNG(file.path(tempdir(), fmean1), width = 1000, height = 500)
       if(input$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
@@ -495,7 +498,7 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload mean plot as pdf
-      fmean2 <- paste0("Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', cest_timestamp(), '.pdf')
+      fmean2 <- paste0("Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
       pdf(file.path(tempdir(), fmean2), width = 14, height = 6)
       if(input$DataType == 'methylation'){
         regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),

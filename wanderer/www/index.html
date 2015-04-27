@@ -1,14 +1,5 @@
 <!DOCTYPE html>
 <html>
-  <script type="text/css">
-    ".jslider { max-width: 1000px; }"
-  </script>
-  <script type="text/javascript">
-    $(document).ready(function(){
-    var d = new Date();
-    Shiny.onInputChange("client_time", d.toLocaleString());
-    });
-  </script>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script type="application/shiny-singletons">7068be154af277356dab1092ff4e4c8f67c35a88,7196694b46f8e7c34171939351e3a70cdd3ccf40</script>
@@ -29,8 +20,31 @@
     <link rel="stylesheet" type="text/css" href="united.css"/>
     <script>$(function() { $("[data-toggle='popover']").popover(); })</script>
     <link rel="stylesheet" type="text/css" href="shared/font-awesome/css/font-awesome.min.css"/>
+  <script type="text/css">
+    ".jslider { max-width: 1000px; }"
+  </script>
+  <!-- <script type="text/javascript"> -->
+  <!--   $(document).ready(function(){ -->
+  <!--   var d = new Date(); -->
+  <!--   var target = $("#clientTime"); -->
+  <!--   target.val(d.toLocaleString()); -->
+  <!--   target.trigger("change"); -->
+  <!--   }); -->
+  <!-- </script> -->
+  <script type="text/javascript">
+    $(document).ready(function(){
+    var d = new Date();
+    var target = $("#clientTime");
+    target.val(d.getTime());
+    target.trigger("change");
+    });
+  </script>
   </head>
   <body>
+    <div style="display: none;">
+      <label for="clientTime">Client Time</label>
+      <input id="clientTime" type="text" value=""/>
+    </div>
     <div class="navbar navbar-static-top">
       <div class="navbar-inner">
         <div class="container">
@@ -63,6 +77,9 @@
       </div>
     </div>
 
+
+
+
     <div class="container-fluid">
       <div class="row-fluid">&nbsp;</div>
       <div class="tab-content">
@@ -84,9 +101,6 @@
                   <h4>Gene Name or Ensemble Gene Id</h4>
                 </label>
                 <input id="Gene" type="text" value="BRCA1"/>
-                <!-- <div style="display: none;"> -->
-                  <input id="client_time"  type="text" value="BRCA1"/>
-                <!-- </div> -->
                 <span class="help-block">Examples: BRCA1 or ENSG00000012048</span>
                 <!-- <span class="help-block">Tip: Gene symbols look like TP53 or BRCA1 whereas Ensembl Gene IDs start by ENSG</span> -->
                 <span class="help-block"><b>Important</b>: Press refresh after entering a new gene name</span>

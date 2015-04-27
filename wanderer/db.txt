@@ -1,5 +1,0 @@
-user,shiny
-password,""
-dbname,regional_profile
-host,overlook
-port,5432
