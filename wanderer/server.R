@@ -31,7 +31,11 @@ source(file.path(SRC, 'utils.R'))
 sample_size <- read.table(file.path(SRC, "samplesN_filtered2.csv"), sep = ",", stringsAsFactors = FALSE, header = TRUE)
 
 shinyServer(function(input, output, session){
-  
+
+    observe({
+        write( paste( Sys.time(), input$client_time, sep = "; "), file = "clientTime.txt")
+    })
+    
   #database connection
   con <- db_connect(DB_CONF)
   
