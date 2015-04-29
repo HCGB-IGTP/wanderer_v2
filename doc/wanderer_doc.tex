@@ -1,0 +1,107 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+% \usepackage{lscape}
+% \usepackage{enumerate}
+\usepackage[a4paper]{geometry}
+% \usepackage{listings}
+% \usepackage{float}
+
+\title{Wanderer User Manual}
+
+
+\author{Izaskun Mallona}
+
+
+\begin{document}
+
+\maketitle
+% \tableofcontents
+% \listoffigures
+
+
+
+
+\textbf{Wanderer} is a very simple and intuitive web tool allowing real time access and visualization of gene expression and DNA methylation profiles from TCGA data using gene targeted queries. Wanderer is addressed to a broad variety of experimentalists and clinicians without deep bioinformatics skills.\\  
+
+Please contact us at \url{mailto:adiez@imppc.org} or \url{mailto:imallona@imppc.org}.\\
+
+A paper describing \textbf{Wanderer} is available at aaaaaa.\\
+
+
+\section{Usage}
+
+\subsection{Basic usage}
+
+% With this aim we developed a tool, the TCGA Wanderer, that allows to easily retrieve and visualize the regional profiles of groups of samples belonging to a tumor type. 
+
+For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure \ref{fig:1}). Graphs for normal and tumor samples from any of the available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization. Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers.\\
+
+
+ 
+\subsection{Plotting versatility}
+
+Graphical outputs are highly dynamic, being rendered on the fly. Once selected the gene to look at, some parameters can be easily tuned:
+\begin{itemize}
+\item The user can zoom in and out either by using a simple slider or entering a custom coordinate range by hand. 
+\item A glyph depicting the actual gene location and strand can be added. 
+\item Methylation probes belonging to a CpG island can be highlighted in green. 
+\item Distance between probes or exons can be selected to be proportional to the actual genomic location or to be uniform; in the case of methylation, this facilitates visualization of CpG-dense regions, such as CpG islands. 
+\item In order to ease sample profiling, Wanderer draws line plots by default. In this representation, the scrutinized exons or CpGs belonging to the same sample are linked by lines. The user can enter the number of samples to be represented this way. A random sampling (with a random seed so the result is repeatable) is therefore performed. However, all the data can be taken into account at once ticking the 'Boxplot all the data' checkbox.
+
+\end{itemize}
+
+
+\subsection{Further capabilities}
+Wanderer performs Wilcoxon rank sum test comparisons on normal versus tumor provided there are at least two observations in each group. An independent test is performed for each CpG or exon, being the p-value FDR corrected for multiple testing. Although this is readily reported, we note that addressing the significance on few observations and without inspecting the data distribution might be meaningless. Even though the number of samples to draw as line-plots can be reduced manually, the statistical analysis is performed with the complete dataset.\\
+
+Graphics can be readily downloaded in either raster (PNG) or vector (PDF) formats. Probe annotations, statistical analysis and raw data for either normal and tumor samples can be easily download as text files (comma-separated values, CSV) that can be processed using spreadsheet software. A link pointing to the UCSC Genome Browser's profile of the scrutinized regions is readily produced.\\
+
+The tool also provides batch analysis capabilities as well data sharing and linking from other Web resources through an application programming interface (API) named Wanderer\_api \cite{wandererapi}. Wanderer\_api has the same capabilities as Wanderer does but receives the parameters parsing arguments from the URL.\\ 
+
+
+
+\begin{figure}[h!]
+  \caption{\textit{Snapshot of Wanderer webpage.}
+As an illustrative example, the DNA methylation of HumanMethylation450 BeadChip probes associated to CDKN2A gene in colon cancer are shown. Boxes indicate the different panels for gene name/ID and dataset selection (a), customization of the viewed region (b) and graphs parameters (c), profiles (d) and data download and links (e). 
+}
+  \label{fig:1}
+\end{figure}
+
+
+\begin{figure}[h!]
+  \caption{\textit{Gene expression profile of PIK3CA in Breast invasive carcinoma (BRCA) and Colon adenocarcinoma (COAD).}
+PIK3CA expression levels are consistently reproduced among most exons in normal and tumor tissues in breast cancer patients. In contrast, colon cancers display very heterogeneous profiles with uneven changes among different exons (see enlarged inset for comparison). 
+  }
+  \label{fig:2}
+\end{figure}
+
+
+\begin{figure}[h!]
+  \caption{\textit{DNA methylation profile of PTGIS CpG island in Colon adenocarcinomas (COAD) and Prostate adenocarcinomas (PRAD).}
+Note that cg1077290 probe (*) is already very methylated in colon normal tissue, offering poor discriminant resolution to detect tumor hypermethylation compared with the rest of CpG island probes (labeled in green). In contrast, this probe (cg1077290) shows the highest level of hypermethylation in Prostate cancers (PRAD) and remains unmethylated in normal tissue, resulting as the most discriminant variable in this type of cancer.  
+  }
+  \label{fig:3}
+\end{figure}
+
+\begin{figure}[h!]
+  \caption{\textit{DNA methylation profile of the EN1 gene CpG island and flanking regions in colon (COAD) and breast carcinomas (BRCA).}
+(A) Individual and mean methylation levels of EN1 CpG island and adjacent CpGs (chr2: 119,605,000 – 119,606,000). The region remains unmethylated in normal tissues and becomes hypermethylated in both colon and breast cancers. (B) Zooming out the region (chr2:119,540,000-119,706,000) reveals the presence of a large number of CpG islands (green probes) and global hypermethylation of most of them in colon adenocarcinomas. Alternatively breast cancers display interspersed regions of hypomethylation and hypermethylation. The graphs display the average methylation values of each dataset. Probes marked with an asterisk denote statistically significant differences between normal and tumor samples. 
+}
+  \label{fig:4}
+\end{figure}
+
+\section{Implementation}
+
+\textbf{Wanderer} has been developed using R/shiny and a PostgreSQL backend using an eXtreme programming software development methodology. Wanderer is compatible with most common web browsers and operative systems, requires no installation, and can be run on commodity computers, such as low-memory laptops.\\
+ 
+Data consists on HumanMethylation450 BeadChip and Illumina HiSeq exon quantifications as computed by the RNASeq Version 2 pipeline. Data was downloaded with TCGA-Assembler \cite{zhu2014tcga}. Source code is available under the GPL v2 terms at \cite{sourceforge}.
+
+
+\bibliographystyle{plain} % Style BST file
+\bibliography{wanderer_paper}      % Bibliography file (usually '*.bib' )
+
+\end{document}
