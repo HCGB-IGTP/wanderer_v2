@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <!-- <script type="text/css"> -->
+  <!--   ".jslider { max-width: 1000px; }" -->
+  <!-- </script> -->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="united.css"/>
+    <title>TCGA Wanderer: An interactive viewer to explore DNA methylation and gene expression data in human cancer </title>
+    <meta name="keywords" content="TCGA,cancer,methylation,expression,profile,wanderer,data">
+  </head>
+  <body>
+    <div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <span class="brand pull-left"></span>
+          <ul class="nav shiny-tab-input" id="Wanderer">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="http://maplab.cat" id="maplab">maplab tools<span class="caret"></span></a>
+              <ul class="dropdown-menu" aria-labelledby="themes">
+                <li><a href="http://maplab.cat" target = "_blank">Home</a></li>
+                <li class="divider"></li>
+                
+                <li><a href="http://gattaca.imppc.org:3838/methylation_plotter/" target = "_blank">Methylation plotter</a></li>
+                <li><a href="http://www.maplab.cat/wanderer" target = "_blank">Wanderer</a></li>
+
+                <!-- <li><a href="http://www.maplab.cat/correlations" target = "_blank">Correlations browser</a></li> -->
+                <!-- <li><a href="http://www.maplab.cat/alu_ontology" target = "_blank">Alu Ontology</a></li> -->
+              </ul>
+            </li>
+            <li>
+              <a href="index.html">Wanderer</a>
+            </li>
+            <li class="active">
+              <a href="doc.html">Documentation</a>
+            </li>
+            <li>
+              <a href="support.html">Support</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row-fluid">&nbsp;</div>
+        <div class="tab-content">
+          <div class="tab-pane active" data-value="meth" id="tab-7637-1">
+            <section class="jumbotron">
+	      <div class="container">
+                <div>
+                  <img src="wanderer_logo.png" style="float:left; padding: 1px 2px 1px 1px;"/>
+                  <h3 style="color:#dd4814; float:left; padding: 0px 20px 10px 20px;">Wanderer<br>An interactive viewer to explore DNA methylation<br>and gene expression data in human cancer</h3>
+                </div>
+	      </div>
+              <br>           
+            </section>
+          </div>
+        </div> 
+      </div> 
+    </div> 
+    <div class="row-fluid">
+      <div class="span6 offset4">
+
+ <h1>WANDERER DOCUMENTATION</h1>
+
+<p>This is file describes the outputs obtained with TCGA Wanderer.</p>
+
+<p>Please feel free to contact us at adiez imallona or map at imppc.org.</p>
+
+<ol>
+<li>AIM</li>
+<li>CITATION</li>
+<li>FILE LIST FOR METHYLATION</li>
+<li>FILE LIST FOR EXPRESSION</li>
+<li>FREQUENTLY ASKED QUESTIONS</li>
+<li>VERSION</li>
+</ol>
+
+<h2>AIM</h2>
+
+<p>Wanderer is a very simple and intuitive web tool allowing real time access and visualization of gene expression and DNA methylation profiles from TCGA data using gene targeted queries. Wanderer is addressed to a broad variety of experimentalists and clinicians without deep bioinformatics skills.</p>
+
+<h2>CITATION</h2>
+
+<p>If you find this software useful please consider citing our paper (in press).</p>
+
+<h2>FILE LIST FOR METHYLATION</h2>
+
+<p>Wanderer generates several images and data files. The naming convention includes the gene, dataset and date and hour of the query.</p>
+
+<p>For instance, the predefined query for METHYLATION produces the following files:</p>
+
+<ol>
+<li><p><code>Wanderer_BRCA1_Mean_methylation_brca_Apr_29_2015_at_170440_CEST.pdf</code></p>
+
+<p>A vectorial profile of the average methylation for normals (blue) and tumors (red). The gene location and strand is depicted with an arrow. The CpGs showing statistical differences between normal and tumor are highlighted with an asterisk. Probes within a CpG islands are colored in green.</p></li>
+<li><p><code>Wanderer_BRCA1_Mean_methylation_brca_Apr_29_2015_at_170440_CEST.png</code></p>
+
+<p>A raster version of the previous plot.</p></li>
+<li><p><code>Wanderer_BRCA1_methylation_brca_Apr_29_2015_at_170440_CEST.pdf</code></p>
+
+<p>The profile plot in which the beta values for each sample are linked by lines. The normal&#39;s data is in the upper panel (blue) and the tumor&#39;s data, in the lower one (red). The gene location and strand is depicted with an arrow. Probes within a CpG islands are colored in green.</p></li>
+<li><p><code>Wanderer_BRCA1_methylation_brca_Apr_29_2015_at_170440_CEST.png</code></p>
+
+<p>A raster version of the previous plot.</p></li>
+<li><p><code>Wanderer_BRCA1_methylation_brca_Normal_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the probe name (first column) and a column with the beta values for each of the available normal samples. Sample names are in the first row (header).</p></li>
+<li><p><code>Wanderer_BRCA1_methylation_brca_Tumor_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the probe name (first column) and a column with the beta values for each of the available tumor samples. Sample names are in the first row (header).</p></li>
+<li><p><code>Wanderer_BRCA1_methylation_brca_annotations_and_statistical_analysis_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the annotation for each of the probes considered, as well some descriptive analysis.
+The columns correspond to:</p></li>
+</ol>
+
+<ul>
+<li>probe, probe name</li>
+<li>chr, the chromosome</li>
+<li>cg_start, the genomic position the CpG starts at</li>
+<li>cg_end, the genomic position the CpG ends at</li>
+<li>percentgc, the GC content of the illumina 450k array probe</li>
+<li>probetype, the type of the illumina 450k array probe </li>
+<li>probestart, the genomic position the probe starts at</li>
+<li>probeend, the genomic position the probe ends at</li>
+<li>genestart, the genomic position the closest gene to the probe starts at</li>
+<li>geneend, the genomic position the closest gene to the probe ends at</li>
+<li>genestrand, the gene strand (negative or positive)</li>
+<li>ENSEMBL_geneID, the closest gene id at ensembl</li>
+<li>genebiotype, gene biotype (protein coding, retained intron&hellip;)</li>
+<li>genename, gene symbol</li>
+<li>cpgistart, for those CpG are inside a CpG island, the coordinate this islands starts at</li>
+<li>cpgiend, for those CpG are inside a CpG island, the coordinate this islands ends at</li>
+<li>cpgiid, CpG island identifier</li>
+<li>Norm_nsamples, number of normal samples for this dataset in this release</li>
+<li>Norm_mean, mean beta value for normals </li>
+<li>Norm_sd, standard deviation for the beta values for normals</li>
+<li>Tum_nsamples, number of tumor samples for this dataset in this release</li>
+<li>Tum_mean, mean beta value for tumors</li>
+<li>Tum_sd, standard deviation for the beta values for tumors</li>
+<li>wilcox_stat, Wilcoxon Rank Sum Test W parameter (nonparametric comparison of normals vs tumors)</li>
+<li>pval, Wilcoxon Rank Sum Test p value (nonparametric comparison of normals vs tumors, low values indicates that differences are detected)</li>
+<li>adj.pval, Benjamini and Hochberg adjustement (False Discovery Rate) for multiple testing.</li>
+</ul>
+
+<h2>FILE LIST FOR EXPRESSION</h2>
+
+<p>The predefined query for EXPRESSION produces the following files:</p>
+
+<ol>
+<li><p><code>Wanderer_BRCA1_Mean_expression_brca_Apr_29_2015_at_170440_CEST.pdf</code></p>
+
+<p>A vectorial profile of the average expression for normals (blue) and tumors (red). The gene location and strand is depicted with an arrow. The CpGs showing statistical differences between normal and tumor are highlighted with an asterisk. Probes within a CpG islands are colored in green.</p></li>
+<li><p><code>Wanderer_BRCA1_Mean_expression_brca_Apr_29_2015_at_170440_CEST.png</code></p>
+
+<p>A raster version of the previous plot.</p></li>
+<li><p>Wanderer_BRCA1_boxplot_expression_brca_Apr_29_2015_at_170440_CEST.pdf</p>
+
+<p>A boxplot and a dot chart showing the expression values summarized by gene for normals (blue) and tumors (red). The expression values are log2-transformed normalized RSEM values and reflect the expression of the gene as a whole.</p></li>
+<li><p><code>Wanderer_BRCA1_boxplot_expression_brca_Apr_29_2015_at_170440_CEST.png</code></p>
+
+<p>A raster version of the previous plot.</p></li>
+<li><p><code>Wanderer_BRCA1_expression_brca_Apr_29_2015_at_170440_CEST.pdf</code></p>
+
+<p>The profile plot in which the RPKM values for each exon and each sample are linked by lines. The normal&#39;s data is in the upper panel (blue) and the tumor&#39;s data, in the lower one (red). The gene location and strand is depicted with an arrow.</p></li>
+<li><p><code>Wanderer_BRCA1_expression_brca_Apr_29_2015_at_170440_CEST.png</code></p>
+
+<p>A raster version of the previous plot (6).</p></li>
+<li><p><code>Wanderer_BRCA1_expression_brca_Normal_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the exon name (first column) and a column with the RPKM values for each of the exons of every available normal sample. Sample names are in the first row (header).</p></li>
+<li><p><code>Wanderer_BRCA1_expression_brca_Normal_RNAseqGENE_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the sample name (first column) and a column with the RSEM value for your gene of interest. This file contains data for normals.</p></li>
+<li><p><code>Wanderer_BRCA1_expression_brca_Tumor_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the exon name (first column) and a column with the RPKM values for each of the exons of every available tumor sample. Sample names are in the first row (header).</p></li>
+<li><p><code>Wanderer_BRCA1_expression_brca_Tumor_RNAseqGENE_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the sample name (first column) and a column with the RSEM value for your gene of interest. This file contains data for tumors.</p></li>
+<li><p><code>Wanderer_BRCA1_expression_brca_annotations_and_statistical_analysis_Apr_29_2015_at_170440_CEST.csv</code></p>
+
+<p>A comma separated data matrix with the annotation of your gene expression data, as well some descriptive analysis.
+The columns correspond to:</p></li>
+</ol>
+
+<ul>
+<li>exon, a homemade identifier that collapses the chromosome, start, end and strand of the exon</li>
+<li>id, the exon identifier according to the TCGA pipeline</li>
+<li>ENSEMBL_geneID, the gene identifier according to ENSEMBL (ENSG identifier)</li>
+<li>ENSEMBL_transcriptID, the transcript identifier according to ENSEMBL (ENST identifier)</li>
+<li>chr, the chromosome the exon is located at</li>
+<li>exon_start, the genomic coordinate the exons starts at </li>
+<li>exon_end, the genomic coordinate the exons ends at</li>
+<li>strand, the genomic strand (+ or -)</li>
+<li>genestart, the genomic position the closest gene to the probe starts at</li>
+<li>geneend, the genomic position the closest gene to the probe ends at</li>
+<li>genebiotype, gene biotype (protein coding, retained intron&hellip;)</li>
+<li>genename, gene symbol</li>
+<li>rnaseqgeneid, the TCGA gene identifier</li>
+<li>Norm_nsamples, number of normal samples for this dataset in this release</li>
+<li>Norm_mean, mean RSEM for normals </li>
+<li>Norm_sd, standard deviation for the RSEMs in normals</li>
+<li>Tum_nsamples, number of tumor samples for this dataset in this release</li>
+<li>Tum_mean, mean RSEM for tumors</li>
+<li>Tum_sd, standard deviation for the RSEMs in tumors</li>
+<li>wilcox_stat, Wilcoxon Rank Sum Test W parameter (nonparametric comparison of normals vs tumors)</li>
+<li>pval, Wilcoxon Rank Sum Test p value (nonparametric comparison of normals vs tumors, low values indicates that differences are detected)</li>
+<li>adj.pval, Benjamini and Hochberg adjustement (False Discovery Rate) for multiple testing.</li>
+</ul>
+
+<h2>FREQUENTLY ASKED QUESTIONS</h2>
+
+<ol>
+<li><p>Wanderer says there are not enough samples to perform statistical analysis, what does it mean?</p>
+
+<p>We compute the Wilcoxon test given that there are at least a normal and a tumor samples; if no tumors or no normals are available, we cannot test whether they are equivalent or not.
+We note that, although we calculate the test with small number of samples, this result might be meaningless without a minimum number of cases.</p></li>
+<li><p>The CSV files are a single line file!</p>
+
+<p>We use Linux/UNIX linefeeds. Although your text viewer (i.e. notepad) might merge all the lines under Windows, your spreadsheet software will recognise the line separation properly.</p></li>
+<li><p>How can I open a CSV in my spreadsheet software?</p>
+
+<p>Just use the &#39;open with&#39; (right click with the mouse). Or just lauch the application and import data from text, comma-separated or character-delimited values (this depends on the software).</p></li>
+<li><p>Are you updating this data? When did you take the last snapshot from the TCGA?</p>
+
+<p>We update Wanderer manually. The latest TCGA snapshot was taken from TCGA on January 2014.</p></li>
+<li><p>Which is the annotations origin for gene names and the like?</p>
+
+<p>We use the nice paper from Price, Kobor et al. named <em>Additional annotation enhances potential for biologically-relevant analysis of the Illumina Infinium HumanMethylation450 BeadChip array</em> Epigenetics &amp; Chromatin 2013, 6:4  doi:10.1186/1756-8935-6-4.</p></li>
+<li><p>What does RPKM mean? And RSEM? Why do you use them?</p>
+
+<p>We take advantage of the TCGA pipeline for RNA seq v2 expression analysis. RPKM are used for exons and RSEM for genes. In our plots we log-transform this values adding one to get rid of zeroes; that means we plot <code>log_2(x+1)</code> RPKM or RSEM values. However, the CSVs contain the data as TCGA provides them, without log-transformation.</p></li>
+</ol>
+
+<h2>VERSION</h2>
+
+<p><code>
+commit 51c3d0597cc7e83521bff236f5a26d187e71870b
+Author: Izaskun Mallona &lt;imallona@imppc.org&gt;
+Date:   Tue Apr 28 12:20:53 2015 +0200
+</code></p>
+</div>
+
+    <div class="row-fluid">
+      <div class="span6 offset4">
+        <div class="footer">
+          <p>
+            Data have been obtained from the <a href="http://cancergenome.nih.gov/">TCGA Research Network</a>. Some datasets have limitations for usage until a global analysis is published; please contact <a href="mailto:tcga@mail.nih.gov">TCGA</a> before publishing.
+          </p>
+          <p>&copy; IMPPC, 2014 - Designed and maintained by <a href="mailto:imallona@imppc.org">Izaskun Mallona</a> and <a href="mailto:adiez@imppc.org">Anna D&iacute;ez-Villanueva</a>. Logo by <a href="mailto:judouet@gmail.com">Julien Douet</a>.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
