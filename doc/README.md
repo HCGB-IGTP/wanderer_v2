@@ -21,12 +21,12 @@
 
 ### 1. AIM ###################################################################################################
 
-**Wanderer** is a very simple and intuitive web tool allowing real time access and visualization of gene expression and DNA methylation profiles obtained from the **TCGA Research Network** (http://cancergenome.nih.gov/) using gene targeted queries. Wanderer is addressed to a broad variety of experimentalists and clinicians without deep bioinformatics skills.
+**Wanderer** is a very simple and intuitive web tool allowing real time access and visualization of gene expression and DNA methylation profiles obtained from the **TCGA Research Network** (http://cancergenome.nih.gov/) using gene targeted queries. *Wanderer* is addressed to a broad variety of experimentalists and clinicians without deep bioinformatics skills.
 
 
 ### 2. ACCESS AND CITATION ####################################################################################
 
-Wanderer may be accessed at www.maplab.cat/wanderer
+Wanderer may be accessed at http://www.maplab.cat/wanderer
 
 If you find this software useful please consider citing our paper:  (in preparation).
 
@@ -82,6 +82,7 @@ _File name examples:_
 `Wanderer_BRCA1_methylation_brca_Tumor_Apr_29_2015_at_170440_CEST.csv`
 
 4.1.4. A comma separated data matrix with the annotation for each of the informative probes and descriptive analysis of the DNA methylation data. The columns correspond to:
+
   - probe, probe name
   - chr, the chromosome
   - cg_start, the genomic position the CpG starts at
@@ -229,27 +230,25 @@ Both values are directly obtained from the TCGA pipeline for RNA seq v2 expressi
 [(Zhu, 2014)] Y. Zhu, P. Qiu, Y. Ji. **TCGA-Assembler: Open-Source Software for Retrieving and Processing TCGA Data**. Nature Methods. 11:599-600, 2014. | doi:10.1038/nmeth.2956).
 
 
-
-#### 7. NEWS #################################################################################################
+### 7. VERSIONS AND COPYRIGHT  ##############################################################################
 
 This documentation corresponds to Wanderer v1.0. The full development log can be found at https://sourceforge.net/projects/tcga-wanderer/. The previous major releases of **Wanderer** are:
 
-- Mon Dec 29 15:14:48 2014 **Alpha Release** 21f1c7d9c742011e289842752a1ea871c13dc5fb
-- Mon Oct  6 15:04:45 2014 **Project start** 3e5440a552d04319331415e74635e144045cc6ae
+- **Alpha Release**  Mon Dec 29 15:14:48 2014  (commit 21f1c7d9c742011e289842752a1ea871c13dc5fb)
+- **Project start**  Mon Oct  6 15:04:45 2014  (commit 3e5440a552d04319331415e74635e144045cc6ae)
+
 
 This document corresponds to
 
 `commit ddc7c2ee86eade104855a71f90224d7af23c625d
 Author: Izaskun Mallona <imallona@imppc.org>
-Date:   Tue May 12 09:44:57 2015 +0200
-`
-
-#### 8. COPYRIGHT ############################################################################################
-
-Some datasets have limitations for usage until a global analysis is published; please contact TCGA before publishing. Copyright IMPPC, 2014 - Izaskun Mallona, Anna Díez-Villanueva and Miguel A. Peinado. Logo by Julien Douet.
+Date:   Tue May 12 09:44:57 2015 +0200`
 
 
-#### 9. CONTACT ##############################################################################################
+Some datasets have limitations for usage until a global analysis is published; please contact TCGA before publishing. Copyright IMPPC, 2014 - Izaskun Mallona, Anna Diez-Villanueva and Miguel A. Peinado. Logo by Julien Douet.
+
+
+### 8. CONTACT ##############################################################################################
 
 Izaskun Mallona (imallona@imppc.org)
 Anna Diez-Villanueva (adiez@imppc.org)
