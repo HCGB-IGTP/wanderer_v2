@@ -61,17 +61,17 @@ The predefined query for DNA methylation produces the following graphs and data 
 
 _File name examples_:
 
-Vectorial format: `Wanderer_BRCA1_methylation_brca_Apr_29_2015_at_170440_CEST.pdf`
+_Vectorial format:_ `Wanderer_BRCA1_methylation_brca_Apr_29_2015_at_170440_CEST.pdf`
 
-Raster version: `Wanderer_BRCA1_methylation_brca_Apr_29_2015_at_170440_CEST.png`
+_Raster version:_ `Wanderer_BRCA1_methylation_brca_Apr_29_2015_at_170440_CEST.png`
 
 4.1.2. Profile plots displaying the average methylation for all the normal (blue) and tumor samples (red) of the selected dataset. The gene location and strand is depicted with an arrow. CpG island located probes are colored in green. The CpGs showing statistical differences between normal and tumor are highlighted with an asterisk (Wilcoxon adjusted p-value < 0.05).
 
 _File name examples:_
 
-Vectorial format: `Wanderer_BRCA1_Mean_methylation_brca_Apr_29_2015_at_170440_CEST.pdf`
+_Vectorial format:_ `Wanderer_BRCA1_Mean_methylation_brca_Apr_29_2015_at_170440_CEST.pdf`
 
-Raster version: `Wanderer_BRCA1_Mean_methylation_brca_Apr_29_2015_at_170440_CEST.png`
+_Raster version:_ `Wanderer_BRCA1_Mean_methylation_brca_Apr_29_2015_at_170440_CEST.png`
 
 4.1.3. Two tables consisting of a comma separated data matrix containing data for normal and tumor samples respectively. Table contents: First row: Sample ID, First column: 450K Methylation array probe name, second column: DNA methylation beta value.
 
@@ -115,29 +115,29 @@ __File name examples:__
 
 #### 4.2 GENE EXPRESSION FILES ###############################################################################
 
-4.2.1. Profile plots displaying the log2-transformed RPKM values [reference] for each exon in two separate panels for a subset of normal (upper panel, blue marks) and tumor samples (bottom panel, red marks) from the selected dataset. Lines link values corresponding to the same sample. The gene location and strand is depicted with an arrow.
+4.2.1. Profile plots displaying the log2-transformed RPKM values [(Guo, 2013)] for each exon in two separate panels for a subset of normal (upper panel, blue marks) and tumor samples (bottom panel, red marks) from the selected dataset. Lines link values corresponding to the same sample. The gene location and strand is depicted with an arrow.
 
 _File name examples:_
 
-Vectorial format: `Wanderer_BRCA1_expression_brca_Apr_29_2015_at_170440_CEST.pdf`
+_Vectorial format:_ `Wanderer_BRCA1_expression_brca_Apr_29_2015_at_170440_CEST.pdf`
 
-Raster version: `Wanderer_BRCA1_expression_brca_Apr_29_2015_at_170440_CEST.png`
+_Raster version:_ `Wanderer_BRCA1_expression_brca_Apr_29_2015_at_170440_CEST.png`
 
 4.2.2. Profile plots of the average expression for all the normal (blue) and tumor samples (red) of the selected dataset. The gene location and strand is depicted with an arrow. The exons showing statistically significant differences between normal and tumor are highlighted with an asterisk (Wilcoxon adjusted p-value < 0.05).
 
 _File name examples:_
 
-Vectorial format: `Wanderer_BRCA1_Mean_expression_brca_Apr_29_2015_at_170440_CEST.pdf`
+_Vectorial format:_ `Wanderer_BRCA1_Mean_expression_brca_Apr_29_2015_at_170440_CEST.pdf`
 
-Raster version: `Wanderer_BRCA1_Mean_expression_brca_Apr_29_2015_at_170440_CEST.png`
+_Raster version:_ `Wanderer_BRCA1_Mean_expression_brca_Apr_29_2015_at_170440_CEST.png`
 
-4.2.3. Boxplot and a stripchart graphs showing the expression values summarized by gene for all the normal (blue) and tumor samples (red) of the selected dataset. The expression values are log2-transformed normalized RSEM values  [reference] and reflect the expression of the gene as a whole.
+4.2.3. Boxplot and a stripchart graphs showing the expression values summarized by gene for all the normal (blue) and tumor samples (red) of the selected dataset. The expression values are log2-transformed normalized RSEM values [(Guo, 2013)] and reflect the expression of the gene as a whole.
 
 _File name examples:_
 
-Vectorial format: `Wanderer_BRCA1_boxplot_expression_brca_Apr_29_2015_at_170440_CEST.pdf`
+_Vectorial format:_ `Wanderer_BRCA1_boxplot_expression_brca_Apr_29_2015_at_170440_CEST.pdf`
 
-Raster version: `Wanderer_BRCA1_boxplot_expression_brca_Apr_29_2015_at_170440_CEST.png`
+_Raster version:_ `Wanderer_BRCA1_boxplot_expression_brca_Apr_29_2015_at_170440_CEST.png`
 
 4.2.4. Two tables consisting of a comma separated data matrix with the exon location (first column) and a column with the log2-transformed RPKM values for each of the exons of all the samples in the dataset. Sample names are in the first row (header). 
 
@@ -202,19 +202,33 @@ In most cases it should work by just using the **open with** (right click with t
 
 5.4. **How and when did you download the data from the TCGA?**
 
-Data from TCGA was downloaded using the TCGA-Assembler with the Traverse Result File 'DirectoryTraverseResult_Jul-08-2014.rda' Y. Zhu, P. Qiu, Y. Ji*. TCGA-Assembler: Open-Source Software for Retrieving and Processing TCGA Data. Nature Methods. 11:599-600, 2014. | doi:10.1038/nmeth.2956).
+Data from TCGA was downloaded using the TCGA-Assembler with the Traverse Result File 'DirectoryTraverseResult_Jul-08-2014.rda' 
 
 5.5. **What is the origin of annotation data?**
 
-450k methylation array probes have been annotated as described in Price, et al. Additional annotation enhances potential for biologically-relevant analysis of the Illumina Infinium HumanMethylation450 BeadChip array, Epigenetics & Chromatin 2013, 6:4 doi:10.1186/1756-8935-6-4.
+450k methylation array probes have been annotated as described in [(Price, 2013)].
 
 For RNAseq data we used BioMart and Ensembl gene annotations and the exon positions provided by TCGA and UCSC Genome Browser. Data were merged using the function overlapRegions from the regioneR Bioconductor package.
 
 5.6. **What does RPKM and RSEM stand for?**
 
-Both values are directly obtained from the TCGA pipeline for RNA seq v2 expression analysis. RPKM stands for “reads per kilobase per million mapped reads” [reference] and is used to represent exon expression levels. RSEM stands for “RNA-Seq by Expectation-Maximization“ [reference] and is used to represent gene expression levels. We log2-transform these values adding one to get rid of zeroes; that means we plot log_2(x+1) RPKM or RSEM values.
+Both values are directly obtained from the TCGA pipeline for RNA seq v2 expression analysis. RPKM stands for *reads per kilobase per million mapped reads* [(Guo, 2013)][(Guo, 2013)] and is used to represent exon expression levels. RSEM stands for *RNA-Seq by Expectation-Maximization* [(Guo, 2013)][(Guo, 2013)] and is used to represent gene expression levels. We log2-transform these values adding one to get rid of zeroes; that means we plot log_2(x+1) RPKM or RSEM values.
+
 
 ### 6. REFERENCES ############################################################################################
+
+[(Guo, 2013)]: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0071462 (Large Scale Comparison of Gene Expression Levels by Microarrays and RNAseq Using TCGA Data)
+[(Guo, 2013)] Guo, Yan, et al. **Large scale comparison of gene expression levels by microarrays and RNAseq using TCGA data.** PloS one 8.8 (2013): e71462.
+
+
+[(Price, 2013)]: http://www.epigeneticsandchromatin.com/content/6/1/4 (Additional annotation enhances potential for biologically-relevant analysis of the Illumina Infinium HumanMethylation450 BeadChip array)
+[(Price, 2013)] Price et al. **Additional annotation enhances potential for biologically-relevant analysis of the Illumina Infinium HumanMethylation450 BeadChip array**. Epigenetics & Chromatin 2013, 6:4 doi:10.1186/1756-8935-6-4.
+
+
+[(Zhu, 2014)]: http://www.ncbi.nlm.nih.gov/pubmed/24874569 (TCGA-assembler: open-source software for retrieving and processing TCGA data.)
+[(Zhu, 2014)] Y. Zhu, P. Qiu, Y. Ji. **TCGA-Assembler: Open-Source Software for Retrieving and Processing TCGA Data**. Nature Methods. 11:599-600, 2014. | doi:10.1038/nmeth.2956).
+
+
 
 #### 7. NEWS #################################################################################################
 
