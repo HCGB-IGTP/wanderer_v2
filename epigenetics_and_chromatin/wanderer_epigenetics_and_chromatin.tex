@@ -54,6 +54,7 @@
 %\usepackage[applemac]{inputenc} %applemac support if unicode package fails
 %\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
 
+\usepackage{color}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                             %%
@@ -315,7 +316,8 @@ For any given gene selected by the investigator, the tool provides detailed indi
  
 \subsection*{Plotting versatility}
 
-Graphical outputs are highly dynamic, being rendered on the fly. Once selected the gene to look at, some parameters can be easily tuned:
+Graphical outputs are highly dynamic, being rendered on the fly. {\color{red} Once the gene of interest is selected, some parameters can be easily tuned: }
+
 \begin{itemize}
 \item The user can zoom in and out either by using a simple slider or entering a custom coordinate range by hand. 
 \item A glyph depicting the actual gene location and strand can be added. 
@@ -325,9 +327,18 @@ Graphical outputs are highly dynamic, being rendered on the fly. Once selected t
 
 \end{itemize}
 
+{\color{red}
+\subsection*{Methylation and expression exploring}
+To study the influence of DNA methylation on the expression of the closest gene, Wanderer performs a correlation analysis of the expression value (summarized by gene) with any of the CpGs of the region. The user can navigate through upstream, gene body or downstream probes as far as they are in the gene's vicinity.
+
+}
 
 \subsection*{Further capabilities}
 Wanderer performs Wilcoxon rank sum test comparisons on normal versus tumor provided there are at least two observations in each group. An independent test is performed for each CpG or exon, being the p-value FDR corrected for multiple testing. Although this is readily reported, we note that addressing the significance on few observations and without inspecting the data distribution might be meaningless. Even though the number of samples to draw as line-plots can be reduced manually, the statistical analysis is performed with the complete dataset.\\
+
+{\color{red}
+Wanderer also explores the gene expression between normals and tumors using a by-gene value. This summarization takes into account all the exons of the gene. As a result, a boxplot depicting the differences in its overall expression between normal and tumors is produced; a Wilcoxon rank sum test checks whether normal and tumors are statistically equivalent.\\
+}
 
 Graphics can be readily downloaded in either raster (PNG) or vector (PDF) formats. Probe annotations, statistical analysis and raw data for either normal and tumor samples can be easily download as text files (comma-separated values, CSV) that can be processed using spreadsheet software. A link pointing to the UCSC Genome Browser's profile of the scrutinized regions is readily produced.\\
 
