@@ -15,3 +15,17 @@ GeneSize <- function(con, geneName, geneNamesType){
 }
 
 
+##' Extracts the genesymbol of a ensembl id (ENSG identifier)
+##'
+##' Based on static, local-db pairing
+##' @title 
+##' @param con open connection to the database
+##' @param ensembl_id the ENSG identifier
+##' @return a string with the genesymbol
+##' @author Izaskun Mallona
+ensembl_to_gene_symbol <- function(con, ensembl_id) {
+    stmt <- "SELECT genename FROM annotations.reduced_genome WHERE emsemblgeneid = '%s'"
+    gene_symbol <- fetch(dbSendQuery(con, statement = sprintf(stmt, ensembl_id)), n = -1)
+
+    return(as.character(gene_symbol))                              
+}
