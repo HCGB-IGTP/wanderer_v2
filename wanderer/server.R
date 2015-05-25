@@ -580,13 +580,26 @@ shinyServer(function(input, output, session){
   output$genome_browser <- renderText({
     generate_genome_browser_link(chromosome = geneSize()[[3]],
                                  start = input$Zoom[1],
-                                 end = input$Zoom[2])
-    
+                                 end = input$Zoom[2])    
   })
-  
+
+  output$cbioportal <- renderText({
+      if (!is.null(input$Gene) & !is.null(input$TissueType) & !is.null(input$DataType)) {
+          generate_cbioportal_link(dataset = input$TissueType,
+                                   gene = input$Gene)
+      }
+  })
+
+  output$regulome_explorer <- renderText({
+      if (!is.null(input$Gene) & !is.null(input$TissueType) & !is.null(input$DataType)) {
+          generate_regulome_explorer_link(dataset = input$TissueType,
+                                          gene = input$Gene)
+      }
+  })
+
   
   cancel.onSessionEnded <- session$onSessionEnded(function() {
-    dbDisconnect(con)
+      dbDisconnect(con)
   })
   
   

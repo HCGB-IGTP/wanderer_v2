@@ -102,6 +102,8 @@ regulome_explorer_datasets <- list('acc'  = 'acc_2015_03_31',
  
 ## generates an url with an start, end and chromosome for hg19
 generate_regulome_explorer_link <- function(dataset, gene) {
+    dataset <- regulome_explorer_datasets[[dataset]]
+    
     ## 'http://explorer.cancerregulome.org/all_pairs/?dataset=chol_20150515_private&t_type=*&t_label=TP53'
     base <- 'http://explorer.cancerregulome.org/all_pairs/?dataset=%s&t_type=*&t_label=%s'
     
@@ -109,39 +111,41 @@ generate_regulome_explorer_link <- function(dataset, gene) {
 
     template <- sprintf('<a class="btn" target = "_blank" href="%s">Go to Regulome explorer</a>', loc)
     ## template <- sprintf('<button type="button" class="btn" href="%s">Go to Genome Browser</button>',
-                        ## loc)                          
+                        ## loc)
+
+    return(template)
 }
 
 
-cbioportal_datasets <- list(ACC = 'acc_tcga',
-                            BLCA = 'blca_tcga_pub',
-                            BRCA = 'brca_tcga_pub'
-                            CESC = 'cesc_tcga',                            
-                            CHOL = 'chol_nccs_2013',
-                            COAD = 'coadread_tcga',
-                            DLBC = 'dlbc_tcga',
-                            ESCA = 'esca_tcga',
-                            GBM = 'gbm_tcga_pub2013',
-                            HNSC = 'hnsc_tcga',
-                            KICH = 'kich_tcga_pub',
-                            KIRC = 'kirc_tcga_pub',
-                            KIRP = 'kirp_tcga',
-                            LAML = 'laml_tcga_pub',
-                            LGG = 'lgg_tcga',
-                            LIHC = 'lihc_tcga',
-                            LUAD = 'luad_tcga_pub',
-                            LUSC = 'lusc_tcga',
-                            OV = 'ov_tcga_pub',
-                            PAAD = 'paad_tcga',
-                            PCPG = 'pcpg_tcga',
-                            PRAD = 'prad_tcga', 
-                            READ = 'coadread_tcga',
-                            SARC = 'sarc_tcga',
-                            SKCM = 'skcm_tcga',
-                            STAD = 'stad_tcga',
-                            THCA = 'thca_tcga',
-                            UCEC = 'ucec_tcga',
-                            UCS = 'ucs_tcga')
+cbioportal_datasets <- list(acc = 'acc_tcga',
+                            blca = 'blca_tcga_pub',
+                            brca = 'brca_tcga_pub',
+                            cesc = 'cesc_tcga',                            
+                            chol = 'chol_nccs_2013',
+                            coad = 'coadread_tcga',
+                            dlbc = 'dlbc_tcga',
+                            esca = 'esca_tcga',
+                            gbm = 'gbm_tcga_pub2013',
+                            hnsc = 'hnsc_tcga',
+                            kich = 'kich_tcga_pub',
+                            kirc = 'kirc_tcga_pub',
+                            kirp = 'kirp_tcga',
+                            laml = 'laml_tcga_pub',
+                            lgg = 'lgg_tcga',
+                            lihc = 'lihc_tcga',
+                            luad = 'luad_tcga_pub',
+                            lusc = 'lusc_tcga',
+                            ov = 'ov_tcga_pub',
+                            paad = 'paad_tcga',
+                            pcpg = 'pcpg_tcga',
+                            prad = 'prad_tcga', 
+                            read = 'coadread_tcga',
+                            sarc = 'sarc_tcga',
+                            skcm = 'skcm_tcga',
+                            stad = 'stad_tcga',
+                            thca = 'thca_tcga',
+                            ucec = 'ucec_tcga',
+                            ucs = 'ucs_tcga')
 
 
 
@@ -149,8 +153,18 @@ cbioportal_datasets <- list(ACC = 'acc_tcga',
 
 ## http://www.cbioportal.org/index.do?cancer_study_list=coadread_tcga_pub&cancer_study_id=coadread_tcga_pub&genetic_profile_ids_PROFILE_MUTATION_EXTENDED=coadread_tcga_pub_mutations&Z_SCORE_THRESHOLD=2.0&data_priority=0&case_set_id=coadread_tcga_pub_sequenced&case_ids=&gene_set_choice=user-defined-list&gene_list=HDAC9&clinical_param_selection=null&tab_index=tab_visualize&Action=Submit
 generate_cbioportal_link <- function(dataset, gene) {
-    ## @todo complete this
-    return(NULL)
+    dataset <- cbioportal_datasets[[dataset]]
+
+        ## 'http://explorer.cancerregulome.org/all_pairs/?dataset=chol_20150515_private&t_type=*&t_label=TP53'
+    base <- 'http://www.cbioportal.org/index.do?cancer_study_list=%s&cancer_study_id=%s&genetic_profile_ids_PROFILE_MUTATION_EXTENDED=%s_mutations&genetic_profile_ids_PROFILE_COPY_NUMBER_ALTERATION=%s_gistic&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&data_priority=0&case_set_id=%s_cnaseq&case_ids=&gene_set_choice=user-defined-list&gene_list=%s&clinical_param_selection=null&tab_index=tab_visualize&Action=Submit'
+    
+    loc <- sprintf(base, dataset, dataset, dataset, dataset, dataset, gene)
+
+    template <- sprintf('<a class="btn" target = "_blank" href="%s">Go to cBioPortal</a>', loc)
+    ## template <- sprintf('<button type="button" class="btn" href="%s">Go to Genome Browser</button>',
+                        ## loc)                         
+
+    return(template)
 }
 
 
