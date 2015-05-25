@@ -29,7 +29,7 @@ DAT=(COAD READ SKCM UCEC UCS)
 PLATFORM=(RNAseqGene RNAseq)
 #  Anna did inconsistent filenaming
 # PLATFORMFN=(RNAseq_Gene RNAseq)
-PLATFORMFN=RNAseq
+# PLATFORMFN=RNAseq
 CTYPE=(Normal Tumor)
 
 
@@ -46,16 +46,30 @@ do
     do
         for platform in ${PLATFORM[@]}
         do
+            PLATFORMFN=""
             # catching the data source inconsistent filenaming
             if [ "$platform" = "RNAseqGene" ]
             then
                 PLATFORMFN=RNAseq_Gene
+                table="illuminahiseq_rnaseqv2_by_gene"
+                pk_field="gene"
             else
                 PLATFORMFN=RNAseq
+                table="illuminahiseq_rnaseqv2"
+                pk_field="exon"
             fi
 
             curr_data_fn="$WDIR"/"$name"/"$platform"/"$ctype"/"$name"_"$PLATFORMFN"_"$ctype".csv
             curr_sql_fn="$WDIR"/"$name"/"$platform"/"$ctype"/"$name"_"$PLATFORMFN"_"$ctype"_createTable.txt
+
+            echo ''
+            echo ''
+            echo '-- Working on'
+            echo '------------------------------'
+            echo "-- $PLATFORMN $table $pk_field"
+            echo "-- $curr_data_fn"
+            echo "-- $curr_sql_fn"
+            echo '------------------------------'
 
             #  checking whether the filename exists
             if [ -f $curr_data_fn ] ; then
@@ -66,10 +80,11 @@ do
                 sed 's/\./_/g' /tmp/f > /tmp/f2
                 sed 's/-/_/g' /tmp/f2 > /tmp/f
 
-                table="illuminahiseq_rnaseqv2_by_gene"
-                pk_field="gene"
+                # table="illuminahiseq_rnaseqv2_by_gene"
+                # pk_field="gene"
 
                 schema_table="$name"_"$ctype"."$table"
+
                 # echo $schema_table >> /tmp/flo
 
                 header="CREATE TABLE ""$schema_table""("
@@ -86,26 +101,10 @@ do
                 echo "ALTER DEFAULT PRIVILEGES IN SCHEMA ""$name"_"$ctype" >> /tmp/schema_stmt
                 echo " GRANT SELECT ON TABLES TO maplabr;" >> /tmp/schema_stmt
 
-                <<EOF            
-
-            PGPASSWORD="$PASS" psql -h $HOST -p $PORT -U $USER \
-            -d $DB -t -A -F"," -f /tmp/schema_stmt
-EOF
-
                 cat /tmp/schema_stmt
                 # schema statement end
-
-                # PGPASSWORD="$PASS" psql -h $HOST -p $PORT -U $USER \
-                # -d $DB -t -A -F"," -f "$curr_sql_fn"
-
-                <<EOF
-
-
-            PGPASSWORD="$PASS" psql -h $HOST -p $PORT -U $USER \
-            -d $DB -t -A -F"," -f /tmp/stmt
-EOF
-
-                echo "TRUNCATE $schema_table;"
+                
+                echo "DROP TABLE $schema_table;"
                 
                 cat /tmp/stmt
                 rm /tmp/stmt  /tmp/f /tmp/f2
@@ -120,11 +119,7 @@ EOF
                 echo "CREATE UNIQUE INDEX ""$table"_idx ON "$schema_table"" (""$pk_field"");" >> /tmp/stmt_pk
                 echo "ALTER TABLE ""$schema_table" >> /tmp/stmt_pk
                 echo " ADD CONSTRAINT ""$table""_pkey PRIMARY KEY USING INDEX ""$table""_idx;" >> /tmp/stmt_pk
-                <<EOF
-
-            PGPASSWORD="$PASS" psql -h $HOST -p $PORT -U $USER \
-            -d $DB -t -A -F"," -f /tmp/stmt_pk
-EOF
+               
                 # primary key generation end
 
 
@@ -152,11 +147,19 @@ done
 
 ## sql output
 <<EOF
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseqGene/Normal/COAD_RNAseq_Gene_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseqGene/Normal/COAD_RNAseq_Gene_Normal_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS COAD_Normal;
 GRANT USAGE ON SCHEMA COAD_Normal TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA COAD_Normal
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE COAD_Normal.illuminahiseq_rnaseqv2_by_gene;
+DROP TABLE COAD_Normal.illuminahiseq_rnaseqv2_by_gene;
 CREATE TABLE COAD_Normal.illuminahiseq_rnaseqv2_by_gene(
 gene VARCHAR(27),
 TCGA_AZ_6605_11A_01R_1839_07 FLOAT(4),
@@ -204,12 +207,20 @@ TCGA_AA_3531_11A_01R_A32Z_07 FLOAT(4));
 CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON COAD_Normal.illuminahiseq_rnaseqv2_by_gene (gene);
 ALTER TABLE COAD_Normal.illuminahiseq_rnaseqv2_by_gene
  ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Normal/COAD_RNAseq_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Normal/COAD_RNAseq_Normal_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS COAD_Normal;
 GRANT USAGE ON SCHEMA COAD_Normal TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA COAD_Normal
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE COAD_Normal.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE COAD_Normal.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE COAD_Normal.illuminahiseq_rnaseqv2;
+CREATE TABLE COAD_Normal.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_AZ_6605_11A_01R_1839_07 FLOAT(4),
 TCGA_AZ_6603_11A_02R_1839_07 FLOAT(4),
@@ -252,15 +263,23 @@ TCGA_AA_3517_11A_01R_A32Z_07 FLOAT(4),
 TCGA_AA_3520_11A_01R_A32Z_07 FLOAT(4),
 TCGA_AA_3527_11A_01R_A32Z_07 FLOAT(4),
 TCGA_AA_3531_11A_01R_A32Z_07 FLOAT(4));
-\copy COAD_Normal.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Normal/COAD_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON COAD_Normal.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE COAD_Normal.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy COAD_Normal.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Normal/COAD_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON COAD_Normal.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE COAD_Normal.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseqGene/Tumor/COAD_RNAseq_Gene_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseqGene/Tumor/COAD_RNAseq_Gene_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS COAD_Tumor;
 GRANT USAGE ON SCHEMA COAD_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA COAD_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE COAD_Tumor.illuminahiseq_rnaseqv2_by_gene;
+DROP TABLE COAD_Tumor.illuminahiseq_rnaseqv2_by_gene;
 CREATE TABLE COAD_Tumor.illuminahiseq_rnaseqv2_by_gene(
 gene VARCHAR(27),
 TCGA_A6_2684_01A_01R_1410_07 FLOAT(4),
@@ -529,12 +548,20 @@ TCGA_D5_7000_01A_11R_A32Z_07 FLOAT(4));
 CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON COAD_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
 ALTER TABLE COAD_Tumor.illuminahiseq_rnaseqv2_by_gene
  ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Tumor/COAD_RNAseq_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Tumor/COAD_RNAseq_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS COAD_Tumor;
 GRANT USAGE ON SCHEMA COAD_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA COAD_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE COAD_Tumor.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE COAD_Tumor.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE COAD_Tumor.illuminahiseq_rnaseqv2;
+CREATE TABLE COAD_Tumor.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_AA_A004_01A_01R_A00A_07 FLOAT(4),
 TCGA_AA_A010_01A_01R_A089_07 FLOAT(4),
@@ -728,15 +755,23 @@ TCGA_AA_A029_01A_01R_A00A_07 FLOAT(4),
 TCGA_AA_3947_01A_01R_1022_07 FLOAT(4),
 TCGA_A6_2684_01A_01R_1410_07 FLOAT(4),
 TCGA_AZ_4315_01A_01R_1410_07 FLOAT(4));
-\copy COAD_Tumor.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Tumor/COAD_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON COAD_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE COAD_Tumor.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy COAD_Tumor.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/COAD/RNAseq/Tumor/COAD_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON COAD_Tumor.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE COAD_Tumor.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseqGene/Normal/READ_RNAseq_Gene_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseqGene/Normal/READ_RNAseq_Gene_Normal_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS READ_Normal;
 GRANT USAGE ON SCHEMA READ_Normal TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA READ_Normal
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE READ_Normal.illuminahiseq_rnaseqv2_by_gene;
+DROP TABLE READ_Normal.illuminahiseq_rnaseqv2_by_gene;
 CREATE TABLE READ_Normal.illuminahiseq_rnaseqv2_by_gene(
 gene VARCHAR(27),
 TCGA_AG_3732_11A_01R_1660_07 FLOAT(4),
@@ -752,12 +787,20 @@ TCGA_AG_3731_11A_01R_1736_07 FLOAT(4));
 CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON READ_Normal.illuminahiseq_rnaseqv2_by_gene (gene);
 ALTER TABLE READ_Normal.illuminahiseq_rnaseqv2_by_gene
  ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Normal/READ_RNAseq_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Normal/READ_RNAseq_Normal_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS READ_Normal;
 GRANT USAGE ON SCHEMA READ_Normal TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA READ_Normal
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE READ_Normal.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE READ_Normal.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE READ_Normal.illuminahiseq_rnaseqv2;
+CREATE TABLE READ_Normal.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_AG_3732_11A_01R_1660_07 FLOAT(4),
 TCGA_AG_3742_11A_01R_1660_07 FLOAT(4),
@@ -768,15 +811,23 @@ TCGA_AF_2691_11A_01R_A32Z_07 FLOAT(4),
 TCGA_AF_2689_11A_01R_A32Z_07 FLOAT(4),
 TCGA_AF_2692_11A_01R_A32Z_07 FLOAT(4),
 TCGA_AG_3731_11A_01R_1736_07 FLOAT(4));
-\copy READ_Normal.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Normal/READ_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON READ_Normal.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE READ_Normal.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy READ_Normal.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Normal/READ_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON READ_Normal.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE READ_Normal.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseqGene/Tumor/READ_RNAseq_Gene_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseqGene/Tumor/READ_RNAseq_Gene_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS READ_Tumor;
 GRANT USAGE ON SCHEMA READ_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA READ_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE READ_Tumor.illuminahiseq_rnaseqv2_by_gene;
+DROP TABLE READ_Tumor.illuminahiseq_rnaseqv2_by_gene;
 CREATE TABLE READ_Tumor.illuminahiseq_rnaseqv2_by_gene(
 gene VARCHAR(27),
 TCGA_DY_A1DE_01A_11R_A155_07 FLOAT(4),
@@ -874,12 +925,20 @@ TCGA_AG_3731_01A_11R_1736_07 FLOAT(4));
 CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON READ_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
 ALTER TABLE READ_Tumor.illuminahiseq_rnaseqv2_by_gene
  ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Tumor/READ_RNAseq_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Tumor/READ_RNAseq_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS READ_Tumor;
 GRANT USAGE ON SCHEMA READ_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA READ_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE READ_Tumor.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE READ_Tumor.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE READ_Tumor.illuminahiseq_rnaseqv2;
+CREATE TABLE READ_Tumor.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_AG_A01Y_01A_41R_A083_07 FLOAT(4),
 TCGA_AG_A036_01A_12R_A083_07 FLOAT(4),
@@ -953,30 +1012,62 @@ TCGA_AG_3727_01A_01R_0905_07 FLOAT(4),
 TCGA_AG_A00C_01A_01R_A002_07 FLOAT(4),
 TCGA_AG_A016_01A_01R_A002_07 FLOAT(4),
 TCGA_AG_A02X_01A_01R_A00A_07 FLOAT(4));
-\copy READ_Tumor.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Tumor/READ_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON READ_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE READ_Tumor.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy READ_Tumor.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/READ/RNAseq/Tumor/READ_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON READ_Tumor.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE READ_Tumor.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseqGene/Normal/SKCM_RNAseq_Gene_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseqGene/Normal/SKCM_RNAseq_Gene_Normal_createTable.txt
+------------------------------
 --/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseqGene/Normal/SKCM_RNAseq_Gene_Normal.csv is empty, skipping.
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Normal/SKCM_RNAseq_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Normal/SKCM_RNAseq_Normal_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS SKCM_Normal;
 GRANT USAGE ON SCHEMA SKCM_Normal TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA SKCM_Normal
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE SKCM_Normal.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE SKCM_Normal.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE SKCM_Normal.illuminahiseq_rnaseqv2;
+CREATE TABLE SKCM_Normal.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_GN_A4U8_11A_11R_A32P_07 FLOAT(4));
-\copy SKCM_Normal.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Normal/SKCM_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON SKCM_Normal.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE SKCM_Normal.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy SKCM_Normal.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Normal/SKCM_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON SKCM_Normal.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE SKCM_Normal.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseqGene/Tumor/SKCM_RNAseq_Gene_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseqGene/Tumor/SKCM_RNAseq_Gene_Tumor_createTable.txt
+------------------------------
 --/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseqGene/Tumor/SKCM_RNAseq_Gene_Tumor.csv is empty, skipping.
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Tumor/SKCM_RNAseq_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Tumor/SKCM_RNAseq_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS SKCM_Tumor;
 GRANT USAGE ON SCHEMA SKCM_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA SKCM_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE SKCM_Tumor.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE SKCM_Tumor.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE SKCM_Tumor.illuminahiseq_rnaseqv2;
+CREATE TABLE SKCM_Tumor.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_EB_A1NK_01A_11R_A18T_07 FLOAT(4),
 TCGA_D9_A1X3_01A_11R_A18S_07 FLOAT(4),
@@ -1060,15 +1151,23 @@ TCGA_FR_A726_01A_11R_A32P_07 FLOAT(4),
 TCGA_FR_A728_01A_11R_A32P_07 FLOAT(4),
 TCGA_GF_A769_01A_32R_A32P_07 FLOAT(4),
 TCGA_GN_A4U5_01A_11R_A32P_07 FLOAT(4));
-\copy SKCM_Tumor.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Tumor/SKCM_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON SKCM_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE SKCM_Tumor.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy SKCM_Tumor.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/SKCM/RNAseq/Tumor/SKCM_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON SKCM_Tumor.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE SKCM_Tumor.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseqGene/Normal/UCEC_RNAseq_Gene_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseqGene/Normal/UCEC_RNAseq_Gene_Normal_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS UCEC_Normal;
 GRANT USAGE ON SCHEMA UCEC_Normal TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA UCEC_Normal
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE UCEC_Normal.illuminahiseq_rnaseqv2_by_gene;
+DROP TABLE UCEC_Normal.illuminahiseq_rnaseqv2_by_gene;
 CREATE TABLE UCEC_Normal.illuminahiseq_rnaseqv2_by_gene(
 gene VARCHAR(27),
 TCGA_AJ_A3NE_11A_11R_A22K_07 FLOAT(4),
@@ -1099,12 +1198,20 @@ TCGA_FL_A1YV_11A_12R_A32Y_07 FLOAT(4));
 CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON UCEC_Normal.illuminahiseq_rnaseqv2_by_gene (gene);
 ALTER TABLE UCEC_Normal.illuminahiseq_rnaseqv2_by_gene
  ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Normal/UCEC_RNAseq_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Normal/UCEC_RNAseq_Normal_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS UCEC_Normal;
 GRANT USAGE ON SCHEMA UCEC_Normal TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA UCEC_Normal
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE UCEC_Normal.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE UCEC_Normal.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE UCEC_Normal.illuminahiseq_rnaseqv2;
+CREATE TABLE UCEC_Normal.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_AJ_A3NE_11A_11R_A22K_07 FLOAT(4),
 TCGA_AJ_A3NH_11A_11R_A22K_07 FLOAT(4),
@@ -1130,15 +1237,23 @@ TCGA_FL_A1YQ_11A_11R_A32Y_07 FLOAT(4),
 TCGA_FL_A1YT_11A_12R_A32Y_07 FLOAT(4),
 TCGA_FL_A1YU_11A_11R_A32Y_07 FLOAT(4),
 TCGA_FL_A1YV_11A_12R_A32Y_07 FLOAT(4));
-\copy UCEC_Normal.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Normal/UCEC_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON UCEC_Normal.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE UCEC_Normal.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy UCEC_Normal.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Normal/UCEC_RNAseq_Normal.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON UCEC_Normal.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE UCEC_Normal.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseqGene/Tumor/UCEC_RNAseq_Gene_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseqGene/Tumor/UCEC_RNAseq_Gene_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS UCEC_Tumor;
 GRANT USAGE ON SCHEMA UCEC_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA UCEC_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene;
+DROP TABLE UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene;
 CREATE TABLE UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene(
 gene VARCHAR(27),
 TCGA_A5_A1OH_01A_21R_A22K_07 FLOAT(4),
@@ -1303,12 +1418,20 @@ TCGA_SJ_A6ZJ_01A_12R_A34R_07 FLOAT(4));
 CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
 ALTER TABLE UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene
  ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Tumor/UCEC_RNAseq_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Tumor/UCEC_RNAseq_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS UCEC_Tumor;
 GRANT USAGE ON SCHEMA UCEC_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA UCEC_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE UCEC_Tumor.illuminahiseq_rnaseqv2;
+CREATE TABLE UCEC_Tumor.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_A5_A1OH_01A_21R_A22K_07 FLOAT(4),
 TCGA_A5_A3LO_01A_11R_A22K_07 FLOAT(4),
@@ -1468,17 +1591,41 @@ TCGA_PG_A7D5_01A_11R_A34R_07 FLOAT(4),
 TCGA_QS_A744_01A_11R_A34R_07 FLOAT(4),
 TCGA_SJ_A6ZI_01A_12R_A34R_07 FLOAT(4),
 TCGA_SJ_A6ZJ_01A_12R_A34R_07 FLOAT(4));
-\copy UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Tumor/UCEC_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE UCEC_Tumor.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy UCEC_Tumor.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCEC/RNAseq/Tumor/UCEC_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON UCEC_Tumor.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE UCEC_Tumor.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseqGene/Normal/UCS_RNAseq_Gene_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseqGene/Normal/UCS_RNAseq_Gene_Normal_createTable.txt
+------------------------------
 --/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseqGene/Normal/UCS_RNAseq_Gene_Normal.csv is empty, skipping.
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseq/Normal/UCS_RNAseq_Normal.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseq/Normal/UCS_RNAseq_Normal_createTable.txt
+------------------------------
 --/imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseq/Normal/UCS_RNAseq_Normal.csv is empty, skipping.
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2_by_gene gene
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseqGene/Tumor/UCS_RNAseq_Gene_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseqGene/Tumor/UCS_RNAseq_Gene_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS UCS_Tumor;
 GRANT USAGE ON SCHEMA UCS_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA UCS_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE UCS_Tumor.illuminahiseq_rnaseqv2_by_gene;
+DROP TABLE UCS_Tumor.illuminahiseq_rnaseqv2_by_gene;
 CREATE TABLE UCS_Tumor.illuminahiseq_rnaseqv2_by_gene(
 gene VARCHAR(27),
 TCGA_N5_A4RD_01A_11R_A28V_07 FLOAT(4),
@@ -1542,12 +1689,20 @@ TCGA_N5_A4RM_01A_11R_A28V_07 FLOAT(4));
 CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON UCS_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
 ALTER TABLE UCS_Tumor.illuminahiseq_rnaseqv2_by_gene
  ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+
+
+-- Working on
+------------------------------
+--  illuminahiseq_rnaseqv2 exon
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseq/Tumor/UCS_RNAseq_Tumor.csv
+-- /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseq/Tumor/UCS_RNAseq_Tumor_createTable.txt
+------------------------------
 CREATE SCHEMA IF NOT EXISTS UCS_Tumor;
 GRANT USAGE ON SCHEMA UCS_Tumor TO maplabr;
 ALTER DEFAULT PRIVILEGES IN SCHEMA UCS_Tumor
  GRANT SELECT ON TABLES TO maplabr;
-TRUNCATE UCS_Tumor.illuminahiseq_rnaseqv2_by_gene;
-CREATE TABLE UCS_Tumor.illuminahiseq_rnaseqv2_by_gene(
+DROP TABLE UCS_Tumor.illuminahiseq_rnaseqv2;
+CREATE TABLE UCS_Tumor.illuminahiseq_rnaseqv2(
 exon VARCHAR(27),
 TCGA_N5_A4RD_01A_11R_A28V_07 FLOAT(4),
 TCGA_N8_A56S_01A_11R_A28V_07 FLOAT(4),
@@ -1606,9 +1761,159 @@ TCGA_NF_A4X2_01A_11R_A28V_07 FLOAT(4),
 TCGA_N7_A4Y5_01A_12R_A28V_07 FLOAT(4),
 TCGA_N7_A4Y0_01A_12R_A28V_07 FLOAT(4),
 TCGA_N5_A4RM_01A_11R_A28V_07 FLOAT(4));
-\copy UCS_Tumor.illuminahiseq_rnaseqv2_by_gene from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseq/Tumor/UCS_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
-CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_by_gene_idx ON UCS_Tumor.illuminahiseq_rnaseqv2_by_gene (gene);
-ALTER TABLE UCS_Tumor.illuminahiseq_rnaseqv2_by_gene
- ADD CONSTRAINT illuminahiseq_rnaseqv2_by_gene_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_by_gene_idx;
+\copy UCS_Tumor.illuminahiseq_rnaseqv2 from /imppc/labs/maplab/share/anna2izaskun/db_region_profile_data/fixed/UCS/RNAseq/Tumor/UCS_RNAseq_Tumor.csv  WITH null AS 'NA' DELIMITER ','
+CREATE UNIQUE INDEX illuminahiseq_rnaseqv2_idx ON UCS_Tumor.illuminahiseq_rnaseqv2 (exon);
+ALTER TABLE UCS_Tumor.illuminahiseq_rnaseqv2
+ ADD CONSTRAINT illuminahiseq_rnaseqv2_pkey PRIMARY KEY USING INDEX illuminahiseq_rnaseqv2_idx;
+
+EOF
+
+
+## sql log
+<<EOF
+[imallona@lechuck regional_profiler]$  PGPASSWORD="$PASS" psql -h $HOST -p $PORT -U $USER -d $DB -t -A -F"," -f database_repopulation.sql 
+psql:database_repopulation.sql:9: NOTICE:  schema "coad_normal" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:20592: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_by_gene_idx" to "illuminahiseq_rnaseqv2_by_gene_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:20601: NOTICE:  schema "coad_normal" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:259975: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:259984: NOTICE:  schema "coad_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:280788: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_by_gene_idx" to "illuminahiseq_rnaseqv2_by_gene_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:280797: NOTICE:  schema "coad_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:520322: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:520331: NOTICE:  schema "read_normal" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:540882: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_by_gene_idx" to "illuminahiseq_rnaseqv2_by_gene_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:540891: NOTICE:  schema "read_normal" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:780233: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:780242: NOTICE:  schema "read_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:800875: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_by_gene_idx" to "illuminahiseq_rnaseqv2_by_gene_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:800884: NOTICE:  schema "read_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:1040289: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:1040307: NOTICE:  schema "skcm_normal" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:1279641: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:1279659: NOTICE:  schema "skcm_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:1519074: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:1519083: NOTICE:  schema "ucec_normal" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:1539649: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_by_gene_idx" to "illuminahiseq_rnaseqv2_by_gene_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:1539658: NOTICE:  schema "ucec_normal" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:1779015: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:1779024: NOTICE:  schema "ucec_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:1799724: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_by_gene_idx" to "illuminahiseq_rnaseqv2_by_gene_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:1799733: NOTICE:  schema "ucec_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:2039224: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:2039251: NOTICE:  schema "ucs_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:2059850: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_by_gene_idx" to "illuminahiseq_rnaseqv2_by_gene_pkey"
+ALTER TABLE
+psql:database_repopulation.sql:2059859: NOTICE:  schema "ucs_tumor" already exists, skipping
+CREATE SCHEMA
+GRANT
+ALTER DEFAULT PRIVILEGES
+DROP TABLE
+CREATE TABLE
+CREATE INDEX
+psql:database_repopulation.sql:2299249: NOTICE:  ALTER TABLE / ADD CONSTRAINT USING INDEX will rename index "illuminahiseq_rnaseqv2_idx" to "illuminahiseq_rnaseqv2_pkey"
 
 EOF
