@@ -189,39 +189,42 @@ _File name example:_
 
 ### 5. DATA AVAILABILITY  ####################################################################################
 
-Wanderer uses a TCGA snapshot taken on July 2014. Data availability for normals (N) and tumors (T) is as follows:
+Wanderer uses a TCGA snapshot taken on July 2014. Data availability for normals (N) and tumors (T) is detailed below. 
 
-| Description | Name | Meth_N | Meth_T | RNAseq_N | RNAseq_T | 
-|----------------------- |:------:|:-----:|:-----:|:-----:|:-----:| 
-| Adrenocortical carcinoma | ACC |  0 | 80 | 0 | 79 | 
-| Bladder Urothelial Carcinoma | BLCA | 21 | 358 | 19 | 267 |
-| Brain Lower Grade Glioma | LGG | 0 | 511 | 0 | 513 |
-| Breast invasive carcinoma | BRCA  | 98 | 743 | 113 | 1052 |
-| Cervical squamous cell carcinoma and endocervical adenocarcinoma | CESC  | 3 | 256 | 3 | 207 |
-| Colon adenocarcinoma | COAD| 38 | 302 | 41 | 192 |
-| Esophageal carcinoma | ESCA  | 16 | 185 | 0 | 0 |
-| Glioblastoma multiforme | GBM | 2 | 129 | 5 | 156 |
-| Head and Neck squamous cell carcinoma | HNSC  | 50 | 528 | 43 | 497 |
-| Kidney Chromophobe | KICH  | 0 | 66 | 25 | 66 |
-| Kidney renal clear cell carcinoma | KIRC  | 160 | 324 | 72 | 518 |
-| Kidney renal papillary cell carcinoma | KIRP | 45 | 226 | 30 | 198 |
-| Liver hepatocellular carcinoma | LIHC  | 50 | 256 | 50 | 212 |
-| Lung adenocarcinoma | LUAD |  32 | 463 | 58 | 488 |
-| Lung squamous cell carcinoma | LUSC | 43 | 361 | 50 | 491 |
-| Lymphoid Neoplasm Diffuse Large B+AC0-cell Lymphoma | DLBC  | 0 | 48 | 0 | 28 |
-| Mesothelioma | MESO  | 0 | 37 | 0 | 36 |
-| Ovarian serous cystadenocarcinoma | OV  | 0 | 10 | 0 | 262 |
-| Pancreatic adenocarcinoma | PAAD | 10 | 146 | 4 | 96 |
-| Pheochromocytoma and Paraganglioma | PCPG  | 3 | 179 | 3 | 178 |
-| Prostate adenocarcinoma | PRAD |  49 | 340 | 52 | 374 |
-| Rectum adenocarcinoma | READ |  7 | 98 | 9 | 72 |
-| Sarcoma | SARC |  4 | 242 | 2 | 103 |
-| Skin Cutaneous Melanoma | SKCM | 2 | 92 | 1 | 82 |
-| Stomach adenocarcinoma | STAD | 2 | 339 | 0 | 0 |
-| Thyroid carcinoma | THCA | 56 | 507 | 59 | 498 |
-| Uterine Carcinosarcoma | UCS | 0 | 57 | 0 | 57 |
-| Uterine Corpus Endometrial Carcinoma | UCEC | 46 | 438 | 11 | 370 |
-| Uveal Melanoma | UVM | 0 | 80 | 0 | 0 |
+Wanderer offers external links to Genome Browser, Regulome Explorer and cBioPortal. We note that some of the user's queries might involve a gene or a dataset (i.e. mesothelioma) that was not covered in either Regulome Explorer or cBioPortal. We note that the patient's samples used in the analysis might differ between Wanderer and these others Web resources, as they used different TCGA data snapshots.
+
+| Description | Name | Meth_N | Meth_T | RNAseq_N | RNAseq_T | Regulome Explorer | cBioPortal |
+|----------------------- |:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:| 
+| Adrenocortical carcinoma | ACC |  0 | 80 | 0 | 79 | acc_2015_03_31 | acc_tcga |
+| Bladder Urothelial Carcinoma | BLCA | 21 | 358 | 19 | 267 | blca_20may13_test | blca_tcga_pub |
+| Brain Lower Grade Glioma | LGG | 0 | 511 | 0 | 513 | lgg_04oct13_seq | lgg_tcga |
+| Breast invasive carcinoma | BRCA  | 98 | 743 | 113 | 1052 | brca_manuscript_rerun_nov12d_pw | brca_tcga_pub |
+| Cervical squamous cell carcinoma and endocervical adenocarcinoma | CESC  | 3 | 256 | 3 | 207 | | cesc_tcga |
+| Colon adenocarcinoma | COAD| 38 | 302 | 41 | 192 | coad_03feb13_seq_tumor_only | coadread_tcga |
+| Esophageal carcinoma | ESCA  | 16 | 185 | 0 | 0 | | esca_tcga |
+| Glioblastoma multiforme | GBM | 2 | 129 | 5 | 156 | gbm_2013_pub_tumor_only | gbm_tcga_pub2013 |
+| Head and Neck squamous cell carcinoma | HNSC  | 50 | 528 | 43 | 497 | hnsc_03feb13_seq_tumor_only | hnsc_tcga |
+| Kidney Chromophobe | KICH  | 0 | 66 | 25 | 66 | | kich_tcga_pub |
+| Kidney renal clear cell carcinoma | KIRC  | 160 | 324 | 72 | 518 | kirc_01oct12_A_pw | kirc_tcga_pub |
+| Kidney renal papillary cell carcinoma | KIRP | 45 | 226 | 30 | 198 | | kirp_tcga |
+| Liver hepatocellular carcinoma | LIHC  | 50 | 256 | 50 | 212 | | lihc_tcga |
+| Lung adenocarcinoma | LUAD |  32 | 463 | 58 | 488 | luad_03feb13_seq_tumor_only | luad_tcga_pub |
+| Lung squamous cell carcinoma | LUSC | 43 | 361 | 50 | 491 | lusc_03feb13_seq_tumor_only | lusc_tcga |
+| Lymphoid Neoplasm Diffuse Large B+AC0-cell Lymphoma | DLBC  | 0 | 48 | 0 | 28 | | dlbc_tcga |
+| Mesothelioma | MESO  | 0 | 37 | 0 | 36 | | |
+| Ovarian serous cystadenocarcinoma | OV  | 0 | 10 | 0 | 262 | ov_03feb13_ary_tumor_only | ov_tcga_pub |
+| Pancreatic adenocarcinoma | PAAD | 10 | 146 | 4 | 96 | | paad_tcga |
+| Pheochromocytoma and Paraganglioma | PCPG  | 3 | 179 | 3 | 178 | | pcpg_tcga |
+| Prostate adenocarcinoma | PRAD |  49 | 340 | 52 | 374 | | prad_tcga |
+| Rectum adenocarcinoma | READ |  7 | 98 | 9 | 72 | | coadread_tcga |
+| Sarcoma | SARC |  4 | 242 | 2 | 103 | | sarc_tcga |
+| Skin Cutaneous Melanoma | SKCM | 2 | 92 | 1 | 82 | | skcm_tcga |
+| Stomach adenocarcinoma | STAD | 2 | 339 | 0 | 0 | stad_23jan14_seq_tumor_only | stad_tcga |
+| Thyroid carcinoma | THCA | 56 | 507 | 59 | 498 | thca_18oct14_TP | thca_tcga |
+| Uterine Carcinosarcoma | UCS | 0 | 57 | 0 | 57 | | ucs_tcga |
+| Uterine Corpus Endometrial Carcinoma | UCEC | 46 | 438 | 11 | 370 | ucec_28jun13b_seq_tumor_only | ucec_tcga |
+| Uveal Melanoma | UVM | 0 | 80 | 0 | 0 | uvm_20150515_private | |
+
 
 ### 6. FREQUENTLY ASKED QUESTIONS  ###########################################################################
 
