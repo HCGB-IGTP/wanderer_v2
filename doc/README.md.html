@@ -251,7 +251,7 @@ Data from TCGA was downloaded using the TCGA-Assembler with the Traverse Result 
 
 For RNAseq data we used BioMart and Ensembl gene annotations and the exon positions provided by TCGA and UCSC Genome Browser. Data were merged using the function overlapRegions from the regioneR Bioconductor package.
 
-6.6. **What does RPKM and RSEM stand for?**
+6.6. **What do RPKM and RSEM stand for?**
 
 Both values are directly obtained from the TCGA pipeline for RNA seq v2 expression analysis. RPKM stands for *reads per kilobase per million mapped reads* [(Guo, 2013)][(Guo, 2013)] and is used to represent exon expression levels. RSEM stands for *RNA-Seq by Expectation-Maximization* [(Guo, 2013)][(Guo, 2013)] and is used to represent gene expression levels. We log2-transform these values adding one to get rid of zeroes; that means we plot log_2(x+1) RPKM or RSEM values.
 
@@ -280,9 +280,11 @@ This documentation corresponds to Wanderer v1.0. The full development log can be
 
 This document corresponds to
 
-`commit ddc7c2ee86eade104855a71f90224d7af23c625d
+`
+commit ec5c6643247d07eaa14251bda719d9fd4e56cfee
 Author: Izaskun Mallona <imallona@imppc.org>
-Date:   Tue May 12 09:44:57 2015 +0200`
+Date:   Tue May 26 12:40:54 2015 +0200
+`
 
 
 Some datasets have limitations for usage until a global analysis is published; please contact TCGA before publishing. Copyright IMPPC, 2014 - Izaskun Mallona, Anna Diez-Villanueva and Miguel A. Peinado. Logo by Julien Douet.
