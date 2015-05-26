@@ -1,6 +1,0 @@
-API access example
-
-http://192.168.3.67:3939/wanderer_api?Gene=BRCA1&start=41198000&end=41278000&TissueType=brca&goButton=1&DataType=methylation&goButton=1&plotmean=FALSE&geneLine=TRUE&CpGi=FALSE&nN=30&nT=10&region=TRUE 
-Mon Jan 26 15:43:16 CET 2015
-imallona
-Linux lechuck.imppc.local 2.6.35.6-45.fc14.x86_64 #1 SMP Mon Oct 18 23:57:44 UTC 2010 x86_64 x86_64 x86_64 GNU/Linux
