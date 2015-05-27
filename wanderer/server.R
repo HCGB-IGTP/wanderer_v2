@@ -679,16 +679,18 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload documentation
-      fileDoc <- paste0(SRC,"Wanderer_Documentation.txt")
-      #fileDoc2 <- paste0(SRC,"Wanderer_Documentation.pdf")
+      fileDoc <- file.path(SRC,"Wanderer_Documentation.txt")
+      fileDoc2 <- file.path(SRC, "Wanderer_Documentation.pdf")
       
       #################################################
       #dowload documentation
-      fileClinic <- paste0(SRC,"Clinical/",toupper(input$TissueType),"_Clinical__nationwidechildrens.org_clinical_patient_",input$TissueType,".txt")
+
+      fileClinic <- file.path(SRC, 'Clinical', paste0(toupper(input$TissueType),"_Clinical__nationwidechildrens.org_clinical_patient_",input$TissueType,".txt"))
+
       
       #################################################
       
-      zip(zipfile =  file, files = c(file.path(tempdir(), c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)), fileClinic, fileDoc), flags = "-j")
+      zip(zipfile =  file, files = c(file.path(tempdir(), c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)), fileClinic, fileDoc, fileDoc2), flags = "-j")
       
       # stop(file)
       if (file.exists(paste0( file, ".zip")))
