@@ -6,8 +6,8 @@ library(Cairo)
 
 # the file containing the db parameters
 #SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-SRC <- '/imppc/labs/maplab/adiez/region_profile/Wanderer_190515/'
-#SRC <- '.'
+## SRC <- '/imppc/labs/maplab/adiez/region_profile/Wanderer_190515/'
+SRC <- '.'
 
 DB_CONF <- file.path(SRC, 'db.txt')
 
