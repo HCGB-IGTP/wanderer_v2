@@ -3,7 +3,7 @@
 ###############################################
 
 
-stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands, geneLine, plotting, proportional){
+stat_analysis_meth <- function(results_filt, geneName, geneNamesType, pvalThres, CpGislands, geneLine, plotting, proportional){
   
   ddN2 <- results_filt$ddN2
   row.names(ddN2) <- ddN2[,1]
@@ -44,11 +44,12 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
     #plot
     if(plotting){
       
-      asterisc<-results_stats$adj.pval<0.05
+      asterisc<-results_stats$adj.pval<pvalThres
       asterisc[is.na(asterisc)]<-FALSE
       pasterisc<-probes2$probe
       if(sum(asterisc)>0) pasterisc[asterisc]<-paste0("* ",probes2$probe[asterisc])
       
+            
       if(proportional){
         xmin <- results_filt$xmin
         xmax <- results_filt$xmax
@@ -62,6 +63,7 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
         if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
         if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
         
+        
         posmin <- ((xmin%/%1000)-1)*1000
         posmax <- ((xmax%/%1000)+1)*1000
         postep <- posmax - posmin
@@ -70,14 +72,13 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
         positions <- positions[positions>=xmin & positions<=xmax]
       }
       
+
       if(!proportional){
         xmin <- 1
         xmax <- dim(probes2)[1]
         probes2$cg_start <- seq(xmin,xmax,1)
-        
         gmin <- gmax <- gchr <- NULL
       }
-      
       
       
       mddN <- apply(ddN,1,mean,na.rm=TRUE)
@@ -108,7 +109,7 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, CpGislands
       }
       box(lwd = 1.5)
       par(xpd=TRUE)
-      legend(xmin, 1.5, c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")")), lty=1, lwd=1.2, col=c("dodgerblue","darkred"))
+      legend(xmin, 1.5, c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")"), paste0("adj. pval<", pvalThres)), pch=c("","","*"), lty=c(1,1,0), lwd=c(1.2, 1.2, 0), col=c("dodgerblue","darkred","black"))
       par(xpd=FALSE)
       
     }

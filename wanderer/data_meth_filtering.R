@@ -24,11 +24,7 @@ data_meth_filtering <- function(results, sampleSize, tissue, zoom){
     ddT2 <- NULL
   }
   
-  #if(dim(probes2)[1]>0){
-    results_filt <- list(ddN2 = ddN2, ddT2 = ddT2, probes2 = probes2, xmax = xmax, xmin = xmin, tissue_label = tissue_label)
-#   } else{
-#     results_filt <- list(probes2 = data.frame())
-#   }
+  results_filt <- list(ddN2 = ddN2, ddT2 = ddT2, probes2 = probes2, xmax = xmax, xmin = xmin, tissue_label = tissue_label)
   return(results_filt)  
   
 }

@@ -3,8 +3,26 @@ plot_RNAseqGene <- function(dd, geneName, tissue_label){
 
   ddN <- as.numeric(dd$Normal[-1])
   ddT <- as.numeric(dd$Tumor[-1])
-  ymin <- min(c(ddN, ddT), na.rm = TRUE)
-  ymax <- max(c(ddN, ddT), na.rm = TRUE)
+  
+  
+  #plot
+  if(!is.null(ddN) & !is.null(ddT)){
+    ymax<-max(c(ddN,ddT),na.rm=TRUE)
+    ymin<-min(c(ddN,ddT),na.rm=TRUE)
+  }
+  if(is.null(ddN)){
+    ymax<-max(ddT,na.rm=TRUE)
+    ymin<-min(ddT,na.rm=TRUE)
+  }
+  if(is.null(ddT)){
+    ymax<-max(ddN,na.rm=TRUE)
+    ymin<-min(ddN,na.rm=TRUE)
+  }
+  if(is.null(ddN) & is.null(ddT)){
+    ymax<-1
+    ymin<-0
+  }
+
   
   if(length(ddN)!=0 & length(ddT)!=0){
     pval <- sprintf('%e',wilcox.test(ddN, ddT)$p.val)

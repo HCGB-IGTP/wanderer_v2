@@ -15,7 +15,3 @@ RNAseq_data_table <- function(ddGene, ddExons){
   return(dataGene)
 }
 
-
-
-
-

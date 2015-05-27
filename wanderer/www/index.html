@@ -121,20 +121,17 @@
                 </span>
               </label>
 
-              <div data-display-if="input.distribute_uniformly==false">
-
-                <label class="checkbox" for="geneLine">
-                  <input id="geneLine" type="checkbox" checked="checked"/>
-                  <span>
-                    <h5>
-                      Show gene location
-                      <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as a black arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
-                        <b>?</b>
-                      </a>
-                    </h5>
-                  </span>
-                </label>
-              </div>
+              <label class="checkbox" for="geneLine">
+                 <input id="geneLine" type="checkbox" checked="checked"/>
+                 <span>
+                   <h5>
+                     Show gene location
+                     <a href="#" class="btn btn-mini" data-toggle="popover" title="" data-content="Gene is displayed as a black arrow in the bottom of the plot." data-animation="TRUE" data-placement="right" data-trigger="hover">
+                       <b>?</b>
+                     </a>
+                   </h5>
+                 </span>
+               </label>
 
               <!-- <hr/> -->
               <div data-display-if="input.DataType == &#39;methylation&#39;">
@@ -193,26 +190,82 @@
                 <br>
               </div>
               <div align = "center">
-             
                 <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%;"></div>
-                <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%;"></div>
-                <div  data-display-if="input.DataType == &#39;expression&#39;" id="plotRNAseqGene" class="shiny-plot-output" style="width: 100% ; height: 10%;"></div>
+            </div>
+          </div>
+          <div class="row-fluid">
 
+            <div class="span3 offset1">
+              <div style="visibility: hidden;">
+              <div id="pvalParam" class="shiny-text-output"></div>
+              </div>
+              <div data-display-if="output.pvalParam!=0">
+              <label class="control-label" for="p-value_threshold">
+                <h5>Adjusted p-value threshold:</h5>
+              </label>
+              <select id="pvalThres"><option value="0.05" selected>0.05</option>
+              <option value="0.01">0.01</option><option value="0.001">0.001</option></select>              
+             </div>
+            </div>
+
+            <div class="span7">
+              <div class="shiny-flow-layout" align="center">
+               <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%;"></div>
+             </div>
+          </div>
+          </div>
+                
+          <div class="row-fluid">
+            <div class="span3 offset1">
+              <div style="visibility: hidden;">
+              <div id="correlParam" class="shiny-text-output"></div>
+              </div>
+             <div data-display-if="input.DataType==&#39;methylation&#39;">
+              <div data-display-if="output.correlParam!=0">
+               <div id="ProbeSelected" class="shiny-html-output"></div>
+              </div>
+             </div>
+              <div data-display-if="input.DataType==&#39;methylation&#39;">
+              <div data-display-if="output.correlParam!=0">
+              <label class="control-label" for="correlationMethod">
+                <h5>Correlation method:</h5>
+              </label>
+              <select id="correlationMethod"><option value="spearman" selected>Spearman</option>
+              <option value="kendall">Kendall</option><option value="pearson">Pearson</option></select>     
+              
+                <label class="checkbox" for="regressionLine">
+                  <input id="regressionLine" type="checkbox" checked="checked"/>
+                  <span>
+                    <h5>
+                      Regression Line
+                    </h5>
+                  </span>
+                </label>
+              </div> <!-- if data display end -->
+            </div>
+            </div>
+            <div class="span7">
+              <div class="shiny-flow-layout" align="center">
+               <div  data-display-if="input.DataType == &#39;methylation&#39;" id="correlmethexpress" class="shiny-plot-output" style="width: 100% ; height: 10%;"></div>
+                <div  data-display-if="input.DataType == &#39;expression&#39;" id="plotRNAseqGene" class="shiny-plot-output" style="width: 100% ; height: 10%;"></div>
               </div>
               <br>
               <div align = "center">
+              <div style="visibility: hidden;">
+              <div id="downloadParam" class="shiny-text-output"></div>
+              </div>
+              <div data-display-if="output.downloadParam!=0">
                 <a id="downloadResults" class="btn shiny-download-link" href="" target="_blank"><i class="fa fa-download"></i> Download Data & Results</a>  
               </div>
-                
+                </div>
               <div align = "center">
                 <div id="permalink_modal" class="shiny-html-output"></div>
                 <div id="genome_browser" class="shiny-html-output"></div>
-                <div id="cbioportal" class="shiny-html-output"></div>
-                <div id="regulome_explorer" class="shiny-html-output"></div>
               </div>
               
             </div> <!-- shiny flow end -->
           </div>
+               </div>
             <br>
             <br>
             <br>
@@ -222,7 +275,7 @@
                   <p>
                     Data have been obtained from the <a href="http://cancergenome.nih.gov/">TCGA Research Network</a>. Some datasets have limitations for usage until a global analysis is published; please contact <a href="mailto:tcga@mail.nih.gov">TCGA</a> before publishing.
                   </p>
-                  <p>&copy; IMPPC, 2014 - Designed and maintained by <a href="mailto:adiez@imppc.org">Anna D&iacute;ez-Villanueva</a> and <a href="mailto:imallona@imppc.org">Izaskun Mallona</a>. Logo by <a href="mailto:judouet@gmail.com">Julien Douet</a>.</p>
+                  <p>&copy; IMPPC, 2015 - Designed and maintained by <a href="mailto:adiez@imppc.org">Anna D&iacute;ez-Villanueva</a> and <a href="mailto:imallona@imppc.org">Izaskun Mallona</a>. Logo by <a href="mailto:judouet@gmail.com">Julien Douet</a>.</p>
                 </div>
               </div>
             </div>

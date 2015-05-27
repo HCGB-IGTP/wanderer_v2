@@ -1,0 +1,30 @@
+X,X1,x1,MethN,MethT,RNAseqN,RNAseqT
+Adrenocortical carcinoma,ACC,acc,0,80,0,79
+Bladder Urothelial Carcinoma,BLCA,blca,21,358,19,267
+Brain Lower Grade Glioma,LGG,lgg,0,511,0,513
+Breast invasive carcinoma,BRCA,brca,98,743,113,1052
+Cervical squamous cell carcinoma and endocervical adenocarcinoma,CESC,cesc,3,256,3,207
+Colon adenocarcinoma,COAD,coad,38,302,41,262
+Esophageal carcinoma,ESCA,esca,16,185,0,0
+Glioblastoma multiforme,GBM,gbm,2,129,5,156
+Head and Neck squamous cell carcinoma,HNSC,hnsc,50,528,43,497
+Kidney Chromophobe,KICH,kich,0,66,25,66
+Kidney renal clear cell carcinoma,KIRC,kirc,160,324,72,518
+Kidney renal papillary cell carcinoma,KIRP,kirp,45,226,30,198
+Liver hepatocellular carcinoma,LIHC,lihc,50,256,50,212
+Lung adenocarcinoma,LUAD,luad,32,463,58,488
+Lung squamous cell carcinoma,LUSC,lusc,43,361,50,491
+Lymphoid Neoplasm Diffuse Large B+AC0-cell Lymphoma,DLBC,dlbc,0,48,0,28
+Mesothelioma,MESO,meso,0,37,0,36
+Ovarian serous cystadenocarcinoma,OV,ov,0,10,0,262
+Pancreatic adenocarcinoma,PAAD,paad,10,146,4,96
+Pheochromocytoma and Paraganglioma,PCPG,pcpg,3,179,3,178
+Prostate adenocarcinoma,PRAD,prad,49,340,52,374
+Rectum adenocarcinoma,READ,read,7,98,9,91
+Sarcoma,SARC,sarc,4,242,2,103
+Skin Cutaneous Melanoma,SKCM,skcm,2,92,1,82
+Stomach adenocarcinoma,STAD,stad,2,339,0,0
+Thyroid carcinoma,THCA,thca,56,507,59,498
+Uterine Carcinosarcoma,UCS,ucs,0,57,0,57
+Uterine Corpus Endometrial Carcinoma,UCEC,ucec,46,438,24,158
+Uveal Melanoma,UVM,uvm,0,80,0,0
