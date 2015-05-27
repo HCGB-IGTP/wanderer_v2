@@ -78,6 +78,18 @@ shinyServer(function(input, output, session){
       GeneSize(con = con, geneName = geneNameSaved(), geneNamesType = geneFormat())  
     }
   })
+
+  ## Sync gene symbol identifier for ENSG genenames; used when generating URL to external services
+  ## @todo test
+  gene_symbol <- reactive({
+       if(input$goButton == 0) {
+           curr_gene_symbol <- 'BRCA1'
+       } else if (geneFormat() == 'genename') {
+           curr_gene_symbol <- geneNameSaved()
+       } else if (geneFormat() == 'emsemblgeneid') {
+           curr_gene_symbol <- ensembl_to_gene_symbol(con, geneNameSaved())
+       }
+  })
   
   #################################################
   #zoom
@@ -739,12 +751,32 @@ shinyServer(function(input, output, session){
     
     generate_modal(url)
   })
-  
+
+    ## external link to genome browser
   output$genome_browser <- renderText({
     generate_genome_browser_link(chromosome = geneSize()[[3]],
                                  start = input$Zoom[1],
-                                 end = input$Zoom[2])
-    
+                                 end = input$Zoom[2])    
+  })
+
+  ## external link to cbioportal
+  output$cbioportal <- renderText({
+      if (!is.null(input$Gene) & !is.null(input$TissueType) & !is.null(input$DataType)) {
+          if (tolower(input$TissueType) %in% names(cbioportal_datasets())) {
+              generate_cbioportal_link(dataset = input$TissueType,
+                                       gene = gene_symbol())
+          }
+      }
+  })
+
+  ## external link to regulome explorer
+  output$regulome_explorer <- renderText({
+      if (!is.null(input$Gene) & !is.null(input$TissueType) & !is.null(input$DataType)) {
+          if (tolower(input$TissueType) %in% names(regulome_explorer_datasets())) {
+              generate_regulome_explorer_link(dataset = input$TissueType,
+                                              gene = gene_symbol())
+          }
+      }          
   })
   
   
