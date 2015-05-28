@@ -155,7 +155,7 @@ shinyServer(function(input, output, session){
   #Filtering Methylation data
   datamethfilt <- reactive({
     if(input$DataType == 'methylation'){
-      if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1){
+      if(geneSize()[[1]]!=0 & geneSize()[[1]]!=1 & !is.null(datameth()[['empty']])){
         if(!datameth()[['empty']])  data_meth_filtering(results = datameth(), sampleSize = sample_size, tissue = input$TissueType, zoom = c(input$start, input$end))
       }
     }

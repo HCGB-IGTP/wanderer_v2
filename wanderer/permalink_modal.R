@@ -80,7 +80,6 @@ pop_modal_plot <- function(url) {
 </div>
 '
 }
-<<<<<<< HEAD
 
 
 ## selected regulome explorer datasets May 2015
@@ -178,5 +177,3 @@ generate_cbioportal_link <- function(dataset, gene) {
 
 
 ## http://www.cbioportal.org/index.do?cancer_study_list=cesc_tcga&cancer_study_id=cesc_tcga&genetic_profile_ids_PROFILE_MUTATION_EXTENDED=cesc_tcga_mutations&genetic_profile_ids_PROFILE_COPY_NUMBER_ALTERATION=cesc_tcga_gistic&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&data_priority=0&case_set_id=cesc_tcga_cnaseq&case_ids=&gene_set_choice=user-defined-list&gene_list=ACTA1&clinical_param_selection=null&tab_index=tab_visualize&Action=Submit
-=======
->>>>>>> d4e399f... Major revision to reviewers concerns
