@@ -33,12 +33,6 @@ sample_size <- read.table(file.path(SRC, "NumberOfSamples.csv"), sep = ",", stri
 
 shinyServer(function(input, output, session){
   
-  ## get_client_date <- function() {
-  ##     reactive(return(input$clientTime))
-  ## }
-  
-  ## write.table(file = 'test', )
-  
   #database connection
   con <- db_connect(DB_CONF)
   
@@ -80,7 +74,6 @@ shinyServer(function(input, output, session){
   })
 
   ## Sync gene symbol identifier for ENSG genenames; used when generating URL to external services
-  ## @todo test
   gene_symbol <- reactive({
        if(input$goButton == 0) {
            curr_gene_symbol <- 'BRCA1'
@@ -765,8 +758,13 @@ shinyServer(function(input, output, session){
   output$cbioportal <- renderText({
       if (!is.null(input$Gene) & !is.null(input$TissueType) & !is.null(input$DataType)) {
           if (tolower(input$TissueType) %in% names(cbioportal_datasets())) {
-              generate_cbioportal_link(dataset = input$TissueType,
-                                       gene = gene_symbol())
+              ## the equivalence to the ENSG identifier, if any
+              gene_symbol <- gene_symbol()
+              
+              if (is.character(gene_symbol) & nchar(gene_symbol) > 0) {
+                  generate_cbioportal_link(dataset = input$TissueType,
+                                           gene = gene_symbol)
+              }
           }
       }
   })
@@ -775,8 +773,14 @@ shinyServer(function(input, output, session){
   output$regulome_explorer <- renderText({
       if (!is.null(input$Gene) & !is.null(input$TissueType) & !is.null(input$DataType)) {
           if (tolower(input$TissueType) %in% names(regulome_explorer_datasets())) {
-              generate_regulome_explorer_link(dataset = input$TissueType,
-                                              gene = gene_symbol())
+               ## the equivalence to the ENSG identifier, if any
+              gene_symbol <- gene_symbol()
+              
+              if (is.character(gene_symbol) & nchar(gene_symbol) > 0) {
+              
+                  generate_regulome_explorer_link(dataset = input$TissueType,
+                                                  gene = gene_symbol)
+              }
           }
       }          
   })
@@ -785,8 +789,5 @@ shinyServer(function(input, output, session){
   cancel.onSessionEnded <- session$onSessionEnded(function() {
     dbDisconnect(con)
   })
-  
-  
-  #on.exit(dbDisconnect(con), add = TRUE)
   
 })
