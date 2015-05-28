@@ -81,6 +81,12 @@ shinyServer(function(input, output, session){
                                      'geneLine', 'CpGi', 'nN', 'nT', 'region', 'goButton', 'Zoom',
                                      'distribute_uniformly', 'pvalThres'))
   
+
+  ## ## ###############################################
+  ## #Gene Name
+  ## geneNameSaved <- function(){
+  ##     return(toupper(query$Gene))
+  ## }
   
   #################################################
   #detect gene format
@@ -145,114 +151,70 @@ shinyServer(function(input, output, session){
     }
   })
   
-  
-  #################################################
-  #print wanderer plot
+  ## main profile plot
   output$plot1 <- renderPlot({
-    if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(geneNameSaved()) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
-      if(input$region & ((input$end > input$Zoom[2]) | (input$end < input$Zoom[1]) | (input$start < input$Zoom[1]) | (input$start > input$Zoom[2]))) stop(print(paste0("The region must be between ", input$Zoom[1], " and ", input$Zoom[2])))
-      
-      if(input$DataType == 'methylation'){
-        if(dim(datamethfilt()[['probes2']])[1]>0){
-          if(is.null(datamethfilt()$ddN2) & is.null(datamethfilt()$ddT2)){
-            stop("There are no samples in this tissue type")
-          } else{
-            wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
-                                 geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                 CpGislands = input$CpGi, plotmean = input$plotmean,
-                                 plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
+      if (!all(api_arguments_allowances == sort(names(query))) | !(toupper(query$TissueType) %in% sample_size[,2]))
+          stop(error)
+
+      if(!is.null(query$TissueType) & !is.null(query$nN) & !is.null(query$nT) & !is.null(toupper(query$Gene)) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) { 
+          if(query$region & ((query$end > query$Zoom[2]) | (query$end < query$Zoom[1]) | (query$start < query$Zoom[1]) | (query$start > query$Zoom[2])))
+              stop(error)
+          
+          if(query$DataType == 'methylation'){
+              if(dim(datamethfilt()[['probes2']])[1]<=0){
+                  stop(error)
+              }else{
+                  wanderer_methylation(results_filt = datamethfilt(), geneName = toupper(query$Gene),
+                                       geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
+                                       CpGislands = query$CpGi, plotmean = query$plotmean,
+                                       plotting = TRUE, geneLine = query$geneLine,
+                                       proportional = !(query$distribute_uniformly))
+              }
           }
-        }
-      }
-      if(input$DataType == 'expression'){
-        if(dim(dataexprfilt()[['exons2']])[1]>0){
-          if(is.null(dataexprfilt()$ddN2) & is.null(dataexprfilt()$ddT2)){
-            stop("There are no samples in this tissue type")
-          } else{
-            wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
-                                geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
+          else if(query$DataType == 'expression'){
+              if(dim(dataexprfilt()[['exons2']])[1]<=0){
+                  stop(error)
+              }else{
+                  wanderer_expression(results_filt = dataexprfilt(), geneName = (toupper(query$Gene)),
+                                      geneNamesType = geneFormat(), npointsN = query$nN, npointsT = query$nT,
+                                      plotmean = query$plotmean, plotting = TRUE, geneLine = query$geneLine,
+                                      proportional = !(query$distribute_uniformly))
+              }
           }
-        }
+
       }
-    }
   }, height = 1000, width = 1000)
+
   
-  
-  ##################################################
-  #print summary plot
+  ## profile NT comparison
   output$plotStat <- renderPlot({
-    if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(geneNameSaved()) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
-      
-      if(input$DataType == 'methylation'){
-        if(dim(datamethfilt()[['probes2']])[1]>0){
-          if(is.null(datamethfilt()$ddN2) | is.null(datamethfilt()$ddT2)){
-            stop("There are not enough samples to perform the statistical analysis")
-          } else{
-            
-            if(dim(datamethfilt()$ddN2)[2]<=2 | dim(datamethfilt()$ddT2)[2]<=2){
-              stop("There are not enough samples to perform the statistical analysis")
-            } else{
-              stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
-                                 geneNamesType = geneFormat(), CpGislands = input$CpGi, pvalThres = input$pvalThres,
-                                 geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
-            }
+
+      if (!all(api_arguments_allowances == sort(names(query))) | !(toupper(query$TissueType) %in% sample_size[,2]))
+          stop(error)
+
+      if(!is.null(query$TissueType) & !is.null(query$nN) & !is.null(query$nT) & !is.null(toupper(query$Gene)) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
+          if(query$DataType == 'methylation'){
+              if(dim(datamethfilt()[['probes2']])[1]>0){
+                  stat_analysis_meth(results_filt = datamethfilt(), geneName = toupper(query$Gene),
+                                     geneNamesType = geneFormat(), CpGislands = query$CpGi,
+                                     geneLine = query$geneLine, plotting = TRUE,
+                                     proportional = !(query$distribute_uniformly),
+                                     pvalThres = query$pvalThres)
+              }
           }
-        }
-      }
-      else if(input$DataType == 'expression'){
-        if(dim(dataexprfilt()[['exons2']])[1]>0){
-          if(is.null(dataexprfilt()$ddN2) | is.null(dataexprfilt()$ddT2)){
-            stop("There are not enough samples to perform the statistical analysis")
-          } else{
-            
-            if(dim(dataexprfilt()$ddN2)[2]<=2 | dim(dataexprfilt()$ddT2)[2]<=2){
-              stop("There are not enough samples to perform the statistical analysis")
-            } else{
-              stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
-                                 geneNamesType = geneFormat(), pvalThres = input$pvalThres,
-                                 geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
-            }
+          if(query$DataType == 'expression'){
+              if(dim(dataexprfilt()[['exons2']])[1]>0){
+                  stat_analysis_expr(results_filt = dataexprfilt(), geneName =toupper(query$Gene),
+                                     geneNamesType = geneFormat(),
+                                     geneLine = query$geneLine, plotting = TRUE,
+                                     proportional = !(query$distribute_uniformly),
+                                     pvalThres = query$pvalThres)
+              }
           }
-        }
       }
-    }
   }, height = 500, width = 1000)
-  
-  #################################################
-  #index html stat parameters to print (adjusted pval)
-  output$pvalParam <- reactive({
-    pvalparam <- 0
-    if(!is.null(input$TissueType) & !is.null(input$nN) & !is.null(input$nT) & !is.null(geneNameSaved()) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1) {
-      if(input$DataType == 'methylation'){
-        if(dim(datamethfilt()[['probes2']])[1]>0){
-          if(is.null(datamethfilt()$ddN2) | is.null(datamethfilt()$ddT2)){
-            pvalparam <- 0
-          } else{
-            if(dim(datamethfilt()$ddN2)[2]<=2 | dim(datamethfilt()$ddT2)[2]<=2){
-              pvalparam <- 0
-            } else{
-              pvalparam <- 1
-            }
-          }
-        }
-      } else if(input$DataType == 'expression'){
-        if(dim(dataexprfilt()[['exons2']])[1]>0){
-          if(is.null(dataexprfilt()$ddN2) | is.null(dataexprfilt()$ddT2)){
-            pvalparam <- 0
-          } else{
-            if(dim(dataexprfilt()$ddN2)[2]<=2 | dim(dataexprfilt()$ddT2)[2]<=2){
-              pvalparam <- 0
-            } else{
-              pvalparam <- 1
-            }
-          }
-        }
-      }
-    }
-    return(pvalparam)
-  })
-  
+
+    
   #################################################
   #index html stat parameters to print (adjusted pval)
   output$downloadParam <- reactive({
@@ -293,252 +255,252 @@ shinyServer(function(input, output, session){
   
   
   
-  #################################################
-  #DOWNLOAD RESULTS
+  ## #################################################
+  ## #DOWNLOAD RESULTS
   
-  output$downloadResults <- downloadHandler(
+  ## output$downloadResults <- downloadHandler(
     
-    filename = function(){
-      file.path(paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.zip'))
-    },
+  ##   filename = function(){
+  ##     file.path(paste0("Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.zip'))
+  ##   },
     
-    content = function(file) {
+  ##   content = function(file) {
       
-      ######################################
-      #wanderer plot in png      
-      f1 <- paste0("1_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
-      CairoPNG(file.path(tempdir(),f1), width = 1000, height = 1000)
-      if(input$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
-                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                        CpGislands = input$CpGi, plotmean = input$plotmean,
-                                        plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
-      } else if(input$DataType == 'expression'){
-        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
-                                       geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                       plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
-      }
-      dev.off()
+  ##     ######################################
+  ##     #wanderer plot in png      
+  ##     f1 <- paste0("1_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
+  ##     CairoPNG(file.path(tempdir(),f1), width = 1000, height = 1000)
+  ##     if(input$DataType == 'methylation'){
+  ##       regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
+  ##                                       geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
+  ##                                       CpGislands = input$CpGi, plotmean = input$plotmean,
+  ##                                       plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
+  ##     } else if(input$DataType == 'expression'){
+  ##       regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
+  ##                                      geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
+  ##                                      plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
+  ##     }
+  ##     dev.off()
       
-      #####################################
-      #wanderer plot in pdf
-      f2 <- paste0("2_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-      pdf(file.path(tempdir(), f2), width = 14, height = 14)
-      if(input$DataType == 'methylation'){
-        regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
-                                        geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                        CpGislands = input$CpGi, plotmean = input$plotmean,
-                                        plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
-      } else if(input$DataType == 'expression'){
-        regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
-                                       geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
-                                       plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
-      }
-      dev.off()
-      
-      
-      #################################################
-      #dowload Normal data
-      fileN <- paste0("3_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_', client_timestamp(input$clientTime), '.csv')
-      if(input$DataType == 'methylation'){
-        if(!is.null(datamethfilt()$ddN2)) write.table(datamethfilt()$ddN2, file = file.path(tempdir(), fileN), sep = ",", row.names = FALSE, quote = FALSE)
-      } else if(input$DataType == 'expression'){
-        if(!is.null(dataexprfilt()$ddN2)) write.table(dataexprfilt()$ddN2, file = file.path(tempdir(), fileN), sep = ",", row.names = FALSE, quote = FALSE)
-      }
+  ##     #####################################
+  ##     #wanderer plot in pdf
+  ##     f2 <- paste0("2_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
+  ##     pdf(file.path(tempdir(), f2), width = 14, height = 14)
+  ##     if(input$DataType == 'methylation'){
+  ##       regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
+  ##                                       geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
+  ##                                       CpGislands = input$CpGi, plotmean = input$plotmean,
+  ##                                       plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
+  ##     } else if(input$DataType == 'expression'){
+  ##       regplot <- wanderer_expression(results_filt = dataexprfilt(), geneName = geneNameSaved(),
+  ##                                      geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
+  ##                                      plotmean = input$plotmean, plotting = TRUE, geneLine = input$geneLine, proportional = !(input$distribute_uniformly))
+  ##     }
+  ##     dev.off()
       
       
-      #################################################
-      #dowload RNAseq Gene level Normal data
-      if(input$DataType == 'expression'){
-        fileNG <- paste0("10_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_RNAseqGENE_', client_timestamp(input$clientTime), '.csv')
-        if(!is.null(dataRNAseqGene()$Normal)){
-          ddN <- RNAseq_data_table(dataRNAseqGene()$Normal, dataexprfilt()$ddN2)
-          write.table(ddN, file = file.path(tempdir(), fileNG), sep = ",", row.names = FALSE, quote = FALSE)        
-        }
-      }
-      
-      #################################################
-      #dowload RNAseq Gene level Normal data common with methylation
-      if(input$DataType == 'methylation'){
-        fileNG <- paste0("10_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_RNAseqGENE_CommonWithMethylation_', client_timestamp(input$clientTime), '.csv')
-        if(!is.null(dataRNAseqGene()[['Normal']]) & !is.null(datamethfilt()[['ddN2']])){        
-          RNAseqdata <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = FALSE, datareturn = TRUE)
-          if(!is.null(RNAseqdata$ddNE)) write.table(RNAseqdata$ddNE, file = file.path(tempdir(), fileNG), sep = ",", row.names = FALSE, quote = FALSE)        
-        }
-      }
-      
-      #################################################
-      #dowload Tumor data
-      fileT <- paste0("4_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_', client_timestamp(input$clientTime), '.csv')
-      if(input$DataType == 'methylation'){
-        if(!is.null(datamethfilt()$ddT2)) write.table(datamethfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)
-      } else if(input$DataType == 'expression'){
-        if(!is.null(dataexprfilt()$ddT2)) write.table(dataexprfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)
-      }
-      
-      #################################################
-      #dowload RNAseq Gene level Tumor data
-      if(input$DataType == 'expression'){
-        fileTG <- paste0("11_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_RNAseqGENE_', client_timestamp(input$clientTime), '.csv')
-        if(!is.null(dataRNAseqGene()$Tumor)){
-          ddT <- RNAseq_data_table(dataRNAseqGene()$Tumor, dataexprfilt()$ddT2)
-          write.table(ddT, file = file.path(tempdir(), fileTG), sep = ",", row.names = FALSE, quote = FALSE)        
-        }
-      }
-      
-      #################################################
-      #dowload RNAseq Gene level Tumor data common with methylation
-      if(input$DataType == 'methylation'){
-        fileTG <- paste0("11_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_RNAseqGENE_CommonWithMethylation_', client_timestamp(input$clientTime), '.csv')
-        if(!is.null(dataRNAseqGene()[['Tumor']]) & !is.null(datamethfilt()[['ddT2']])){        
-          RNAseqdata <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = FALSE, datareturn = TRUE)
-          if(!is.null(RNAseqdata$ddTE)) write.table(RNAseqdata$ddTE, file = file.path(tempdir(), fileTG), sep = ",", row.names = FALSE, quote = FALSE)        
-        }
-      }
-      
-      #################################################
-      #dowload probe annotation and statistical analysis
-      fileA <- paste0("7_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_annotations_and_statistical_analysis_', client_timestamp(input$clientTime), '.csv')
-      if(input$DataType == 'methylation'){
-        results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
-                                     geneNamesType = geneFormat(), CpGislands = input$CpGi,
-                                     geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly) )
-      } else if(input$DataType == 'expression'){
-        results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
-                                      geneNamesType = geneFormat(),
-                                      geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly))
-      }
-      write.table(results, file = file.path(tempdir(), fileA), sep = ",", row.names = FALSE, quote = FALSE)        
+  ##     #################################################
+  ##     #dowload Normal data
+  ##     fileN <- paste0("3_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_', client_timestamp(input$clientTime), '.csv')
+  ##     if(input$DataType == 'methylation'){
+  ##       if(!is.null(datamethfilt()$ddN2)) write.table(datamethfilt()$ddN2, file = file.path(tempdir(), fileN), sep = ",", row.names = FALSE, quote = FALSE)
+  ##     } else if(input$DataType == 'expression'){
+  ##       if(!is.null(dataexprfilt()$ddN2)) write.table(dataexprfilt()$ddN2, file = file.path(tempdir(), fileN), sep = ",", row.names = FALSE, quote = FALSE)
+  ##     }
       
       
-      #################################################
-      #dowload boxplot of RNAseq gene data as png
-      if(input$DataType == 'expression'){
-        fbox1 <- paste0("8_Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
-        if(!is.null(dataRNAseqGene())){
-          CairoPNG(file.path(tempdir(), fbox1), width = 1000, height = 500)
-          RNAseqboxplot <- plot_RNAseqGene(dd = dataRNAseqGene(), geneName = geneNameSaved(), tissue_label = dataexprfilt()[['tissue_label']]) 
-          print(RNAseqboxplot)
-          dev.off()
-        } 
-      }
+  ##     #################################################
+  ##     #dowload RNAseq Gene level Normal data
+  ##     if(input$DataType == 'expression'){
+  ##       fileNG <- paste0("10_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_RNAseqGENE_', client_timestamp(input$clientTime), '.csv')
+  ##       if(!is.null(dataRNAseqGene()$Normal)){
+  ##         ddN <- RNAseq_data_table(dataRNAseqGene()$Normal, dataexprfilt()$ddN2)
+  ##         write.table(ddN, file = file.path(tempdir(), fileNG), sep = ",", row.names = FALSE, quote = FALSE)        
+  ##       }
+  ##     }
       
-      #################################################
-      #dowload boxplot of RNAseq gene data as pdf
-      if(input$DataType == 'expression'){
-        fbox2 <- paste0("9_Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-        if(!is.null(dataRNAseqGene())){
-          pdf(file.path(tempdir(),fbox2), width = 12, height = 6)
-          RNAseqboxplot <- plot_RNAseqGene(dd = dataRNAseqGene(), geneName = geneNameSaved(), tissue_label = dataexprfilt()[['tissue_label']]) 
-          dev.off()
-        } 
-      }
+  ##     #################################################
+  ##     #dowload RNAseq Gene level Normal data common with methylation
+  ##     if(input$DataType == 'methylation'){
+  ##       fileNG <- paste0("10_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Normal_RNAseqGENE_CommonWithMethylation_', client_timestamp(input$clientTime), '.csv')
+  ##       if(!is.null(dataRNAseqGene()[['Normal']]) & !is.null(datamethfilt()[['ddN2']])){        
+  ##         RNAseqdata <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = FALSE, datareturn = TRUE)
+  ##         if(!is.null(RNAseqdata$ddNE)) write.table(RNAseqdata$ddNE, file = file.path(tempdir(), fileNG), sep = ",", row.names = FALSE, quote = FALSE)        
+  ##       }
+  ##     }
       
-      #################################################
-      #dowload correl of meth vs RNAseq gene data as png
-      if(input$DataType == 'methylation'){
-        fbox1 <- paste0("8_Wanderer_", geneNameSaved(), '_correl_RNAseqGeneVS', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
-        if((!is.null(dataRNAseqGene()[['Normal']]) & !is.null(datamethfilt()[['ddN2']])) | (!is.null(dataRNAseqGene()[['Tumor']]) & !is.null(datamethfilt()[['ddT2']]))){
-          CairoPNG(file.path(tempdir(), fbox1), width = 1000, height = 500)
-          RNAseqcorrelplot <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = TRUE, datareturn = FALSE) 
-          print(RNAseqcorrelplot)
-          dev.off()
-        } 
-      }
+  ##     #################################################
+  ##     #dowload Tumor data
+  ##     fileT <- paste0("4_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_', client_timestamp(input$clientTime), '.csv')
+  ##     if(input$DataType == 'methylation'){
+  ##       if(!is.null(datamethfilt()$ddT2)) write.table(datamethfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)
+  ##     } else if(input$DataType == 'expression'){
+  ##       if(!is.null(dataexprfilt()$ddT2)) write.table(dataexprfilt()$ddT2, file = file.path(tempdir(), fileT), sep = ",", row.names = FALSE, quote = FALSE)
+  ##     }
       
-      #################################################
-      #dowload correl of meth vs RNAseq gene data as pdf
-      if(input$DataType == 'methylation'){
-        fbox2 <- paste0("9_Wanderer_", geneNameSaved(), '_correl_RNAseqGeneVS', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-        if((!is.null(dataRNAseqGene()[['Normal']]) & !is.null(datamethfilt()[['ddN2']])) | (!is.null(dataRNAseqGene()[['Tumor']]) & !is.null(datamethfilt()[['ddT2']]))){
-          pdf(file.path(tempdir(),fbox2), width = 12, height = 6)
-          RNAseqcorrelplot <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = TRUE, datareturn = FALSE) 
-          dev.off()
-        } 
-      }
+  ##     #################################################
+  ##     #dowload RNAseq Gene level Tumor data
+  ##     if(input$DataType == 'expression'){
+  ##       fileTG <- paste0("11_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_RNAseqGENE_', client_timestamp(input$clientTime), '.csv')
+  ##       if(!is.null(dataRNAseqGene()$Tumor)){
+  ##         ddT <- RNAseq_data_table(dataRNAseqGene()$Tumor, dataexprfilt()$ddT2)
+  ##         write.table(ddT, file = file.path(tempdir(), fileTG), sep = ",", row.names = FALSE, quote = FALSE)        
+  ##       }
+  ##     }
       
-      #################################################
-      #dowload mean plot as png
-      if(input$DataType == 'methylation'){
-        if(!is.null(datamethfilt()$ddN2) & !is.null(datamethfilt()$ddT2)){
-          if(dim(datamethfilt()$ddN2)[2]>2 & dim(datamethfilt()$ddT2)[2]>2){   
-            fmean1 <- paste0("5_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
-            CairoPNG(file.path(tempdir(), fmean1), width = 1000, height = 500)
-            regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
-                                          geneNamesType = geneFormat(), CpGislands = input$CpGi, pvalThres = input$pvalThres,
-                                          geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
-            dev.off()
-          } else fmean1 <- NULL
-        } else fmean1 <- NULL
-      } else if(input$DataType == 'expression'){
-        if(!is.null(dataexprfilt()$ddN2) & !is.null(dataexprfilt()$ddT2)){
-          if(dim(dataexprfilt()$ddN2)[2]>2 & dim(dataexprfilt()$ddT2)[2]>2){   
-            fmean1 <- paste0("5_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
-            CairoPNG(file.path(tempdir(), fmean1), width = 1000, height = 500)
-            regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
-                                          geneNamesType = geneFormat(), pvalThres = input$pvalThres,
-                                          geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
-            dev.off()
-          } else fmean1 <- NULL
-        } else fmean1 <- NULL
-      }
+  ##     #################################################
+  ##     #dowload RNAseq Gene level Tumor data common with methylation
+  ##     if(input$DataType == 'methylation'){
+  ##       fileTG <- paste0("11_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_Tumor_RNAseqGENE_CommonWithMethylation_', client_timestamp(input$clientTime), '.csv')
+  ##       if(!is.null(dataRNAseqGene()[['Tumor']]) & !is.null(datamethfilt()[['ddT2']])){        
+  ##         RNAseqdata <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = FALSE, datareturn = TRUE)
+  ##         if(!is.null(RNAseqdata$ddTE)) write.table(RNAseqdata$ddTE, file = file.path(tempdir(), fileTG), sep = ",", row.names = FALSE, quote = FALSE)        
+  ##       }
+  ##     }
+      
+  ##     #################################################
+  ##     #dowload probe annotation and statistical analysis
+  ##     fileA <- paste0("7_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_annotations_and_statistical_analysis_', client_timestamp(input$clientTime), '.csv')
+  ##     if(input$DataType == 'methylation'){
+  ##       results <-stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
+  ##                                    geneNamesType = geneFormat(), CpGislands = input$CpGi,
+  ##                                    geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly) )
+  ##     } else if(input$DataType == 'expression'){
+  ##       results <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
+  ##                                     geneNamesType = geneFormat(),
+  ##                                     geneLine = input$geneLine, plotting = FALSE, proportional = !(input$distribute_uniformly))
+  ##     }
+  ##     write.table(results, file = file.path(tempdir(), fileA), sep = ",", row.names = FALSE, quote = FALSE)        
       
       
+  ##     #################################################
+  ##     #dowload boxplot of RNAseq gene data as png
+  ##     if(input$DataType == 'expression'){
+  ##       fbox1 <- paste0("8_Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
+  ##       if(!is.null(dataRNAseqGene())){
+  ##         CairoPNG(file.path(tempdir(), fbox1), width = 1000, height = 500)
+  ##         RNAseqboxplot <- plot_RNAseqGene(dd = dataRNAseqGene(), geneName = geneNameSaved(), tissue_label = dataexprfilt()[['tissue_label']]) 
+  ##         print(RNAseqboxplot)
+  ##         dev.off()
+  ##       } 
+  ##     }
       
-      #################################################
-      #dowload mean plot as pdf
-      if(input$DataType == 'methylation'){
-        if(!is.null(datamethfilt()$ddN2) & !is.null(datamethfilt()$ddT2)){
-          if(dim(datamethfilt()$ddN2)[2]>2 & dim(datamethfilt()$ddT2)[2]>2){   
-            fmean2 <- paste0("6_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-            pdf(file.path(tempdir(), fmean2), width = 14, height = 6)
-            regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
-                                          geneNamesType = geneFormat(), CpGislands = input$CpGi, pvalThres = input$pvalThres,
-                                          geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
-            dev.off()
-          } else fmean2 <- NULL
-        } else fmean2 <- NULL
-      } else if(input$DataType == 'expression'){
-        if(!is.null(dataexprfilt()$ddN2) & !is.null(dataexprfilt()$ddT2)){
-          if(dim(dataexprfilt()$ddN2)[2]>2 & dim(dataexprfilt()$ddT2)[2]>2){   
-            fmean2 <- paste0("6_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-            pdf(file.path(tempdir(), fmean2), width = 14, height = 6)
-            regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
-                                          geneNamesType = geneFormat(), pvalThres = input$pvalThres,
-                                          geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
-            dev.off()
-          } else fmean2 <- NULL
-        } else fmean2<- NULL
-      }
+  ##     #################################################
+  ##     #dowload boxplot of RNAseq gene data as pdf
+  ##     if(input$DataType == 'expression'){
+  ##       fbox2 <- paste0("9_Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
+  ##       if(!is.null(dataRNAseqGene())){
+  ##         pdf(file.path(tempdir(),fbox2), width = 12, height = 6)
+  ##         RNAseqboxplot <- plot_RNAseqGene(dd = dataRNAseqGene(), geneName = geneNameSaved(), tissue_label = dataexprfilt()[['tissue_label']]) 
+  ##         dev.off()
+  ##       } 
+  ##     }
+      
+  ##     #################################################
+  ##     #dowload correl of meth vs RNAseq gene data as png
+  ##     if(input$DataType == 'methylation'){
+  ##       fbox1 <- paste0("8_Wanderer_", geneNameSaved(), '_correl_RNAseqGeneVS', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
+  ##       if((!is.null(dataRNAseqGene()[['Normal']]) & !is.null(datamethfilt()[['ddN2']])) | (!is.null(dataRNAseqGene()[['Tumor']]) & !is.null(datamethfilt()[['ddT2']]))){
+  ##         CairoPNG(file.path(tempdir(), fbox1), width = 1000, height = 500)
+  ##         RNAseqcorrelplot <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = TRUE, datareturn = FALSE) 
+  ##         print(RNAseqcorrelplot)
+  ##         dev.off()
+  ##       } 
+  ##     }
+      
+  ##     #################################################
+  ##     #dowload correl of meth vs RNAseq gene data as pdf
+  ##     if(input$DataType == 'methylation'){
+  ##       fbox2 <- paste0("9_Wanderer_", geneNameSaved(), '_correl_RNAseqGeneVS', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
+  ##       if((!is.null(dataRNAseqGene()[['Normal']]) & !is.null(datamethfilt()[['ddN2']])) | (!is.null(dataRNAseqGene()[['Tumor']]) & !is.null(datamethfilt()[['ddT2']]))){
+  ##         pdf(file.path(tempdir(),fbox2), width = 12, height = 6)
+  ##         RNAseqcorrelplot <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = TRUE, datareturn = FALSE) 
+  ##         dev.off()
+  ##       } 
+  ##     }
+      
+  ##     #################################################
+  ##     #dowload mean plot as png
+  ##     if(input$DataType == 'methylation'){
+  ##       if(!is.null(datamethfilt()$ddN2) & !is.null(datamethfilt()$ddT2)){
+  ##         if(dim(datamethfilt()$ddN2)[2]>2 & dim(datamethfilt()$ddT2)[2]>2){   
+  ##           fmean1 <- paste0("5_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
+  ##           CairoPNG(file.path(tempdir(), fmean1), width = 1000, height = 500)
+  ##           regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
+  ##                                         geneNamesType = geneFormat(), CpGislands = input$CpGi, pvalThres = input$pvalThres,
+  ##                                         geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
+  ##           dev.off()
+  ##         } else fmean1 <- NULL
+  ##       } else fmean1 <- NULL
+  ##     } else if(input$DataType == 'expression'){
+  ##       if(!is.null(dataexprfilt()$ddN2) & !is.null(dataexprfilt()$ddT2)){
+  ##         if(dim(dataexprfilt()$ddN2)[2]>2 & dim(dataexprfilt()$ddT2)[2]>2){   
+  ##           fmean1 <- paste0("5_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.png')
+  ##           CairoPNG(file.path(tempdir(), fmean1), width = 1000, height = 500)
+  ##           regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
+  ##                                         geneNamesType = geneFormat(), pvalThres = input$pvalThres,
+  ##                                         geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
+  ##           dev.off()
+  ##         } else fmean1 <- NULL
+  ##       } else fmean1 <- NULL
+  ##     }
       
       
-      #################################################
-      #dowload documentation
-      fileDoc <- file.path(SRC,"Wanderer_Documentation.txt")
-      fileDoc2 <- file.path(SRC, "Wanderer_Documentation.pdf")
       
-      #################################################
-      #dowload documentation
+  ##     #################################################
+  ##     #dowload mean plot as pdf
+  ##     if(input$DataType == 'methylation'){
+  ##       if(!is.null(datamethfilt()$ddN2) & !is.null(datamethfilt()$ddT2)){
+  ##         if(dim(datamethfilt()$ddN2)[2]>2 & dim(datamethfilt()$ddT2)[2]>2){   
+  ##           fmean2 <- paste0("6_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
+  ##           pdf(file.path(tempdir(), fmean2), width = 14, height = 6)
+  ##           regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
+  ##                                         geneNamesType = geneFormat(), CpGislands = input$CpGi, pvalThres = input$pvalThres,
+  ##                                         geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
+  ##           dev.off()
+  ##         } else fmean2 <- NULL
+  ##       } else fmean2 <- NULL
+  ##     } else if(input$DataType == 'expression'){
+  ##       if(!is.null(dataexprfilt()$ddN2) & !is.null(dataexprfilt()$ddT2)){
+  ##         if(dim(dataexprfilt()$ddN2)[2]>2 & dim(dataexprfilt()$ddT2)[2]>2){   
+  ##           fmean2 <- paste0("6_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
+  ##           pdf(file.path(tempdir(), fmean2), width = 14, height = 6)
+  ##           regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
+  ##                                         geneNamesType = geneFormat(), pvalThres = input$pvalThres,
+  ##                                         geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
+  ##           dev.off()
+  ##         } else fmean2 <- NULL
+  ##       } else fmean2<- NULL
+  ##     }
+      
+      
+  ##     #################################################
+  ##     #dowload documentation
+  ##     fileDoc <- file.path(SRC,"Wanderer_Documentation.txt")
+  ##     fileDoc2 <- file.path(SRC, "Wanderer_Documentation.pdf")
+      
+  ##     #################################################
+  ##     #dowload documentation
 
-      fileClinic <- file.path(SRC, 'Clinical', paste0(toupper(input$TissueType),"_Clinical__nationwidechildrens.org_clinical_patient_",input$TissueType,".txt"))
+  ##     fileClinic <- file.path(SRC, 'Clinical', paste0(toupper(input$TissueType),"_Clinical__nationwidechildrens.org_clinical_patient_",input$TissueType,".txt"))
 
       
-      #################################################
+  ##     #################################################
       
-      zip(zipfile =  file, files = c(file.path(tempdir(), c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)), fileClinic, fileDoc, fileDoc2), flags = "-j")
+  ##     zip(zipfile =  file, files = c(file.path(tempdir(), c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)), fileClinic, fileDoc, fileDoc2), flags = "-j")
       
-      # stop(file)
-      if (file.exists(paste0( file, ".zip")))
-        file.rename(paste0(file, ".zip"), file)
+  ##     # stop(file)
+  ##     if (file.exists(paste0( file, ".zip")))
+  ##       file.rename(paste0(file, ".zip"), file)
       
-      ## cleaning the files after compressing and packing them	
-      to_delete <-  c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)
-      for (fn in to_delete) 
-        unlink(file.path(tempdir(),fn))
+  ##     ## cleaning the files after compressing and packing them	
+  ##     to_delete <-  c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)
+  ##     for (fn in to_delete) 
+  ##       unlink(file.path(tempdir(),fn))
       
-    },
-    contentType = "application/zip"
-  )
+  ##   },
+  ##   contentType = "application/zip"
+  ## )
 
   
   cancel.onSessionEnded <- session$onSessionEnded(function() {
