@@ -6,13 +6,8 @@ library(Cairo)
 
 # the file containing the db parameters
 #SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-<<<<<<< HEAD
 ## SRC <- '/imppc/labs/maplab/adiez/region_profile/Wanderer_190515/'
 SRC <- '.'
-=======
-SRC <- '/imppc/labs/maplab/adiez/region_profile/Wanderer_190515/'
-#SRC <- '.'
->>>>>>> d4e399f... Major revision to reviewers concerns
 
 DB_CONF <- file.path(SRC, 'db.txt')
 
@@ -77,7 +72,6 @@ shinyServer(function(input, output, session){
       GeneSize(con = con, geneName = geneNameSaved(), geneNamesType = geneFormat())  
     }
   })
-<<<<<<< HEAD
 
   ## Sync gene symbol identifier for ENSG genenames; used when generating URL to external services
   gene_symbol <- reactive({
@@ -89,8 +83,6 @@ shinyServer(function(input, output, session){
            curr_gene_symbol <- ensembl_to_gene_symbol(con, geneNameSaved())
        }
   })
-=======
->>>>>>> d4e399f... Major revision to reviewers concerns
   
   #################################################
   #zoom
@@ -436,7 +428,6 @@ shinyServer(function(input, output, session){
     }
     return(downloadparam)
   })
-<<<<<<< HEAD
   
   #################################################
   #print the number of probes or exons
@@ -459,30 +450,6 @@ shinyServer(function(input, output, session){
   })
   
   
-=======
-  
-  #################################################
-  #print the number of probes or exons
-  output$numberpoints <- renderText({
-    if(!is.null(input$TissueType) & geneSize()[[1]]!=0 & geneSize()[[1]]!=1){
-      if(input$DataType == 'methylation'){
-        if(!is.null(datamethfilt())){
-          if(dim(datamethfilt()[['probes2']])[1]==0) printa <- "There are not probes in this region"
-          if(dim(datamethfilt()[['probes2']])[1]>0)  printa <- paste0("There are ", dim(datamethfilt()[['probes2']])[1] ," probes in the selected region")
-        }
-      }
-      if(input$DataType == 'expression'){
-        if(!is.null(dataexprfilt())){
-          if(dim(dataexprfilt()[['exons2']])[1]==0) printa <- "There are not exons in this region"
-          if(dim(dataexprfilt()[['exons2']])[1]>0)  printa <- paste0("There are ", dim(dataexprfilt()[['exons2']])[1] ," exons in the selected region")
-        }
-      }
-      return(printa)
-    }
-  })
-  
-  
->>>>>>> d4e399f... Major revision to reviewers concerns
   
   #################################################
   #DOWNLOAD RESULTS
@@ -705,7 +672,6 @@ shinyServer(function(input, output, session){
       
       #################################################
       #dowload documentation
-<<<<<<< HEAD
       fileDoc <- file.path(SRC,"Wanderer_Documentation.txt")
       fileDoc2 <- file.path(SRC, "Wanderer_Documentation.pdf")
       
@@ -718,18 +684,6 @@ shinyServer(function(input, output, session){
       #################################################
       
       zip(zipfile =  file, files = c(file.path(tempdir(), c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)), fileClinic, fileDoc, fileDoc2), flags = "-j")
-=======
-      fileDoc <- paste0(SRC,"Wanderer_Documentation.txt")
-      #fileDoc2 <- paste0(SRC,"Wanderer_Documentation.pdf")
-      
-      #################################################
-      #dowload documentation
-      fileClinic <- paste0(SRC,"Clinical/",toupper(input$TissueType),"_Clinical__nationwidechildrens.org_clinical_patient_",input$TissueType,".txt")
-      
-      #################################################
-      
-      zip(zipfile =  file, files = c(file.path(tempdir(), c(f1, f2, fileN, fileT, fileA, fbox1, fbox2, fmean1, fmean2, fileNG, fileTG)), fileClinic, fileDoc), flags = "-j")
->>>>>>> d4e399f... Major revision to reviewers concerns
       
       # stop(file)
       if (file.exists(paste0( file, ".zip")))
@@ -747,61 +701,58 @@ shinyServer(function(input, output, session){
   
   
   output$permalink_modal <- renderText({
-    ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
-    ## location <- 'http://192.168.3.67:3939/new_wanderer_api/'
-    location <- 'http://gattaca.imppc.org:3939/wanderer_api'
-    
-    ## if (input$goButton > 0) {
-    
-    if (input$region & !is.null(input$Gene) & !is.null(input$start) & !is.null(input$end) & !is.null(input$TissueType) & !is.null(input$DataType)
-        & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {  
-      url <- sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&distribute_uniformly=%s',
-                     location,
-                     input$Gene,
-                     input$start,
-                     input$end,
-                     input$TissueType,
-                     input$DataType,
-                     input$plotmean,
-                     input$geneLine,
-                     input$CpGi,
-                     input$nN,
-                     input$nT,
-                     input$distribute_uniformly)
-    }
-    else if (!input$region & !is.null(input$Gene) & !is.null(input$Zoom[0]) & !is.null(input$Zoom[1]) & !is.null(input$TissueType) & !is.null(input$DataType)
-             & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {          
+      ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
+      ## location <- 'http://192.168.3.67:3939/new_wanderer_api/'
+      location <- 'http://gattaca.imppc.org:3939/wanderer_api'
       
-      url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&distribute_uniformly=%s',
-                    location,
-                    input$Gene,
-                    input$Zoom[1],
-                    input$Zoom[2],
-                    input$TissueType,
-                    input$DataType,
-                    input$plotmean,
-                    input$geneLine,
-                    input$CpGi,
-                    input$nN,
-                    input$nT,
-                    input$distribute_uniformly)
-    } else {
-      url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30&distribute_uniformly=FALSE', location)
+      ## if (input$goButton > 0) {
       
-    }
-    
-    generate_modal(url)
+      if (input$region & !is.null(input$Gene) & !is.null(input$start) & !is.null(input$end) & !is.null(input$TissueType) & !is.null(input$DataType)
+          & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {  
+          url <- sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&distribute_uniformly=%s&pvalThres=%s',
+                         location,
+                         input$Gene,
+                         input$start,
+                         input$end,
+                         input$TissueType,
+                         input$DataType,
+                         input$plotmean,
+                         input$geneLine,
+                         input$CpGi,
+                         input$nN,
+                         input$nT,
+                         input$distribute_uniformly,
+                         input$pvalThres)
+      }
+      else if (!input$region & !is.null(input$Gene) & !is.null(input$Zoom[0]) & !is.null(input$Zoom[1]) & !is.null(input$TissueType) & !is.null(input$DataType)
+               & !is.null(input$plotmean) & !is.null(input$geneLine) & !is.null(input$CpGi) & !is.null(input$nN) & !is.null(input$nT)) {          
+          
+          url = sprintf('%s?Gene=%s&start=%s&end=%s&TissueType=%s&DataType=%s&plotmean=%s&geneLine=%s&CpGi=%s&nN=%s&nT=%s&distribute_uniformly=%s&pvalThres=%s',
+              location,
+              input$Gene,
+              input$Zoom[1],
+              input$Zoom[2],
+              input$TissueType,
+              input$DataType,
+              input$plotmean,
+              input$geneLine,
+              input$CpGi,
+              input$nN,
+              input$nT,
+              input$distribute_uniformly,
+              input$pvalThres)
+      } else {
+          url <- sprintf('%s/?Gene=BRCA1&start=41195000&end=41278000&TissueType=brca&DataType=methylation&plotmean=FALSE&geneLine=TRUE&CpGi=TRUE&nN=30&nT=30&distribute_uniformly=FALSE&pvalThres=0.05', location)
+          
+      }
+      
+      generate_modal(url)
   })
-<<<<<<< HEAD
 
     ## external link to genome browser
-=======
-  
->>>>>>> d4e399f... Major revision to reviewers concerns
   output$genome_browser <- renderText({
     generate_genome_browser_link(chromosome = geneSize()[[3]],
                                  start = input$Zoom[1],
-<<<<<<< HEAD
                                  end = input$Zoom[2])    
   })
 
@@ -834,10 +785,6 @@ shinyServer(function(input, output, session){
               }
           }
       }          
-=======
-                                 end = input$Zoom[2])
-    
->>>>>>> temp
   })
   
   
