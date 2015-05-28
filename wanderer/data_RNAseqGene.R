@@ -1,14 +1,17 @@
 
-data_RNAseqGene <- function(con, dataexpr, tissue){
+data_RNAseqGene <- function(con, geneNamesType, geneName, tissue){
   
-  dd <- dataexpr[['exons2']]
-  geneid <- unique(dd$rnaseqgeneid)
-    
+  exonsaux <- dbSendQuery(con, statement = paste0("select * from annotations.exons_annot where ", geneNamesType, " = '", geneName, "'"))
+  exonsaux <- fetch(exonsaux, n = -1)
+  exonsaux <- exonsaux[,-c(1,2,4,6,7)]
+  exonsaux <- exonsaux[!duplicated(exonsaux),]
+  geneid <- unique(exonsaux$rnaseqgeneid)
+  
   if(!is.na(geneid)){
     
     #RNAseq at gene level tumor data download
     ddT <- try(dbSendQuery(con, paste0("select * from ", tissue, "_tumor.illuminahiseq_rnaseqv2_by_gene
-                                     where gene = '", geneid, "';")), silent=TRUE)
+                                       where gene = '", geneid, "';")), silent=TRUE)
     if(class(ddT)=="try-error"){
       ddT<-NULL
     } else{
@@ -39,6 +42,5 @@ data_RNAseqGene <- function(con, dataexpr, tissue){
   }
   return(results)
   
-}
-
+  }
 

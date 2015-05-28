@@ -3,7 +3,7 @@
 ###############################################
 
 
-stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, plotting, proportional){
+stat_analysis_expr <- function(results_filt, geneName, geneNamesType, pvalThres, geneLine, plotting, proportional){
   
   ddN2 <- results_filt$ddN2
   row.names(ddN2) <- ddN2[,1]
@@ -20,7 +20,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
   } else{
     
     tissue_label <- results_filt$tissue_label
-
+    
     
     #wilcoxon test
     results<-data.frame(exon=0,wilcox_stat=0,pval=0)
@@ -48,32 +48,32 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
     #plot
     if(plotting){
       
-      asterisc<-results_stats$adj.pval<0.05
+      asterisc<-results_stats$adj.pval<pvalThres
       asterisc[is.na(asterisc)]<-FALSE
       print(asterisc)
       pasterisc<-exons2$exon
       if(sum(asterisc)>0) pasterisc[asterisc]<-paste0("* ",exons2$exon[asterisc])
       
-      
+          
       if(proportional){
-            xmin <- results_filt$xmin
-      xmax <- results_filt$xmax
-      
-      #axis limits
-      gmin <- unique(exons2$genestart[exons2[,paste0(geneNamesType)] == geneName])
-      gmax <- unique(exons2$geneend[exons2[,paste0(geneNamesType)] == geneName])
-      gstrand <- unique(exons2$strand[exons2[,paste0(geneNamesType)] == geneName])
-      gchr <- unique(exons2$chr)
-      if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
-      if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
-      if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
-      
-      posmin <- ((xmin%/%1000)-1)*1000
-      posmax <- ((xmax%/%1000)+1)*1000
-      postep <- posmax - posmin
-      positions <- round(seq(posmin, posmax, postep/5),0)
-      positions <- (positions%/%1000)*1000
-      positions <- positions[positions>=xmin & positions<=xmax]
+        xmin <- results_filt$xmin
+        xmax <- results_filt$xmax
+        
+        #axis limits
+        gmin <- unique(exons2$genestart[exons2[,paste0(geneNamesType)] == geneName])
+        gmax <- unique(exons2$geneend[exons2[,paste0(geneNamesType)] == geneName])
+        gstrand <- unique(exons2$strand[exons2[,paste0(geneNamesType)] == geneName])
+        gchr <- unique(exons2$chr)
+        if(length(gmin)==0 & length(gmax)>0) gmin <- xmin
+        if(length(gmin)>0 & length(gmax)==0) gmax <- xmax
+        if(length(gmin)==0 & length(gmax)==0) gmin <- gmax <- NULL
+        
+        posmin <- ((xmin%/%1000)-1)*1000
+        posmax <- ((xmax%/%1000)+1)*1000
+        postep <- posmax - posmin
+        positions <- round(seq(posmin, posmax, postep/5),0)
+        positions <- (positions%/%1000)*1000
+        positions <- positions[positions>=xmin & positions<=xmax]
       }
       
       if(!proportional){
@@ -83,7 +83,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
         
         gmin <- gmax <- gchr <- NULL
       }
-     
+      
       mddN <- apply(ddN,1,mean,na.rm=TRUE)
       mddT <- apply(ddT,1,mean,na.rm=TRUE)
       
@@ -114,7 +114,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, geneLine, 
       }
       box(lwd = 1.5)
       par(xpd=TRUE)
-      legend(xmin, ymax + (ymax/3), c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")")), lty=1, lwd=1.2, col=c("dodgerblue","darkred"), yjust=0)
+      legend(xmin, ymax + (ymax/3), c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")"), paste0("adj. pval<", pvalThres)), lty=1, lwd=1.2, col=c("dodgerblue","darkred"), yjust=0)
       par(xpd=FALSE)
       
     }

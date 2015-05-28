@@ -13,7 +13,6 @@ wanderer_expression <- function(results_filt, geneName, geneNamesType, npointsN,
   
   #data_label <- "Illumina HiSeq RNAseq"
   
-  
   ddN2 <- results_filt$ddN2
   ddT2 <- results_filt$ddT2
   exons2 <- results_filt$exons2

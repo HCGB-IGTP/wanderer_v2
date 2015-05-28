@@ -81,6 +81,7 @@ pop_modal_plot <- function(url) {
 '
 }
 
+
 ## selected regulome explorer datasets May 2015
 regulome_explorer_datasets <- function() {
     dat <- list('acc'  = 'acc_2015_03_31',
