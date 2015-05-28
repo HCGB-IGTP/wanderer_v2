@@ -114,7 +114,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, pvalThres,
       }
       box(lwd = 1.5)
       par(xpd=TRUE)
-      legend(xmin, ymax + (ymax/3), c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")"), paste0("adj. pval<", pvalThres)), pch=c("","","*"), lty=c(1,1,0), lwd=c(1.2, 1.2, 0), col=c("dodgerblue","darkred","black"))
+      legend(xmin, ymax + (ymax/3), c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")"), paste0("adj. pval<", pvalThres)), pch=c("","","*"), lty=c(1,1,0), lwd=c(1.2, 1.2, 0), col=c("dodgerblue","darkred","black"), yjust=0)
       par(xpd=FALSE)
       
     }
