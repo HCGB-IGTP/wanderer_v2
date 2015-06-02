@@ -321,12 +321,7 @@ The purpose of this work is to develop Wanderer, a very simple and intuitive web
 
 For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure \ref{fig:1}). Graphs for normal and tumor samples from any of the available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization.\\ 
 
-{\color{red}
-To study the influence of DNA methylation on gene expression, Wanderer performs a correlation analysis of the gene expression value with any of the CpG probes of the region. The user can navigate through upstream, gene body or downstream probes as far as they are in the gene's vicinity.}\\
 
-
-{\color{red}
-An application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers. Wanderer also produces a link to the UCSC Genome Browser's profile of the scrutinized region; and to two TCGA data exploring platforms, the cBioPortal \cite{gao2013integrative} and the All Pairs Regulome Explorer \cite{cancer2012comprehensive}, when available; {\color{red} and the UCSC Genome Browser}. The interplay with cBioPortal facilitates access to mutations, protein and survival data, among others. The Regulome Explorer permits the visualization of mutations, copy number alterations, microRNAs or clinical data and their associations.}
 
 \subsection*{Plotting versatility}
 
@@ -342,6 +337,12 @@ Graphical outputs are highly dynamic, being rendered on the fly. {\color{red} On
 \item {\color{red} When profiling DNA methylation data, Wanderer produces a correlation plot of the summarized-by-gene overall expression with a given CpG probe methylation: the user only needs to select one of the CpG probes located inside the gene or in the surrounding area.}
 \end{itemize}
 
+{\color{red}
+\subsection*{Interplay with other tools}
+
+The tool also provides batch analysis capabilities as well data sharing and linking from other Web resources through an application programming interface (API) named Wanderer\_api \cite{wandererapi}. Wanderer\_api has the same capabilities as Wanderer does but receives the parameters parsing arguments from the URL.\\ 
+
+Wanderer also produces a link to the UCSC Genome Browser's profile of the scrutinized region; and to two TCGA data exploring platforms, the cBioPortal \cite{gao2013integrative} and the All Pairs Regulome Explorer \cite{cancer2012comprehensive}, when available; {\color{red} and the UCSC Genome Browser}. The interplay with cBioPortal facilitates access to mutations, protein and survival data, among others. The Regulome Explorer permits the visualization of mutations, copy number alterations, microRNAs or clinical data and their associations.}
 
 
 \subsection*{Further capabilities}
@@ -351,9 +352,11 @@ Wanderer performs Wilcoxon rank sum test comparisons on normal versus tumor prov
 Wanderer also explores the gene expression between normals and tumors using a summarized-by-gene value. {\color{red} Briefly, this summarization takes into account all the exons of the gene using RSEM values \cite{guo2013large}}. As a result, a boxplot depicting the differences in its overall expression between normal and tumors is produced; a Wilcoxon rank sum test checks whether normal and tumors are statistically equivalent.\\
 }
 
+{\color{red}
+To study the influence of DNA methylation on gene expression, Wanderer performs a correlation analysis of the gene expression value with any of the CpG probes of the region. The user can navigate through upstream, gene body or downstream probes as far as they are in the gene's vicinity.}\\
+
 Graphics are readily downloaded {\color{red} in raster (PNG) and vector (PDF) formats}. Probe annotations, statistical analysis, {\color{red} clinical} and raw data for either normal and tumor samples {\color{red} are available} as text files (comma-separated values, CSV) that can be processed using spreadsheet software. {\color{red} Data, analysis and graphics are packaged as a ZIP file with a unique identifier containing the gene name, dataset and the user's timestamp. The ZIP file contains a copy of the user manual including a detailed summary of the outputs and the software and data version.} \\
 
-The tool also provides batch analysis capabilities as well data sharing and linking from other Web resources through an application programming interface (API) named Wanderer\_api \cite{wandererapi}. Wanderer\_api has the same capabilities as Wanderer does but receives the parameters parsing arguments from the URL.\\ 
 
 
 % Wanderer performs Wilcoxon rank sum test comparisons on normal \textit{vs} tumor when there is at least an observation in each group. An independent test is performed for each CpG or exon, being the p-value FDR corrected for multiple testing. Although this is reported automatedly, we note that addressing the significance on few observations and without inspecting the data distribution might be meaningless. Even though the number of samples to draw as line-plots can be reduced manually, the statistical analysis is performed with the complete dataset.\\
