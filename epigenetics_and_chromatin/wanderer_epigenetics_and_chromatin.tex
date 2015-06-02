@@ -319,7 +319,14 @@ The purpose of this work is to develop Wanderer, a very simple and intuitive web
 
 % With this aim we developed a tool, the TCGA Wanderer, that allows to easily retrieve and visualize the regional profiles of groups of samples belonging to a tumor type. 
 
-For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure \ref{fig:1}). Graphs for normal and tumor samples from any of the available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization. Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers.\\
+For any given gene selected by the investigator, the tool provides detailed individual profiles of gene expression, exon by exon, and DNA methylation of all the probes inside or in the vicinity of the gene (Figure \ref{fig:1}). Graphs for normal and tumor samples from any of the available TCGA datasets are readily produced. Summarizing plots and tables are also generated, allowing further data analysis or representation using any software the investigator is used to (e.g.: Excel or any other spreadsheet or graphing tool). In addition, statistical analysis is applied to identify differential gene expression or DNA methylation between normal and tumor samples at either the single exon or the DNA methylation probe level, respectively. The tool allows local navigation and zoom in/out within the region of interest, as well as simple graph customization.\\ 
+
+{\color{red}
+To study the influence of DNA methylation on gene expression, Wanderer performs a correlation analysis of the gene expression value with any of the CpG probes of the region. The user can navigate through upstream, gene body or downstream probes as far as they are in the gene's vicinity.}\\
+
+
+{\color{red}
+Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers. Wanderer produces links to cBioPortal \cite{gao2013integrative} and Regulome Explorer \cite{cancer2012comprehensive} tools.}\\
 
 
  
@@ -333,23 +340,20 @@ Graphical outputs are highly dynamic, being rendered on the fly. {\color{red} On
 \item Methylation probes belonging to a CpG island can be highlighted in green. 
 \item Distance between probes or exons can be selected to be proportional to the actual genomic location or to be uniform; in the case of methylation, this facilitates visualization of CpG-dense regions, such as CpG islands. 
 \item In order to ease sample profiling, Wanderer draws line plots by default. In this representation, the scrutinized exons or CpGs belonging to the same sample are linked by lines. The user can enter the number of samples to be represented this way. A random sampling (with a random seed so the result is repeatable) is therefore performed. However, all the data can be taken into account at once ticking the 'Boxplot all the data' checkbox.
-
+\item {\color{red} The user can select the p-value threshold for by-exon or by-CpG normal \textit{vs} tumor comparison.}
+\item {\color{red} When profiling DNA methylation data, Wanderer produces a correlation plot of the summarized-by-gene overall expression with a given CpG probe methylation: the user only needs to select one of the CpG probes located inside the gene or in the surrounding area.}
 \end{itemize}
 
-{\color{red}
-\subsection*{Methylation and expression exploring}
-To study the influence of DNA methylation on the expression of the closest gene, Wanderer performs a correlation analysis of the expression value (summarized by gene) with any of the CpGs of the region. The user can navigate through upstream, gene body or downstream probes as far as they are in the gene's vicinity.
 
-}
 
 \subsection*{Further capabilities}
 Wanderer performs Wilcoxon rank sum test comparisons on normal versus tumor provided there are at least two observations in each group. An independent test is performed for each CpG or exon, being the p-value FDR corrected for multiple testing. Although this is readily reported, we note that addressing the significance on few observations and without inspecting the data distribution might be meaningless. Even though the number of samples to draw as line-plots can be reduced manually, the statistical analysis is performed with the complete dataset.\\
 
 {\color{red}
-Wanderer also explores the gene expression between normals and tumors using a by-gene value. This summarization takes into account all the exons of the gene. As a result, a boxplot depicting the differences in its overall expression between normal and tumors is produced; a Wilcoxon rank sum test checks whether normal and tumors are statistically equivalent.\\
+Wanderer also explores the gene expression between normals and tumors using a summarized-by-gene value.{\color{red} Briefly, this summarization takes into account all the exons of the gene using RSEM values \cite{guo2013large}}. As a result, a boxplot depicting the differences in its overall expression between normal and tumors is produced; a Wilcoxon rank sum test checks whether normal and tumors are statistically equivalent.\\
 }
 
-Graphics can be readily downloaded in either raster (PNG) or vector (PDF) formats. Probe annotations, statistical analysis and raw data for either normal and tumor samples can be easily download as text files (comma-separated values, CSV) that can be processed using spreadsheet software. A link pointing to the UCSC Genome Browser's profile of the scrutinized regions is readily produced.\\
+Graphics can be readily downloaded in either raster (PNG) or vector (PDF) formats. Probe annotations, statistical analysis, {\color{red} clinical} and raw data for either normal and tumor samples can be easily download as text files (comma-separated values, CSV) that can be processed using spreadsheet software. A link pointing to the UCSC Genome Browser's profile of the scrutinized regions is readily produced.\\
 
 The tool also provides batch analysis capabilities as well data sharing and linking from other Web resources through an application programming interface (API) named Wanderer\_api \cite{wandererapi}. Wanderer\_api has the same capabilities as Wanderer does but receives the parameters parsing arguments from the URL.\\ 
 
