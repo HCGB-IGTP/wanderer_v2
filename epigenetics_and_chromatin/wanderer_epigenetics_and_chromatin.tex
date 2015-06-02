@@ -326,10 +326,8 @@ To study the influence of DNA methylation on gene expression, Wanderer performs 
 
 
 {\color{red}
-Resulting graphs and tables may be downloaded and an application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers. Wanderer produces links to cBioPortal \cite{gao2013integrative} and Regulome Explorer \cite{cancer2012comprehensive} tools.}\\
+An application programming interface (API) allows data sharing, automatable query of multiple instances and direct linkage from external servers. Wanderer also produces a link to the UCSC Genome Browser's profile of the scrutinized region; and to two TCGA data exploring platforms, the cBioPortal \cite{gao2013integrative} and the All Pairs Regulome Explorer \cite{cancer2012comprehensive}, when available; {\color{red} and the UCSC Genome Browser}. The interplay with cBioPortal facilitates access to mutations, protein and survival data, among others. The Regulome Explorer permits the visualization of mutations, copy number alterations, microRNAs or clinical data and their associations.}
 
-
- 
 \subsection*{Plotting versatility}
 
 Graphical outputs are highly dynamic, being rendered on the fly. {\color{red} Once the gene of interest is selected, some parameters can be easily tuned: }
@@ -350,10 +348,10 @@ Graphical outputs are highly dynamic, being rendered on the fly. {\color{red} On
 Wanderer performs Wilcoxon rank sum test comparisons on normal versus tumor provided there are at least two observations in each group. An independent test is performed for each CpG or exon, being the p-value FDR corrected for multiple testing. Although this is readily reported, we note that addressing the significance on few observations and without inspecting the data distribution might be meaningless. Even though the number of samples to draw as line-plots can be reduced manually, the statistical analysis is performed with the complete dataset.\\
 
 {\color{red}
-Wanderer also explores the gene expression between normals and tumors using a summarized-by-gene value.{\color{red} Briefly, this summarization takes into account all the exons of the gene using RSEM values \cite{guo2013large}}. As a result, a boxplot depicting the differences in its overall expression between normal and tumors is produced; a Wilcoxon rank sum test checks whether normal and tumors are statistically equivalent.\\
+Wanderer also explores the gene expression between normals and tumors using a summarized-by-gene value. {\color{red} Briefly, this summarization takes into account all the exons of the gene using RSEM values \cite{guo2013large}}. As a result, a boxplot depicting the differences in its overall expression between normal and tumors is produced; a Wilcoxon rank sum test checks whether normal and tumors are statistically equivalent.\\
 }
 
-Graphics can be readily downloaded in either raster (PNG) or vector (PDF) formats. Probe annotations, statistical analysis, {\color{red} clinical} and raw data for either normal and tumor samples can be easily download as text files (comma-separated values, CSV) that can be processed using spreadsheet software. A link pointing to the UCSC Genome Browser's profile of the scrutinized regions is readily produced.\\
+Graphics are readily downloaded {\color{red} in raster (PNG) and vector (PDF) formats}. Probe annotations, statistical analysis, {\color{red} clinical} and raw data for either normal and tumor samples {\color{red} are available} as text files (comma-separated values, CSV) that can be processed using spreadsheet software. {\color{red} Data, analysis and graphics are packaged as a ZIP file with a unique identifier containing the gene name, dataset and the user's timestamp. The ZIP file contains a copy of the user manual including a detailed summary of the outputs and the software and data version.} \\
 
 The tool also provides batch analysis capabilities as well data sharing and linking from other Web resources through an application programming interface (API) named Wanderer\_api \cite{wandererapi}. Wanderer\_api has the same capabilities as Wanderer does but receives the parameters parsing arguments from the URL.\\ 
 
