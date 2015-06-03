@@ -51,7 +51,7 @@ If you find this software useful please consider citing our paper:  (in preparat
 
 > **IMPORTANT WARNING ON USING EXCEL AND OTHER SPREADSHEET SOFTWARE TO IMPORT GENOMIC DATA**
 
-> It is known that Excel and other spreadsheet softwares may change gene names when importing text data [(Zeeberg et al., 2014)]. A default feature will misidentify specific gene names (e.g.: SET1, AGO3) as dates. This conversion may be avoided by formatting the spreadsheet cells as Text before importing.
+> It is known that Excel and other spreadsheet softwares may change gene names when importing text data [(Zeeberg et al., 2004)]. A default feature will misidentify specific gene names (e.g.: SET1, AGO3) as dates. This conversion may be avoided by formatting the spreadsheet cells as Text before importing.
 
 Wanderer generates several images and data files that may be downloaded as a compressed file. The files are named using the following nomenclature: 
 
@@ -212,7 +212,7 @@ _File name examples:_
 
 #### 4.3 CLINICAL DATA #######################################################################################
 
-TCGA clinical data is provided as **biotab** files (among other formats). Biotab files are an amenable, spreedsheet-friendly data sources that reflect clinical and biospecimen information for a set of patients. In this file, each column is a clinical element and each row, a TCGA participant. 
+TCGA clinical data is provided as **biotab** files. Biotab files are an amenable, spreedsheet-friendly data sources that reflect clinical and biospecimen information for a set of patients. In this file, each column is a clinical element and each row, a TCGA participant. 
 
 We note that biotab files cover data unique to each TCGA participant (for instance, the patient's weight and height) and therefore are independent on whether methylation or expression was scrutinized. We offer the biotab files for all the participants available for a dataset (for instance, colon adenocarcinoma), regardless of whether they were explored for expression or methylation, nor in solid primary tumors or in adjacent normal.
 
@@ -337,8 +337,8 @@ Both values are directly obtained from the TCGA pipeline for RNA seq v2 expressi
 [(Zeeberg et al., 2014)]: http://www.biomedcentral.com/1471-2105/5/80 (Mistaken Identifiers: Gene name errors can be introduced inadvertently when using Excel in bioinformatics)
 [(Zeeberg et al., 2014)]  Zeeberg .BR., Riss J., Kane D.W., Bussey K.J., Uchio E., Linehan W.M., Barrett J.C. and Weinstein JN. **Mistaken identifiers: gene name errors can be introduced inadvertently when using Excel in bioinformatics.** BMC Bioinformatics (2004) Jun 23;5:80.
 
-[(Zhu et al., 2014)]: http://www.ncbi.nlm.nih.gov/pubmed/24874569 (TCGA-assembler: open-source software for retrieving and processing TCGA data.)
-[(Zhu et al., 2014)] Zhu Y., Qiu P., Ji Y. **TCGA-Assembler: Open-Source Software for Retrieving and Processing TCGA Data**. Nature Methods (2014) 11:599-600 doi:10.1038/nmeth.2956.
+[(Zhu et al., 2004)]: http://www.ncbi.nlm.nih.gov/pubmed/24874569 (TCGA-assembler: open-source software for retrieving and processing TCGA data.)
+[(Zhu et al., 2004)] Zhu Y., Qiu P., Ji Y. **TCGA-Assembler: Open-Source Software for Retrieving and Processing TCGA Data**. Nature Methods (2014) 11:599-600 doi:10.1038/nmeth.2956.
 
 
 
@@ -359,7 +359,6 @@ This document corresponds to
 commit e75025edb803d38d0bcce595a39539164e5a0b15
 Author: Izaskun Mallona <imallona@imppc.org>
 Date:   Wed Jun 3 11:48:48 2015 +0200
-
 `
 
 Some datasets have limitations for usage until a global analysis is published; please contact TCGA before publishing. 
