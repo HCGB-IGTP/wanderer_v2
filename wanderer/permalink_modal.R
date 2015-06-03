@@ -129,7 +129,7 @@ cbioportal_datasets <- function(x){
                 cesc = 'cesc_tcga',                            
                 chol = 'chol_nccs_2013',
                 coad = 'coadread_tcga',
-                dlbc = 'dlbc_tcga',
+                ## dlbc = 'dlbc_tcga',
                 esca = 'esca_tcga',
                 gbm = 'gbm_tcga_pub2013',
                 hnsc = 'hnsc_tcga',
