@@ -5,11 +5,6 @@
 
 library(RPostgreSQL)
 
-# the file containing the db parameters
-
-#SRC <- '/imppc/labs/maplab/imallona/src/regional_profiler/wanderer'
-#SRC <- '/data/shiny/apps/correlational'
-## DB_CONF <- file.path(SRC, 'db.txt')
 
 # returns a unique connection
 db_connect <- function(db_conf_fn) {
@@ -19,7 +14,7 @@ db_connect <- function(db_conf_fn) {
     
     con <- dbConnect(drv,
                      user = db_conf[['user']],
-                     password = db_conf[['password']],
+                     ## password = db_conf[['password']],
                      dbname = db_conf[['dbname']],
                      host = db_conf[['host']],
                      port = db_conf[['port']])
