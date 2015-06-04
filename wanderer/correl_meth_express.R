@@ -52,29 +52,33 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
     colnames(ddN) <- colN
     ddNE <- as.data.frame(ddNE[,pNE%in%pN])
     colnames(ddNE) <- colNE
-    
-    pNE <- sapply(strsplit(colnames(ddNE),"-"),"[",3)
-    pN <- sapply(strsplit(colnames(ddN),"-"),"[",3)
-    if(length(pN)!=length(pNE)){
-      numpatients <- c(length(pN),length(pNE))
-      aux <- which(numpatients==max(numpatients))
-      if(aux==1){
-        ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddNE)[1]))
-        for(i in 1:numpatients[aux]){
-          aux2 <- which(pNE==pN[i])
-          ddnew[,i] <- ddNE[,aux2]
-          colnames(ddnew)[i] <- colnames(ddNE)[aux2]
+    if(length(ddN)==0 | length(ddNE)==0){
+      ddN <- ddNE <- NULL
+      missatgeN <- "No common patients available"
+    } else{
+      pNE <- sapply(strsplit(colnames(ddNE),"-"),"[",3)
+      pN <- sapply(strsplit(colnames(ddN),"-"),"[",3)
+      if(length(pN)!=length(pNE)){
+        numpatients <- c(length(pN),length(pNE))
+        aux <- which(numpatients==max(numpatients))
+        if(aux==1){
+          ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddNE)[1]))
+          for(i in 1:numpatients[aux]){
+            aux2 <- which(pNE==pN[i])
+            ddnew[,i] <- ddNE[,aux2]
+            colnames(ddnew)[i] <- colnames(ddNE)[aux2]
+          }
+          ddNE <- ddnew
         }
-        ddNE <- ddnew
-      }
-      if(aux==2){
-        ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddN)[1]))
-        for(i in 1:numpatients[aux]){
-          aux2 <- which(pN==pNE[i])
-          ddnew[,i] <- ddN[,aux2]
-          colnames(ddnew)[i] <- colnames(ddN)[aux2]
+        if(aux==2){
+          ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddN)[1]))
+          for(i in 1:numpatients[aux]){
+            aux2 <- which(pN==pNE[i])
+            ddnew[,i] <- ddN[,aux2]
+            colnames(ddnew)[i] <- colnames(ddN)[aux2]
+          }
+          ddN <- ddnew
         }
-        ddN <- ddnew
       }
     }
     if(!is.null(ddN) & !is.null(ddNE)){
@@ -86,7 +90,6 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
       ddNE2<-ddNE2[!is.na(ddNE2)]
       if(length(ddN2)>1)  correlN <- cor(ddN2, ddNE2, method=correlMethod)
     }
-    if(is.null(ddN) | is.null(ddNE))  missatgeN <- "No common patients available"
   }   
   
   
@@ -103,30 +106,34 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
     colnames(ddT) <- colT
     ddTE <- as.data.frame(ddTE[,pTE%in%pT])
     colnames(ddTE) <- colTE
-    
-    pTE <- sapply(strsplit(colnames(ddTE),"-"),"[",3)
-    pT <- sapply(strsplit(colnames(ddT),"-"),"[",3)
-    if(length(pT)!=length(pTE)){
-      numpatients <- c(length(pT),length(pTE))
-      aux <- which(numpatients==max(numpatients))
-      if(aux==1){
-        ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddTE)[1]))
-        for(i in 1:numpatients[aux]){
-          aux2 <- which(pTE==pT[i])
-          ddnew[,i] <- ddTE[,aux2]
-          colnames(ddnew)[i] <- colnames(ddTE)[aux2]
+    if(length(ddT)==0 | length(ddTE)==0){
+      ddT <- ddTE <-NULL
+      missatgeT <- "No common patients available"
+    } else{
+      pTE <- sapply(strsplit(colnames(ddTE),"-"),"[",3)
+      pT <- sapply(strsplit(colnames(ddT),"-"),"[",3)
+      if(length(pT)!=length(pTE)){
+        numpatients <- c(length(pT),length(pTE))
+        aux <- which(numpatients==max(numpatients))
+        if(aux==1){
+          ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddTE)[1]))
+          for(i in 1:numpatients[aux]){
+            aux2 <- which(pTE==pT[i])
+            ddnew[,i] <- ddTE[,aux2]
+            colnames(ddnew)[i] <- colnames(ddTE)[aux2]
+          }
+          ddTE <- ddnew
         }
-        ddTE <- ddnew
+        if(aux==2){
+          ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddT)[1]))
+          for(i in 1:numpatients[aux]){
+            aux2 <- which(pT==pTE[i])
+            ddnew[,i] <- ddT[,aux2]
+            colnames(ddnew)[i] <- colnames(ddT)[aux2]
+          }
+          ddT <- ddnew
+        } 
       }
-      if(aux==2){
-        ddnew <- as.data.frame(matrix(0,ncol=numpatients[aux],nrow=dim(ddT)[1]))
-        for(i in 1:numpatients[aux]){
-          aux2 <- which(pT==pTE[i])
-          ddnew[,i] <- ddT[,aux2]
-          colnames(ddnew)[i] <- colnames(ddT)[aux2]
-        }
-        ddT <- ddnew
-      } 
     }
     if(!is.null(ddT) & !is.null(ddTE)){
       ddT2<-as.numeric(ddT)
@@ -137,7 +144,6 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
       ddTE2<-ddTE2[!is.na(ddTE2)]
       if(length(ddT2)>1) correlT <- cor(ddT2, ddTE2, method=correlMethod)
     }
-    if(is.null(ddT) | is.null(ddTE))  missatgeT <- "No common patients available"
   } 
   
   
