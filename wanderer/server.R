@@ -703,8 +703,8 @@ shinyServer(function(input, output, session){
   output$permalink_modal <- renderText({
       ## location <- 'http://gattaca.imppc.org:3939/betawanderer_api'
       ## location <- 'http://192.168.3.67:3939/new_wanderer_api/'
-      location <- 'http://gattaca.imppc.org:3939/wanderer_api'
-      
+      ## location <- 'http://gattaca.imppc.org:3838/wanderer_api'
+      location <- 'http://www.maplab.cat/wanderer_api'
       ## if (input$goButton > 0) {
       
       if (input$region & !is.null(input$Gene) & !is.null(input$start) & !is.null(input$end) & !is.null(input$TissueType) & !is.null(input$DataType)
