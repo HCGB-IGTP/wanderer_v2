@@ -95,9 +95,7 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, pvalThres,
       plot(exons2$exon_start, mddN, type="b",xlim = c(xmin, xmax), 
            pch =  1, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, ymax), 
            ylab = "Mean Expression log2(rpkm + 1)", xlab = "", las = 1, lwd=1.2)
-      par(new=TRUE)
-      plot(exons2$exon_start, mddT, type="b", col="darkred", pch=1, axes=FALSE, cex = 0.7, lwd=1.2)
-      
+
       if(proportional) title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       if(!proportional) title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label))
       
@@ -118,6 +116,9 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, pvalThres,
       par(xpd=TRUE)
       legend(xmin, ymax + (ymax/3), c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")"), paste0("adj. pval<", pvalThres)), pch=c("","","*"), lty=c(1,1,0), lwd=c(1.2, 1.2, 0), col=c("dodgerblue","darkred","black"), yjust=0)
       par(xpd=FALSE)
+      
+      par(new=TRUE)
+      plot(exons2$exon_start, mddT, type="b", xlim = c(xmin, xmax), ylim = c(-0.2, ymax), col="darkred", pch=1, axes=FALSE, cex = 0.7, lwd=1.2, xlab="", ylab="")
       
     }
   }

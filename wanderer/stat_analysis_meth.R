@@ -95,8 +95,6 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, pvalThres,
       plot(probes2$cg_start, mddN, type="b",xlim = c(xmin, xmax), 
            pch =  1, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, 1), 
            ylab = "Mean Methylation (beta value)", xlab = "", las = 1, lwd=1.2) 
-      par(new=TRUE)
-      plot(probes2$cg_start, mddT, type="b", col="darkred", pch=1, axes=FALSE, cex = 0.7, lwd=1.2)
 
       if(proportional) title(paste0("Mean Methylation of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       if(!proportional) title(paste0("Mean Methylation of ", geneName, "\n" ,tissue_label))
@@ -114,6 +112,9 @@ stat_analysis_meth <- function(results_filt, geneName, geneNamesType, pvalThres,
       par(xpd=TRUE)
       legend(xmin, 1.5, c(paste0("Normal (n=", dim(ddN)[2], ")"), paste0("Tumor (n=", dim(ddT)[2], ")"), paste0("adj. pval<", pvalThres)), pch=c("","","*"), lty=c(1,1,0), lwd=c(1.2, 1.2, 0), col=c("dodgerblue","darkred","black"))
       par(xpd=FALSE)
+      
+      par(new=TRUE)
+      plot(probes2$cg_start, mddT, type="b", xlim = c(xmin, xmax), ylim = c(-0.2, 1), col="darkred", pch=1, axes=FALSE, cex = 0.7, lwd=1.2, ylab="", xlab = "")
       
     }
   }
