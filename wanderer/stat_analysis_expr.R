@@ -47,12 +47,13 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, pvalThres,
     ########################################################################################################
     #plot
     if(plotting){
-      
+      old.scipen <- getOption("scipen")
+      options("scipen"=999)
       asterisc<-results_stats$adj.pval<pvalThres
       asterisc[is.na(asterisc)]<-FALSE
-      print(asterisc)
-      pasterisc<-exons2$exon
-      if(sum(asterisc)>0) pasterisc[asterisc]<-paste0("* ",exons2$exon[asterisc])
+      pasterisc<-results_stats$exon
+      if(sum(asterisc)>0) pasterisc[asterisc]<-paste0("* ",results_stats$exon[asterisc])
+      options("scipen"=old.scipen)
       
           
       if(proportional){
@@ -93,9 +94,10 @@ stat_analysis_expr <- function(results_filt, geneName, geneNamesType, pvalThres,
       par(mai = par()$mai + c(2,0,1,0))
       plot(exons2$exon_start, mddN, type="b",xlim = c(xmin, xmax), 
            pch =  1, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, ymax), 
-           ylab = "Mean Expression log2(rpkm + 1)", xlab = "", las = 1, lwd=1.2) 
-      lines(exons2$exon_start, mddT, col="darkred", lwd=1.2)
-      points(exons2$exon_start, mddT, col="darkred", pch=1, cex = 0.7)
+           ylab = "Mean Expression log2(rpkm + 1)", xlab = "", las = 1, lwd=1.2)
+      par(new=TRUE)
+      plot(exons2$exon_start, mddT, type="b", col="darkred", pch=1, axes=FALSE, cex = 0.7, lwd=1.2)
+      
       if(proportional) title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
       if(!proportional) title(paste0("Mean Expression of ", geneName, "\n" ,tissue_label))
       

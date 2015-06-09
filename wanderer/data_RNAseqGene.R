@@ -6,8 +6,9 @@ data_RNAseqGene <- function(con, geneNamesType, geneName, tissue){
   exonsaux <- exonsaux[,-c(1,2,4,6,7)]
   exonsaux <- exonsaux[!duplicated(exonsaux),]
   geneid <- unique(exonsaux$rnaseqgeneid)
+  geneid <- geneid[!is.na(geneid)]
   
-  if(!is.na(geneid)){
+  if(length(geneid)>0){
     
     #RNAseq at gene level tumor data download
     ddT <- try(dbSendQuery(con, paste0("select * from ", tissue, "_tumor.illuminahiseq_rnaseqv2_by_gene

@@ -103,16 +103,16 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       if(!is.null(ddN2)){
         if(dim(ddN2)[2]>2){
           plot(probes2$cg_start, ddN2[,sampN[1]], type = "b", xlim = c(xmin, xmax), 
-               pch =  1, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, 1), 
+               lwd = 1.2, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, 1), 
                ylab = "Methylation (beta value)", xlab = "", las = 1)
-          for(pl in sampN[-1]) lines(probes2$cg_start, ddN2[,pl], type = "b", pch =  1, cex = 0.7, col = "dodgerblue")
+          for(pl in sampN[-1]) lines(probes2$cg_start, ddN2[,pl], type = "b", lwd = 1.2, cex = 0.7, col = "dodgerblue")
           if(proportional) title(paste0("Methylation of ", geneName, " in Normal (n=", length(sampN), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
           if(!proportional) title(paste0("Methylation of ", geneName, " in Normal (n=", length(sampN), ")\n", tissue_label))
           
         }
         if(dim(ddN2)[2]==2){
           plot(probes2$cg_start, ddN2[,2], type = "b", xlim = c(xmin, xmax), 
-               pch =  1, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, 1), 
+               lwd = 1.2, cex = 0.7, axes = FALSE, col = "dodgerblue", ylim = c(-0.2, 1), 
                ylab = "Methylation (beta value)", xlab = "", las = 1)
           if(proportional) title(paste0("Methylation of ", geneName, " in Normal (n=1)\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
           if(!proportional) title(paste0("Methylation of ", geneName, " in Normal (n=1)\n", tissue_label))
@@ -120,7 +120,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
         }
       } else{
         plot((xmax+xmin)/2, 0.5, type = "n", xlim = c(xmin, xmax), 
-             pch = 1, cex = 0.7, axes = FALSE, ylim = c(-0.2, 1), 
+             axes = FALSE, ylim = c(-0.2, 1), 
              ylab = "Methylation (beta value)", xlab = "", las = 1)
         text((xmax+xmin)/2, 0.5, "No data available", col = "dodgerblue")
         if(proportional) title(paste0("Methylation of ", geneName, " in Normal (n=0)\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
@@ -152,22 +152,22 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
       if(!is.null(ddT2)){
         if(dim(ddT2)[2]>2){
           plot(probes2$cg_start, ddT2[,sampT[1]], type = "b", xlim = c(xmin, xmax), 
-               pch = 1, cex = 0.7, axes = FALSE, col = "darkred", ylim = c(-0.2, 1),
+               lwd = 1.2, cex = 0.7, axes = FALSE, col = "darkred", ylim = c(-0.2, 1),
                ylab = "Methylation (beta value)", xlab = "", las = 1)
-          for(pl in sampT[-1]) lines(probes2$cg_start, ddT2[,pl], type = "b", pch = 1, cex = 0.7, col = "darkred")
+          for(pl in sampT[-1]) lines(probes2$cg_start, ddT2[,pl], type = "b", lwd = 1.2, cex = 0.7, col = "darkred")
           if(proportional) title(paste0("Methylation of ", geneName, " in Tumor (n=", length(sampT), ")\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
           if(!proportional) title(paste0("Methylation of ", geneName, " in Tumor (n=", length(sampT), ")\n", tissue_label)) 
         }
         if(dim(ddT2)[2]==2){
           plot(probes2$cg_start, ddT2[,2], type = "b", xlim = c(xmin, xmax), 
-               pch = 1, cex = 0.7, axes = FALSE, col = "darkred", ylim = c(-0.2, 1),
+               lwd = 1.2, cex = 0.7, axes = FALSE, col = "darkred", ylim = c(-0.2, 1),
                ylab = "Methylation (beta value)", xlab = "", las = 1)
           if(proportional) title(paste0("Methylation of ", geneName, " in Tumor (n=1)\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
           if(!proportional) title(paste0("Methylation of ", geneName, " in Tumor (n=1)\n", tissue_label))   
         }
       } else{
         plot((xmax+xmin)/2, 0.5, type = "n", xlim = c(xmin, xmax), 
-             pch = 1, cex = 0.7, axes = FALSE, ylim = c(-0.2, 1), 
+             axes = FALSE, ylim = c(-0.2, 1), 
              ylab = "Methylation (beta value)", xlab = "", las = 1)
         text((xmax+xmin)/2, 0.5, "No data available", col = "darkred")
         if(proportional) title(paste0("Methylation of ", geneName, " in Tumor (n=0)\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
@@ -206,7 +206,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
         
       } else{
         plot((xmax+xmin)/2, 0.5, type = "n", xlim = c(xmin, xmax), 
-             pch = 1, cex = 0.7, axes = FALSE, ylim = c(-0.2, 1), 
+             axes = FALSE, ylim = c(-0.2, 1), 
              ylab = "Methylation (beta value)", xlab = "", las = 1)
         text((xmax+xmin)/2, 0.5, "No data available", col = "dodgerblue")
         if(proportional) title(paste0("Methylation of ", geneName, " in Normal (n=0)\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
@@ -245,7 +245,7 @@ wanderer_methylation <- function(results_filt, geneName, geneNamesType, npointsN
         
       } else{
         plot((xmax+xmin)/2, 0.5, type = "n", xlim = c(xmin, xmax), 
-             pch = 1, cex = 0.7, axes = FALSE, ylim = c(-0.2, 1), 
+             axes = FALSE, ylim = c(-0.2, 1), 
              ylab = "Methylation (beta value)", xlab = "", las = 1)
         text((xmax+xmin)/2, 0.5, "No data available", col = "darkred")
         if(proportional) title(paste0("Methylation of ", geneName, " in Tumor (n=0)\n", tissue_label, "\n", gchr, ": ", xmin, " - ", xmax))
