@@ -481,7 +481,7 @@ shinyServer(function(input, output, session){
       #####################################
       #wanderer plot in pdf
       f2 <- paste0("2_Wanderer_", geneNameSaved(), '_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-      pdf(file.path(tempdir(), f2), width = 14, height = 14)
+      pdf(file.path(tempdir(), f2), width = 14, height = 14, useDingbats = FALSE)
       if(input$DataType == 'methylation'){
         regplot <- wanderer_methylation(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                         geneNamesType = geneFormat(), npointsN = input$nN, npointsT = input$nT,
@@ -586,7 +586,7 @@ shinyServer(function(input, output, session){
       if(input$DataType == 'expression'){
         fbox2 <- paste0("9_Wanderer_", geneNameSaved(), '_boxplot_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
         if(!is.null(dataRNAseqGene())){
-          pdf(file.path(tempdir(),fbox2), width = 12, height = 6)
+          pdf(file.path(tempdir(),fbox2), width = 12, height = 6, useDingbats = FALSE)
           RNAseqboxplot <- plot_RNAseqGene(dd = dataRNAseqGene(), geneName = geneNameSaved(), tissue_label = dataexprfilt()[['tissue_label']]) 
           dev.off()
         } 
@@ -609,7 +609,7 @@ shinyServer(function(input, output, session){
       if(input$DataType == 'methylation'){
         fbox2 <- paste0("9_Wanderer_", geneNameSaved(), '_correl_RNAseqGeneVS', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
         if((!is.null(dataRNAseqGene()[['Normal']]) & !is.null(datamethfilt()[['ddN2']])) | (!is.null(dataRNAseqGene()[['Tumor']]) & !is.null(datamethfilt()[['ddT2']]))){
-          pdf(file.path(tempdir(),fbox2), width = 12, height = 6)
+          pdf(file.path(tempdir(),fbox2), width = 12, height = 6, useDingbats = FALSE)
           RNAseqcorrelplot <- correl_meth_express(geneName = geneNameSaved(), probeID = input$ProbeSelection, ddmeth = datamethfilt(), ddGene = dataRNAseqGene(),  tissue_label = datamethfilt()[['tissue_label']], regressLine = input$regressionLine, correlMethod = input$correlationMethod, plotting = TRUE, datareturn = FALSE) 
           dev.off()
         } 
@@ -649,7 +649,7 @@ shinyServer(function(input, output, session){
         if(!is.null(datamethfilt()$ddN2) & !is.null(datamethfilt()$ddT2)){
           if(dim(datamethfilt()$ddN2)[2]>2 & dim(datamethfilt()$ddT2)[2]>2){   
             fmean2 <- paste0("6_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-            pdf(file.path(tempdir(), fmean2), width = 14, height = 6)
+            pdf(file.path(tempdir(), fmean2), width = 14, height = 6, useDingbats = FALSE)
             regplot <- stat_analysis_meth(results_filt = datamethfilt(), geneName = geneNameSaved(),
                                           geneNamesType = geneFormat(), CpGislands = input$CpGi, pvalThres = input$pvalThres,
                                           geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
@@ -660,7 +660,7 @@ shinyServer(function(input, output, session){
         if(!is.null(dataexprfilt()$ddN2) & !is.null(dataexprfilt()$ddT2)){
           if(dim(dataexprfilt()$ddN2)[2]>2 & dim(dataexprfilt()$ddT2)[2]>2){   
             fmean2 <- paste0("6_Wanderer_", geneNameSaved(), '_Mean_', input$DataType, '_', input$TissueType, '_', client_timestamp(input$clientTime), '.pdf')
-            pdf(file.path(tempdir(), fmean2), width = 14, height = 6)
+            pdf(file.path(tempdir(), fmean2), width = 14, height = 6, useDingbats = FALSE)
             regplot <- stat_analysis_expr(results_filt = dataexprfilt(), geneName = geneNameSaved(),
                                           geneNamesType = geneFormat(), pvalThres = input$pvalThres,
                                           geneLine = input$geneLine, plotting = TRUE, proportional = !(input$distribute_uniformly))
