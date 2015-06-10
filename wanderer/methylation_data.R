@@ -27,7 +27,7 @@ methylation_data <- function(con, geneName, geneNamesType, tissue){
     probes <- fetch(probes, n = -1)
     if(dim(probes)[1] != 0){
       probes <- probes[order(probes$probe),]
-      ordering <- order(probes$probestart)
+      ordering <- order(probes$cg_start)
       probes <- probes[ordering,]
       ##############
       probes_collapsed <- paste0("('", paste(probes$probe, collapse="','"), "')")
