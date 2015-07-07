@@ -123,35 +123,34 @@ generate_regulome_explorer_link <- function(dataset, gene) {
 
 ## selected cbioportal datasets May 2015
 cbioportal_datasets <- function(x){
-    dat <- list(acc = 'acc_tcga',
-                blca = 'blca_tcga_pub',
-                brca = 'brca_tcga_pub',
-                cesc = 'cesc_tcga',                            
-                chol = 'chol_nccs_2013',
-                coad = 'coadread_tcga',
-                ## dlbc = 'dlbc_tcga',
-                esca = 'esca_tcga',
-                gbm = 'gbm_tcga_pub2013',
-                hnsc = 'hnsc_tcga',
-                kich = 'kich_tcga_pub',
-                kirc = 'kirc_tcga_pub',
-                kirp = 'kirp_tcga',
-                laml = 'laml_tcga_pub',
-                lgg = 'lgg_tcga',
-                lihc = 'lihc_tcga',
-                luad = 'luad_tcga_pub',
-                lusc = 'lusc_tcga',
-                ov = 'ov_tcga_pub',
-                paad = 'paad_tcga',
-                pcpg = 'pcpg_tcga',
-                prad = 'prad_tcga', 
-                read = 'coadread_tcga',
-                sarc = 'sarc_tcga',
-                skcm = 'skcm_tcga',
-                stad = 'stad_tcga',
-                thca = 'thca_tcga',
-                ucec = 'ucec_tcga',
-                ucs = 'ucs_tcga')
+    dat <- list(acc = c(rep('acc_tcga', 4), 'acc_tcga_cnaseq'),
+                blca = c(rep('blca_tcga_pub', 4), 'acc_tcga_cnaseq'),
+                brca = c(rep('brca_tcga', 4), 'brca_tcga_all'),
+                cesc = c(rep('cesc_tcga', 4), 'cesc_tcga_cnaseq'),                         
+                chol = c(rep('chol_nccs_2013', 4), 'chol_nccs_2013_cnaseq'),
+                coad = c(rep('coadread_tcga', 4), 'coadread_tcga_all'),
+                esca = c(rep('esca_tcga', 4), 'esca_tcga_cnaseq'),
+                gbm = c(rep('gbm_tcga', 4), 'gbm_tcga_all'),                
+                hnsc = c(rep('hnsc_tcga', 4), 'hnsc_tcga_cnaseq'),
+                kich = c(rep('kich_tcga_pub', 4), 'kich_tcga_pub_cnaseq'),
+                kirc = c(rep('kirc_tcga_pub', 4), 'kirc_tcga_pub_cnaseq'),
+                kirp = c(rep('kirp_tcga', 4), 'kirp_tcga_cnaseq'),
+                laml = c(rep('laml_tcga_pub', 4), 'laml_tcga_pub_cnaseq'),
+                lgg = c(rep('lgg_tcga', 4), 'lgg_tcga_cnaseq'),
+                lihc = c(rep('lihc_tcga', 4), 'lihc_tcga_cnaseq'),
+                luad = c(rep('luad_tcga_pub', 4), 'luad_tcga_all'),                
+                lusc = c(rep('lusc_tcga', 4), 'lusc_tcga_cnaseq'),
+                ov = c(rep('ov_tcga_pub', 4), 'ov_tcga_pub_cnaseq'),
+                paad = c(rep('paad_tcga', 4), 'paad_tcga_cnaseq'),
+                pcpg = c(rep('pcpg_tcga', 4), 'pcpg_tcga_cnaseq'),
+                prad = c(rep('prad_tcga', 4), 'prad_tcga_cnaseq'), 
+                read = c(rep('coadread_tcga', 4), 'coadread_tcga_cnaseq'),
+                sarc = c(rep('sarc_tcga', 4), 'sarc_tcga_cnaseq'),
+                skcm = c(rep('skcm_tcga', 4), 'skcm_tcga_cnaseq'),
+                stad = c(rep('stad_tcga', 4), 'stad_tcga_cnaseq'),
+                thca = c(rep('thca_tcga', 4), 'thca_tcga_cnaseq'),
+                ucec = c(rep('ucec_tcga', 4), 'ucec_tcga_cnaseq'),
+                ucs = c(rep('ucs_tcga', 4), 'ucsc_tcga_cnaseq'))
     return(dat)
 }
 
@@ -164,9 +163,9 @@ generate_cbioportal_link <- function(dataset, gene) {
     dataset <- cbioportal_datasets()[[dataset]]
 
         ## 'http://explorer.cancerregulome.org/all_pairs/?dataset=chol_20150515_private&t_type=*&t_label=TP53'
-    base <- 'http://www.cbioportal.org/index.do?cancer_study_list=%s&cancer_study_id=%s&genetic_profile_ids_PROFILE_MUTATION_EXTENDED=%s_mutations&genetic_profile_ids_PROFILE_COPY_NUMBER_ALTERATION=%s_gistic&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&data_priority=0&case_set_id=%s_cnaseq&case_ids=&gene_set_choice=user-defined-list&gene_list=%s&clinical_param_selection=null&tab_index=tab_visualize&Action=Submit'
+    base <- 'http://www.cbioportal.org/index.do?cancer_study_list=%s&cancer_study_id=%s&genetic_profile_ids_PROFILE_MUTATION_EXTENDED=%s_mutations&genetic_profile_ids_PROFILE_COPY_NUMBER_ALTERATION=%s_gistic&Z_SCORE_THRESHOLD=2.0&RPPA_SCORE_THRESHOLD=2.0&data_priority=0&case_set_id=%s&case_ids=&gene_set_choice=user-defined-list&gene_list=%s&clinical_param_selection=null&tab_index=tab_visualize&Action=Submit'
     
-    loc <- sprintf(base, dataset, dataset, dataset, dataset, dataset, gene)
+    loc <- sprintf(base, dataset[1], dataset[2], dataset[3], dataset[4], dataset[5], gene)
 
     template <- sprintf('<a class="btn" target = "_blank" href="%s">Go to cBioPortal</a>', loc)
     ## template <- sprintf('<button type="button" class="btn" href="%s">Go to Genome Browser</button>',

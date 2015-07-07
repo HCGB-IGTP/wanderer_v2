@@ -266,17 +266,17 @@ Wanderer offers external links to [Genome Browser](http://genome-euro.ucsc.edu/)
 | Adrenocortical carcinoma | ACC |  acc_2015_03_31 | acc_tcga |
 | Bladder Urothelial Carcinoma | BLCA | blca_20may13_test | blca_tcga_pub |
 | Brain Lower Grade Glioma | LGG  | lgg_04oct13_seq | lgg_tcga |
-| Breast invasive carcinoma | BRCA  | brca_manuscript_rerun_nov12d_pw | brca_tcga_pub |
+| Breast invasive carcinoma | BRCA  | brca_manuscript_rerun_nov12d_pw | brca_tcga_all |
 | Cervical squamous cell carcinoma and endocervical adenocarcinoma | CESC | | cesc_tcga |
-| Colon adenocarcinoma | COAD| coad_03feb13_seq_tumor_only | coadread_tcga |
+| Colon adenocarcinoma | COAD| coad_03feb13_seq_tumor_only | coadread_tcga_all |
 | Esophageal carcinoma | ESCA  |  | esca_tcga |
-| Glioblastoma multiforme | GBM | gbm_2013_pub_tumor_only | gbm_tcga_pub2013 |
+| Glioblastoma multiforme | GBM | gbm_2013_pub_tumor_only | gbm_tcga_all |
 | Head and Neck squamous cell carcinoma | HNSC  | hnsc_03feb13_seq_tumor_only | hnsc_tcga |
 | Kidney Chromophobe | KICH  | | kich_tcga_pub |
 | Kidney renal clear cell carcinoma | KIRC | kirc_01oct12_A_pw | kirc_tcga_pub |
 | Kidney renal papillary cell carcinoma | KIRP  | | kirp_tcga |
 | Liver hepatocellular carcinoma | LIHC   | | lihc_tcga |
-| Lung adenocarcinoma | LUAD |  luad_03feb13_seq_tumor_only | luad_tcga_pub |
+| Lung adenocarcinoma | LUAD |  luad_03feb13_seq_tumor_only | luad_tcga_all |
 | Lung squamous cell carcinoma | LUSC | lusc_03feb13_seq_tumor_only | lusc_tcga |
 | Ovarian serous cystadenocarcinoma | OV  | ov_03feb13_ary_tumor_only | ov_tcga_pub |
 | Pancreatic adenocarcinoma | PAAD  | | paad_tcga |
@@ -320,6 +320,10 @@ Expression data annotation was performed using gene annotations and exon positio
 6.6. **What do RPKM and RSEM stand for?**
 
 Both values are directly obtained from the TCGA pipeline for RNA seq v2 expression analysis. RPKM stands for *reads per kilobase per million mapped reads* [(Guo et al., 2013)] and is used to represent exon expression levels. RSEM stands for *RNA-Seq by Expectation-Maximization* [(Guo et al., 2013)] and is used to represent gene expression levels. We log2-transform these values adding one to get rid of zeroes; that means we plot log_2(x+1) RPKM or RSEM values.
+
+6.7. **Is the Wilcoxon test coupled to the box plots pairwise? For instance, if the breast cancer has n=113  normal and n=1052 tumor how many samples are taken into account for the comparison?**
+
+The test is not a pairwise Wilcoxon one: it does not compare the tumor to the matched normal. It actually tests all the normal data vs all the tumor data, regardless of the pairing. In this example it would compare n=113 against n=1052.
 
 
 ### 7. REFERENCES ############################################################################################
