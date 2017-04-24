@@ -13,6 +13,7 @@
         <![endif]-->
     <script src="shared/selectize/js/selectize.min.js"></script>
     <script src="shared/bootstrap/js/bootstrap.min.js"></script>
+    <!-- <script src="shared/bootstrap/js/bootstrap.js"></script> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="shared/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
     <title>TCGA Wanderer: An interactive viewer to explore DNA methylation and gene expression data in human cancer </title>
@@ -84,8 +85,8 @@
           </section>
           <div class="row-fluid">
             <div class="span8 offset2">
-              <div class="alert alert-block">
-                <a class="close">×</a>
+              <div class="alert alert-block alert-dismissable">
+                <a class="close" data-dismiss="alert" aria-label="close">×</a>
                 <h4 class="alert-heading">Bulk queries</h4>
                 If interested in downloading large amounts of DNA methylation or gene expression data (or the correlation between the two) please contact <a href="mailto:imallona@igtp.cat">Izaskun Mallona</a> or <a href="mailto:mpeinado@igtp.cat">Miguel A. Peinado</a> </span>
               </div>
