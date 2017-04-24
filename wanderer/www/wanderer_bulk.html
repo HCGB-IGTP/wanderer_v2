@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html>
-  <script type="text/css">
-    ".jslider { max-width: 1000px; }"
-  </script>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script type="application/shiny-singletons">7068be154af277356dab1092ff4e4c8f67c35a88,7196694b46f8e7c34171939351e3a70cdd3ccf40</script>
@@ -23,8 +20,23 @@
     <link rel="stylesheet" type="text/css" href="united.css"/>
     <script>$(function() { $("[data-toggle='popover']").popover(); })</script>
     <link rel="stylesheet" type="text/css" href="shared/font-awesome/css/font-awesome.min.css"/>
+    <script type="text/css">
+      ".jslider { max-width: 620px; }"
+    </script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+      var d = new Date();
+      var target = $("#clientTime");
+      target.val(d.getTime());
+      target.trigger("change");
+      });
+    </script>
   </head>
   <body>
+    <div style="display: none;">
+      <label for="clientTime">Client Time</label>
+      <input id="clientTime" type="text" value=""/>
+    </div>
     <div class="navbar navbar-static-top">
       <div class="navbar-inner">
         <div class="container">
@@ -36,15 +48,15 @@
                 <li><a href="http://maplab.cat" target = "_blank">Home</a></li>
                 <li class="divider"></li>
                 
-                <li><a href="http://gattaca.imppc.org:3838/methylation_plotter/" target = "_blank">Methylation plotter</a></li>
+                <li><a href="http://www.maplab.cat/methylation_plotter/" target = "_blank">Methylation plotter</a></li>
                 <li><a href="http://www.maplab.cat/wanderer" target = "_blank">Wanderer</a></li>
 
                 <!-- <li><a href="http://www.maplab.cat/correlations" target = "_blank">Correlations browser</a></li> -->
                 <!-- <li><a href="http://www.maplab.cat/alu_ontology" target = "_blank">Alu Ontology</a></li> -->
               </ul>
             </li>
-            <li class="active">
-              <a href="#tab-1846-1" data-toggle="tab" data-value="main_tabpanel">Wanderer API</a>
+            <li>
+              <a href="http://www.maplab.cat/wanderer">Wanderer</a>
             </li>
             <li>
               <a href="doc.html">Documentation</a>
@@ -56,7 +68,6 @@
         </div>
       </div>
     </div>
-
     <div class="container-fluid">
       <div class="row-fluid">&nbsp;</div>
       <div class="tab-content">
@@ -65,41 +76,28 @@
 	    <div class="container">
               <div>
                 <img src="wanderer_logo.png" style="float:left; padding: 1px 2px 1px 1px;"/>
-                <h3 style="color:#dd4814; float:left; padding: 0px 20px 10px 20px;">Wanderer API<br>An interactive viewer to explore DNA methylation<br>and gene expression data in human cancer</h3>
+                <h3 style="color:#dd4814; float:left; padding: 0px 20px 10px 20px;">Wanderer<br/>An interactive viewer to explore DNA methylation<br/>and gene expression data in human cancer</h3>
               </div>
 	    </div>
-            <br>
-          </section>          
-
-          <div class="row-fluid">
-            <div align = "center">
-
-
-              <div id="plot1" class="shiny-plot-output" style="width: 100% ; height: 100%"></div>
-              <div id="plotStat" class="shiny-plot-output" style="width: 100% ; height: 50%"></div>
-            </div>
-            <br>
-          </div> <!-- shiny flow end -->
-          <!-- <hr/> -->
-
+            <br/>
+          </section>
         </div>
-        
-      </div>
-    </div> <!-- tabpane end -->
-</div>
-<div class="tab-pane" id="tab-1846-2"></div>
+        <div class="row-fluid">
+          <div class="span8 offset2">
+            <h3>Bulk queries</h3>
+            <p>
+              Wanderer is designed to browse TCGA data in a candidate-driven manner. To retrieve large amounts of DNA methylation, gene expression data and/or the correlation between them please contact  <a href="mailto:mpeinado@igtp.cat">Miguel A. Peinado</a> or <a href="mailto:imallona@igtp.cat">Izaskun Mallona</a>: we are happy to fetch them from our database and send them to you.
+            </p>
+            <p>
+                If you consider this software useful please cite our paper <a href="http://www.epigeneticsandchromatin.com/content/8/1/22/abstract">Wanderer, an interactive viewer to explore DNA methylation and gene expression data in human cancer</a> at Epigenetics and Chromatin 2015, 8:22. Data have been obtained from the <a href="http://cancergenome.nih.gov/">TCGA Research Network</a>. Some datasets have limitations for usage until a global analysis is published; please contact <a href="mailto:tcga@mail.nih.gov">TCGA</a> before publishing.
+            </p>
+            <div class="footer">
 
-<br>
-<br>
-<div class="row-fluid">
-  <div class="span8 offset2">
-    <div class="footer">
-      <p>
-            If you consider this software useful please cite our paper <a href="http://www.epigeneticsandchromatin.com/content/8/1/22/abstract">Wanderer, an interactive viewer to explore DNA methylation and gene expression data in human cancer</a> at Epigenetics and Chromatin 2015, 8:22. Data have been obtained from the <a href="http://cancergenome.nih.gov/">TCGA Research Network</a>. Some datasets have limitations for usage until a global analysis is published; please contact <a href="mailto:tcga@mail.nih.gov">TCGA</a> before publishing.
-      </p>
-      <p>&copy; IMPPC, 2014 - Designed and maintained by <a href="mailto:imallona@imppc.org">Izaskun Mallona</a> and Anna D&iacute;ez-Villanueva. Logo by <a href="mailto:judouet@gmail.com">Julien Douet</a>.</p>
+              <p>&copy; IMPPC, 2014 - Designed by Anna D&iacute;ez-Villanueva and <a href="mailto:imallona@igtp.cat">Izaskun Mallona</a>. Logo by <a href="mailto:judouet@gmail.com">Julien Douet</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-</body>
+  </body>
 </html>
