@@ -789,7 +789,11 @@ shinyServer(function(input, output, session){
   
   
   cancel.onSessionEnded <- session$onSessionEnded(function() {
-    dbDisconnect(con)
+      dbDisconnect(con)
+      if (length(dev.list()) > 0){          
+          for (i in 1:length(dev.list())) {
+              dev.off()
+          }
+      }
   })
-  
 })
