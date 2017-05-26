@@ -1,0 +1,16 @@
+2017-05-26 Izaskun Mallona <izaskun.mallona@gmail.com>
+	Wanderer v1.1 fixes unexpected pairings between normal and tumor barcodes when correlating DNA methylation with gene expression
+
+2015-06-10 Izaskun Mallona <izaskun.mallona@gmail.com>
+	Wanderer v1.0 Wed Jun 10 10:56:31 2015 +0200 (commit 9339d9ee59d6fabaf802b1d17caaadbf82786442)
+	Fixes minor bugs on profiling, allows data download in a ZIP file, adds new datasets, includes RNA seq by-gene data and correlates methylation and expression.
+
+2014-12-29 Izaskun Mallona <izaskun.mallona@gmail.com>
+	Alpha Release Mon Dec 29 15:14:48 2014 (commit 21f1c7d9c742011e289842752a1ea871c13dc5fb)
+
+	Profiles DNA methylation and expression for matched normal-tumor datasets.
+
+2014-10-06 Izaskun Mallona <izaskun.mallona@gmail.com>
+	Project start Mon Oct 6 15:04:45 2014 (commit 3e5440a552d04319331415e74635e144045cc6ae)
+
+	Project prototype.
