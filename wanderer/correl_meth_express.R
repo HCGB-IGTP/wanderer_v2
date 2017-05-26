@@ -1,7 +1,6 @@
 
 
 correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label, regressLine, correlMethod, plotting, datareturn){
-  
   ddN <- ddmeth$ddN2
   ddT <- ddmeth$ddT2
   ddNE <- ddGene$Normal
@@ -225,6 +224,10 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
   } else{
     ddTE2 <- NULL
   }
-  
+
+  ## @todo remove this debugging purposes
+  save(file = '/tmp/wanderer_debug.RData',
+       list = c('geneName', 'probeID', 'ddmeth', 'ddGene', 'tissue_label',
+           'regressLine', 'correlMethod', 'plotting', 'datareturn', 'ddNE2', 'ddTE2'))
   if(datareturn)  return(list(ddNE=ddNE2, ddTE=ddTE2))
 }
