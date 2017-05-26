@@ -3,11 +3,6 @@
 ## @fixup Izaskun Mallona
 correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label, regressLine,
                                 correlMethod, plotting, datareturn){
-
-    save(file = '/tmp/wanderer_debug.RData',
-         list = c('geneName', 'probeID', 'ddmeth', 'ddGene', 'tissue_label',
-             'regressLine', 'correlMethod', 'plotting', 'datareturn'))
-      
     ## [tn][em] stands for tumor/normal and expression/meth
     ## kept adiez's variable names too
     te <- ddN <- ddGene$Tumor
@@ -130,6 +125,8 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
         box(lwd=2)
     }
 
+    ## this to return expression data (note that the barcodes have been trimmed
+    ## to the first 16 chars)
     if(!is.null(ddNE)){
         ddNE2 <- data.frame(PATIENT = rownames(normal_data),
                             gene = normal_data$expr)
@@ -147,13 +144,5 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
         ddTE2 <- NULL
     }
 
-    tryCatch({
-        save(file = '/tmp/wanderer_debug.RData',
-             list = c('geneName', 'probeID', 'ddmeth', 'ddGene', 'tissue_label',
-                 'regressLine', 'correlMethod', 'plotting', 'datareturn', 'ddNE2', 'ddTE2'))
-    }, error = function(x) print('foo'))
-    
     if(datareturn)  return(list(ddNE=ddNE2, ddTE=ddTE2))
 }
-
-
