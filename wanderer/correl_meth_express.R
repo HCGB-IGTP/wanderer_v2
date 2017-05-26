@@ -3,7 +3,11 @@
 ## @fixup Izaskun Mallona
 correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label, regressLine,
                                 correlMethod, plotting, datareturn){
-    
+
+    save(file = '/tmp/wanderer_debug.RData',
+         list = c('geneName', 'probeID', 'ddmeth', 'ddGene', 'tissue_label',
+             'regressLine', 'correlMethod', 'plotting', 'datareturn'))
+      
     ## [tn][em] stands for tumor/normal and expression/meth
     ## kept adiez's variable names too
     te <- ddN <- ddGene$Tumor
@@ -16,8 +20,10 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
 
     for (item in c('te', 'tm', 'ne', 'nm')) {
         curr <- get(item)
-        colnames(curr) <- strtrim(colnames(curr), 16)
-        rownames(curr) <- curr[,1]
+        if (!is.null(curr)) {
+            colnames(curr) <- strtrim(colnames(curr), 16)
+            rownames(curr) <- curr[,1]
+        }
         assign(x = item, value = curr)
     }
 
@@ -36,18 +42,22 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
     if (length(common_normals) > 0) {
         normal_data <- data.frame(expr = as.numeric(ne[, common_normals]),
                                   meth = as.numeric(nm[probeID, common_normals]))
-        normal_data <- na.omit(normal_data)
         rownames(normal_data) <- common_normals
+        normal_data <- na.omit(normal_data)
         correlN <- cor(normal_data$meth, normal_data$expr, method = correlMethod)
     } else {
         missatgeN <- "No common patients available"
     }
 
     ## recovering adiez's naming
-    ddTE <- ddTE2 <- tumor_data$expr
-    ddNE <- ddNE2 <- normal_data$expr
-    ddT <- ddT2 <-tumor_data$meth
-    ddN <- ddN2 <- normal_data$meth
+    if (exists('normal_data')) {
+        ddNE <- ddNE2 <- normal_data$expr
+        ddN <- ddN2 <- normal_data$meth
+    }
+    if (exists('tumor_data')) {
+        ddTE <- ddTE2 <- tumor_data$expr
+        ddT <- ddT2 <-tumor_data$meth        
+    }
 
     if (plotting){
         if(!is.null(ddNE) & !is.null(ddTE)){
@@ -137,6 +147,12 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
         ddTE2 <- NULL
     }
 
+    tryCatch({
+        save(file = '/tmp/wanderer_debug.RData',
+             list = c('geneName', 'probeID', 'ddmeth', 'ddGene', 'tissue_label',
+                 'regressLine', 'correlMethod', 'plotting', 'datareturn', 'ddNE2', 'ddTE2'))
+    }, error = function(x) print('foo'))
+    
     if(datareturn)  return(list(ddNE=ddNE2, ddTE=ddTE2))
 }
 

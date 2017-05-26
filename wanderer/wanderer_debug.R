@@ -15,11 +15,12 @@ if (is.null(ddT) | is.null(ddTE)) missatgeT <- "No data available"
 
 for (item in c('te', 'tm', 'ne', 'nm')) {
     curr <- get(item)
-    colnames(curr) <- strtrim(colnames(curr), 16)
-    rownames(curr) <- curr[,1]
+    if (!is.null(curr)) {
+        colnames(curr) <- strtrim(colnames(curr), 16)
+        rownames(curr) <- curr[,1]
+    }
     assign(x = item, value = curr)
 }
-
 
 common_tumors <- intersect(colnames(te), colnames(tm))
 if (length(common_tumors) > 0) {
@@ -37,8 +38,9 @@ common_normals <- intersect(colnames(ne), colnames(nm))
 if (length(common_normals) > 0) {
     normal_data <- data.frame(expr = as.numeric(ne[, common_normals]),
                               meth = as.numeric(nm[probeID, common_normals]))
-    normal_data <- na.omit(normal_data)
     rownames(normal_data) <- common_normals
+    normal_data <- na.omit(normal_data)
+
     correlN <- cor(normal_data$meth, normal_data$expr, method = correlMethod)
 } else {
     missatgeN <- "No common patients available"
