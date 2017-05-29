@@ -1,4 +1,16 @@
 
+##' returns non duplicated items from a vector (requires the item to have frequency 1)
+##'
+##' 
+##' @title 
+##' @param x a char vector
+##' @return 
+##' @author Izaskun Mallona
+distinct <- function(x) {
+    ft <- as.data.frame(table(x))
+    return(as.character(ft[ft$Freq == 1,1]))
+}
+
 ## @author Anna Diez
 ## @fixup Izaskun Mallona
 correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label, regressLine,
@@ -16,28 +28,43 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
     for (item in c('te', 'tm', 'ne', 'nm')) {
         curr <- get(item)
         if (!is.null(curr)) {
-            colnames(curr) <- strtrim(colnames(curr), 16)
+            ## colnames(curr) <- strtrim(colnames(curr), 16)
             rownames(curr) <- curr[,1]
+            curr <- curr[,-1]
+            curr <- curr[ , order(names(curr))]
         }
         assign(x = item, value = curr)
     }
 
-    common_tumors <- intersect(colnames(te), colnames(tm))
+    ## defensive removal of duplicated samples, just in case
+    common_tumors <- intersect(distinct(strtrim(colnames(te), 16)),
+                               distinct(strtrim(colnames(tm), 16)))
     if (length(common_tumors) > 0) {
-        tumor_data <- data.frame(expr = as.numeric(te[,common_tumors]),
-                                 meth = as.numeric(tm[probeID, common_tumors]))
-        rownames(tumor_data) <- common_tumors
+        ## tumor_data <- data.frame(expr = as.numeric(te[,common_tumors]),
+        ## meth = as.numeric(tm[probeID, common_tumors]))
+        
+        tumor_data <- data.frame(expr = as.numeric(te[,strtrim(colnames(te), 16) %in%
+                                     common_tumors]),
+                                 meth = as.numeric(tm[probeID, strtrim(colnames(tm), 16) %in%
+                                     common_tumors]))
+        ## rownames(tumor_data) <- common_tumors
+        rownames(tumor_data) <- colnames(te)[strtrim(colnames(te), 16) %in% common_tumors]
         tumor_data <- na.omit(tumor_data)
         correlT <- cor(tumor_data$meth, tumor_data$expr, method = correlMethod)
     } else {
         missatgeT <- "No common patients available"
     }
 
-    common_normals <- intersect(colnames(ne), colnames(nm))
+    common_normals <- intersect(distinct(strtrim(colnames(ne), 16)),
+                                distinct(strtrim(colnames(nm), 16)))
+    
     if (length(common_normals) > 0) {
-        normal_data <- data.frame(expr = as.numeric(ne[, common_normals]),
-                                  meth = as.numeric(nm[probeID, common_normals]))
-        rownames(normal_data) <- common_normals
+        normal_data <- data.frame(expr = as.numeric(ne[, strtrim(colnames(ne), 16) %in%
+                                      common_normals]),
+                                  meth = as.numeric(nm[probeID, strtrim(colnames(nm), 16) %in%
+                                      common_normals]))
+        ## rownames(normal_data) <- common_normals
+        rownames(normal_data) <- colnames(ne)[strtrim(colnames(ne), 16) %in% common_normals]
         normal_data <- na.omit(normal_data)
         correlN <- cor(normal_data$meth, normal_data$expr, method = correlMethod)
     } else {
@@ -125,8 +152,7 @@ correl_meth_express <- function(geneName, probeID, ddmeth, ddGene, tissue_label,
         box(lwd=2)
     }
 
-    ## this to return expression data (note that the barcodes have been trimmed
-    ## to the first 16 chars)
+    ## this to return expression data
     if(!is.null(ddNE)){
         ddNE2 <- data.frame(PATIENT = rownames(normal_data),
                             gene = normal_data$expr)
