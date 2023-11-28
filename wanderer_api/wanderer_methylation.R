@@ -1,1 +1,1 @@
-/imppc/labs/maplab/imallona/src/regional_profiler/wanderer/wanderer_methylation.R
+../wanderer/wanderer_methylation.R

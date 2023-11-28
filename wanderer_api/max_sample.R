@@ -1,1 +1,1 @@
-/imppc/labs/maplab/imallona/src/regional_profiler/wanderer/max_sample.R
+../wanderer/max_sample.R
