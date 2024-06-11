@@ -1,0 +1,23 @@
+## clone from SourceForge
+git clone git://git.code.sf.net/p/tcga-wanderer/code wanderer_v2
+cd wanderer_v2/
+
+git status
+git log
+
+## set the url to push and fecth
+git remote set-url origin https://github.com/HCGB-IGTP/wanderer_v2.git
+git remote add origin https://github.com/HCGB-IGTP/wanderer_v2.git
+git branch -M main
+git push -u origin main
+
+## change to branch 
+git checkout v2_branch 
+git branch --set-upstream-to=origin/v2_branch v2_branch
+
+## edit files
+git status
+git add ... 
+git commit -m '...'
+git push
+
